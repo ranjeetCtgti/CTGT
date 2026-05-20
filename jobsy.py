@@ -1,5 +1,10 @@
 import csv
+from pathlib import Path
+
 from jobspy import scrape_jobs
+
+
+OUTPUT_CSV = Path("scrape_data.csv")
 
 jobs = scrape_jobs(
     site_name=["indeed", "linkedin", "google"], # "bayt", "naukri", "bdjobs"
@@ -15,4 +20,11 @@ jobs = scrape_jobs(
 )
 print(f"Found {len(jobs)} jobs")
 print(jobs.head(40))
-jobs.to_csv("jobs.csv", quoting=csv.QUOTE_NONNUMERIC, escapechar="\\", index=False) # to_excel
+jobs.to_csv(
+    OUTPUT_CSV,
+    mode="a",
+    header=not OUTPUT_CSV.exists(),
+    quoting=csv.QUOTE_NONNUMERIC,
+    escapechar="\\",
+    index=False,
+)  # append rows for each scrape run

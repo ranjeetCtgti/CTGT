@@ -42,7 +42,7 @@ DEFAULT_PIPELINE_PHASE = "testing"
 PLACEHOLDER_ENV_VALUES = {
     "your_scrapedo_api_key",
     "your_gemini_api_key",
-    "your_hf_api_key",
+    "your_groq_api_key",
     "postgresql+psycopg2://username:password@localhost:5432/ctgt_leads",
 }
 DEFAULT_SMOKE_TEST_QUERIES = 3
@@ -87,7 +87,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--debug-extraction",
         action="store_true",
-        help="Log Gemini extraction decisions for verification during testing.",
+        help="Log extraction decisions for verification during testing.",
     )
     parser.add_argument(
         "--smoke-test",
@@ -549,8 +549,8 @@ def validate_runtime_config(args: argparse.Namespace) -> None:
     if args.leads:
         required_env = ["DATABASE_URL"]
     else:
-        if llm_provider == "huggingface":
-            required_env = ["HF_API_KEY", "HF_MODEL_ID"]
+        if llm_provider == "groq":
+            required_env = ["GROQ_API_KEY"]
         else:
             required_env = ["GEMINI_API_KEY"]
         if "stepstone" in selected_sources:
@@ -585,7 +585,10 @@ def _is_missing_or_placeholder(value: str | None) -> bool:
 
 
 def _llm_provider() -> str:
-    return (os.getenv("LLM_PROVIDER") or "gemini").strip().lower()
+    provider = (os.getenv("LLM_PROVIDER") or "gemini").strip().lower()
+    if provider not in {"gemini", "groq"}:
+        raise ValueError("LLM_PROVIDER must be either 'gemini' or 'groq'")
+    return provider
 
 
 def _unpack_collector_result(result: Any) -> tuple[list["RawJobPosting | RawSignalDocument"], int | None]:

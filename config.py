@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 # Supported software names used throughout extraction/scoring.
@@ -239,7 +240,7 @@ INDUSTRY_CHOICES = [
     "Unknown",
 ]
 
-GEMINI_MODEL = "gemini-2.5-flash-lite"
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash-lite")
 GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
 
 # Query sets
@@ -316,7 +317,7 @@ GEO_CODE_BY_COUNTRY = {
 }
 
 # Runtime defaults
-DEFAULT_BATCH_SIZE = 10
+DEFAULT_BATCH_SIZE = 5
 DEFAULT_REQUEST_TIMEOUT_SECONDS = 30
 CAREER_PAGE_MAX_TEXT_CHARS = 12000
 NEWS_RSS_DESCRIPTION_MAX_CHARS = 4000

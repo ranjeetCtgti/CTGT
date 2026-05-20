@@ -34,13 +34,13 @@ from config import (
 from extractors.prefilter import PrefilterResult, keyword_prefilter
 from models.schema import ExtractedSignal, RawJobPosting, SignalSource, SignalType
 
-
+DEFAULT_LLM_REQUESTS_PER_MINUTE = 25
 class GeminiClientError(Exception):
     """Raised when Gemini extraction fails irrecoverably."""
 
 
-class HuggingFaceClientError(Exception):
-    """Raised when Hugging Face extraction fails irrecoverably."""
+class GroqClientError(Exception):
+    """Raised when Groq extraction fails irrecoverably."""
 
 
 @dataclass
@@ -74,8 +74,8 @@ def _is_retryable_gemini_error(exc: Exception) -> bool:
     return False
 
 
-def _is_retryable_hf_error(exc: Exception) -> bool:
-    if isinstance(exc, HuggingFaceClientError):
+def _is_retryable_groq_error(exc: Exception) -> bool:
+    if isinstance(exc, GroqClientError):
         message = str(exc)
         if "429" in message:
             return True
@@ -178,8 +178,8 @@ class BaseExtractor:
         self,
         batch: list[ExtractionCandidate],
     ) -> list[tuple[ExtractionCandidate, dict[str, Any]]]:
-        time.sleep(4)
         try:
+            self._throttle_model_request()
             raw_items = self._request_batch_items(batch)
             return self._pair_batch_items(batch, raw_items)
         except Exception as exc:
@@ -190,6 +190,22 @@ class BaseExtractor:
                 str(exc),
             )
             return []
+
+    def _throttle_model_request(self) -> None:
+        rpm_cap = _load_llm_requests_per_minute()
+        min_interval_seconds = 60.0 / rpm_cap
+        last_request_started_at = getattr(self, "_last_llm_request_started_at", 0.0)
+        elapsed = time.monotonic() - last_request_started_at
+        remaining = min_interval_seconds - elapsed
+        if remaining > 0:
+            logger.info(
+                "llm throttle provider={} wait_seconds={:.2f} rpm_cap={}",
+                self.__class__.__name__,
+                remaining,
+                rpm_cap,
+            )
+            time.sleep(remaining)
+        self._last_llm_request_started_at = time.monotonic()
 
     def _request_batch_items(self, batch: list[ExtractionCandidate]) -> list[dict[str, Any]]:
         response_text = self._generate_batch_text(batch)
@@ -272,7 +288,11 @@ class BaseExtractor:
                     f"Model returned invalid JSON payload preview={preview!r}"
                 ) from exc
         if isinstance(parsed, dict):
-            parsed = [parsed]
+            wrapped_items = parsed.get("items")
+            if isinstance(wrapped_items, list):
+                parsed = wrapped_items
+            else:
+                parsed = [parsed]
         if not isinstance(parsed, list):
             raise GeminiClientError("Model response was not a JSON list")
         return [item for item in parsed if isinstance(item, dict)]
@@ -442,74 +462,106 @@ class GeminiExtractor(BaseExtractor):
         return text
 
 
-class HuggingFaceExtractor(BaseExtractor):
+class GroqExtractor(BaseExtractor):
     def __init__(
         self,
         api_key: str | None = None,
         model_id: str | None = None,
-        provider: str | None = None,
         timeout_seconds: int = DEFAULT_REQUEST_TIMEOUT_SECONDS,
         batch_size: int = DEFAULT_BATCH_SIZE,
         debug: bool = False,
     ) -> None:
-        self.api_key = api_key or os.getenv("HF_API_KEY")
+        self.api_key = api_key or os.getenv("GROQ_API_KEY")
         if not self.api_key:
-            raise HuggingFaceClientError("HF_API_KEY is missing")
-        self.model_id = model_id or os.getenv("HF_MODEL_ID")
-        if not self.model_id:
-            raise HuggingFaceClientError("HF_MODEL_ID is missing")
-        self.provider = provider or os.getenv("HF_PROVIDER") or None
+            raise GroqClientError("GROQ_API_KEY is missing")
+        self.model_id = model_id or os.getenv("GROQ_MODEL_ID") or "qwen/qwen3-32b"
         self.batch_size = batch_size
         self.debug = debug
         self.timeout_seconds = timeout_seconds
-        try:
-            from huggingface_hub import InferenceClient
-        except ImportError as exc:
-            raise HuggingFaceClientError(
-                "huggingface_hub is not installed; run `pip install -r requirements.txt`"
-            ) from exc
-        self._client = InferenceClient(provider=self.provider, api_key=self.api_key, timeout=timeout_seconds)
+        self._http = httpx.Client(
+            timeout=timeout_seconds,
+            base_url="https://api.groq.com/openai/v1",
+            headers={
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json",
+            },
+        )
 
     def close(self) -> None:
-        return None
+        self._http.close()
 
     @retry(
-        retry=retry_if_exception(_is_retryable_hf_error),
+        retry=retry_if_exception(_is_retryable_groq_error),
         wait=wait_exponential(multiplier=1, min=5, max=45),
         stop=stop_after_attempt(3),
         reraise=True,
     )
-    def _call_hf_chat(
+    def _call_groq_chat(
         self,
         messages: list[dict[str, str]],
-    ) -> Any:
+    ) -> dict[str, Any]:
+        payload = {
+            "model": self.model_id,
+            "messages": messages,
+            "temperature": 0.1,
+            "max_completion_tokens": 2048,
+            "response_format": {"type": "json_object"},
+        }
+        if self.model_id.startswith("qwen/"):
+            payload["reasoning_format"] = "hidden"
+        response = self._http.post("/chat/completions", json=payload)
+        if response.status_code == 429:
+            raise GroqClientError("Groq rate limited (429)")
         try:
-            return self._client.chat_completion(
-                model=self.model_id,
-                messages=messages,
-                max_tokens=2048,
-                temperature=0.1,
-            )
-        except Exception as exc:
-            raise HuggingFaceClientError(f"Hugging Face chat completion failed: {exc}") from exc
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            body_preview = response.text[:800].replace("\n", " ")
+            raise GroqClientError(
+                f"Groq HTTP error status={response.status_code} body_preview={body_preview!r}"
+            ) from exc
+        try:
+            return response.json()
+        except JSONDecodeError as exc:
+            body_preview = response.text[:400].replace("\n", " ")
+            raise GroqClientError(
+                f"Groq returned non-JSON response status={response.status_code} body_preview={body_preview!r}"
+            ) from exc
 
     def _generate_batch_text(
         self,
         batch: list[ExtractionCandidate],
         single_item_retry: bool = False,
     ) -> str:
-        prompt = _build_prompt(batch, single_item_retry=single_item_retry)
-        messages = [
-            {"role": "system", "content": "You are a precise information extraction model."},
-            {"role": "user", "content": prompt},
-        ]
-        response = self._call_hf_chat(messages)
+        prompt = _build_prompt(batch, single_item_retry=single_item_retry, json_object_mode=True)
         try:
-            content = response.choices[0].message.content
-        except (AttributeError, IndexError, TypeError) as exc:
-            raise HuggingFaceClientError(f"Unexpected Hugging Face response shape: {response!r}") from exc
+            response_json = self._call_groq_chat(
+                [
+                    {"role": "system", "content": "You are a precise information extraction model."},
+                    {"role": "user", "content": prompt},
+                ]
+            )
+        except GroqClientError as exc:
+            if "429" not in str(exc) or not os.getenv("GEMINI_API_KEY"):
+                raise
+            logger.warning(
+                "groq rate limited after retries; falling back to Gemini for batch size={}",
+                len(batch),
+            )
+            with GeminiExtractor(
+                timeout_seconds=self.timeout_seconds,
+                batch_size=self.batch_size,
+                debug=self.debug,
+            ) as fallback_extractor:
+                return fallback_extractor._generate_batch_text(
+                    batch,
+                    single_item_retry=single_item_retry,
+                )
+        try:
+            content = response_json["choices"][0]["message"]["content"]
+        except (KeyError, IndexError, TypeError) as exc:
+            raise GroqClientError(f"Unexpected Groq response shape: {response_json!r}") from exc
         if not isinstance(content, str) or not content.strip():
-            raise HuggingFaceClientError("Hugging Face returned empty content")
+            raise GroqClientError("Groq returned empty content")
         return content
 
 
@@ -538,8 +590,8 @@ def build_extractor(
     debug: bool = False,
 ) -> Extractor:
     provider = (os.getenv("LLM_PROVIDER") or "gemini").strip().lower()
-    if provider == "huggingface":
-        return HuggingFaceExtractor(batch_size=batch_size, debug=debug)
+    if provider == "groq":
+        return GroqExtractor(batch_size=batch_size, debug=debug)
     return GeminiExtractor(batch_size=batch_size, debug=debug)
 
 
@@ -559,9 +611,15 @@ def compute_raw_score(signal: ExtractedSignal) -> int:
 def _build_prompt(
     batch: list[ExtractionCandidate],
     single_item_retry: bool = False,
+    json_object_mode: bool = False,
 ) -> str:
     items = []
     for index, candidate in enumerate(batch, start=1):
+        snippet = _sanitise_text(candidate.snippet) if candidate.snippet else None
+        description = _sanitise_text(candidate.description) if candidate.description else None
+        fallback_text = None
+        if not snippet and not description:
+            fallback_text = _sanitise_text(candidate.source_text)
         items.append(
             {
                 "id": index,
@@ -572,16 +630,18 @@ def _build_prompt(
                 "location_hint": candidate.location_hint,
                 "signal_source": candidate.signal_source,
                 "source_title": candidate.source_title,
-                # Keep both structured fields and a flattened fallback text blob.
-                "snippet": _sanitise_text(candidate.snippet) if candidate.snippet else None,
-                "description": _sanitise_text(candidate.description) if candidate.description else None,
-                "text": _sanitise_text(candidate.source_text),
+                # Avoid sending the same article/job text multiple times.
+                "snippet": snippet,
+                "description": description,
+                "text": fallback_text,
             }
         )
 
     if single_item_retry and len(batch) == 1:
+        output_prefix = '{"items":' if json_object_mode else ""
+        output_suffix = "}" if json_object_mode else ""
         return (
-            "Return only one JSON array with one object. No prose. No bullets. No markdown. No schema echo.\n"
+            "Return only valid JSON. No prose. No bullets. No markdown. No schema echo.\n"
             f"Allowed industry values: {', '.join(INDUSTRY_CHOICES)}.\n"
             f"Allowed software_detected values: {', '.join(sorted(ALLOWED_SOFTWARE_NAMES))}.\n"
             "Use the structured fields first: query, title, company_hint, location_hint, snippet, and description.\n"
@@ -589,15 +649,32 @@ def _build_prompt(
             "The company_name must refer to the source company in the input item, never CTGT Innovations unless the input explicitly says that.\n"
             "If Siemens PLM evidence is weak, return empty software_detected and low confidence instead of explanation text.\n"
             "Required output format:\n"
-            '[{"id":1,"company_name":"string","location":"string or null","industry":"string","software_detected":["allowed values only"],'
+            f'{output_prefix}[{{"id":1,"company_name":"string","location":"string or null","industry":"string","software_detected":["allowed values only"],'
             '"migration_detected":true,"migration_from":"string or null","pain_signals":["phrases"],'
-            '"expansion_signals":["phrases"],"confidence":0.0,"reasoning":"one sentence"}]\n'
+            f'"expansion_signals":["phrases"],"confidence":0.0,"reasoning":"one sentence"}}]{output_suffix}\n'
             f"Input item:\n{json.dumps(items[0], ensure_ascii=True)}"
         )
 
+    output_contract = (
+        '{"items":[{"id":1,"company_name":"string","location":"string or null","industry":"string",'
+        '"software_detected":["allowed values only"],"migration_detected":true,"migration_from":"string or null",'
+        '"pain_signals":["phrases"],"expansion_signals":["phrases"],"confidence":0.0,"reasoning":"one sentence"}]}'
+        if json_object_mode
+        else
+        '[{"id":1,"company_name":"string","location":"string or null","industry":"string","software_detected":["allowed values only"],'
+        '"migration_detected":true,"migration_from":"string or null","pain_signals":["phrases"],'
+        '"expansion_signals":["phrases"],"confidence":0.0,"reasoning":"one sentence"}]'
+    )
+    output_rule = (
+        'Return only valid JSON as one object with a top-level "items" array containing exactly one object per input item in the same order.\n'
+        if json_object_mode
+        else
+        "Return only valid JSON as an array with exactly one object per input item in the same order.\n"
+    )
+
     return (
         "You extract Siemens PLM lead signals from source items.\n"
-        "Return only valid JSON as an array with exactly one object per input item in the same order.\n"
+        f"{output_rule}"
         "Do not include markdown, commentary, bullets, prompt restatement, or extra keys.\n"
         f"Allowed industry values: {', '.join(INDUSTRY_CHOICES)}.\n"
         f"Allowed software_detected values: {', '.join(sorted(ALLOWED_SOFTWARE_NAMES))}.\n"
@@ -607,9 +684,7 @@ def _build_prompt(
         "The company_name must refer to the source company in that input item, never CTGT Innovations unless the input explicitly says that.\n"
         "Watch for migration signals such as Windchill, Enovia, CATIA, Autodesk Vault, SAP PLM, or legacy PDM replacements.\n"
         "Each output object must use this schema:\n"
-        '{"id":1,"company_name":"string","location":"string or null","industry":"string","software_detected":["allowed values only"],'
-        '"migration_detected":true,"migration_from":"string or null","pain_signals":["phrases"],'
-        '"expansion_signals":["phrases"],"confidence":0.0,"reasoning":"one sentence"}\n'
+        f"{output_contract}\n"
         f"Input items:\n{json.dumps(items, ensure_ascii=True)}"
     )
 
@@ -813,3 +888,26 @@ def _preview_text(text: str, limit: int = 400) -> str:
 def _chunked(values: list[ExtractionCandidate], size: int) -> Iterable[list[ExtractionCandidate]]:
     for index in range(0, len(values), size):
         yield values[index:index + size]
+
+
+def _load_llm_requests_per_minute() -> int:
+    raw_value = os.getenv("LLM_REQUESTS_PER_MINUTE")
+    if raw_value is None or not raw_value.strip():
+        return DEFAULT_LLM_REQUESTS_PER_MINUTE
+    try:
+        parsed = int(raw_value)
+    except ValueError:
+        logger.warning(
+            "invalid LLM_REQUESTS_PER_MINUTE={!r}; falling back to {}",
+            raw_value,
+            DEFAULT_LLM_REQUESTS_PER_MINUTE,
+        )
+        return DEFAULT_LLM_REQUESTS_PER_MINUTE
+    if parsed < 1:
+        logger.warning(
+            "LLM_REQUESTS_PER_MINUTE={} must be at least 1; using {}",
+            parsed,
+            DEFAULT_LLM_REQUESTS_PER_MINUTE,
+        )
+        return DEFAULT_LLM_REQUESTS_PER_MINUTE
+    return parsed

@@ -4,6 +4,7 @@ import argparse
 import os
 import sys
 from collections import Counter, defaultdict
+from contextlib import nullcontext
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Callable, Iterable
 
@@ -25,26 +26,23 @@ except ImportError:
 
 if TYPE_CHECKING:
     from db import Database
-    from models.schema import CompanyLead, ExtractedSignal, RawJobPosting
+    from models.schema import CompanyLead, ExtractedSignal, RawJobPosting, RawSignalDocument
     from scrapers.scrapedo_client import ScrapeDoClient
 
 
-ScraperFn = Callable[[Any, int | None], list[Any]]
-SOURCE_NAMES = ("linkedin", "indeed", "stepstone")
+ScraperFn = Callable[[Any | None, int | None], Any]
+SOURCE_NAMES = ("linkedin", "indeed", "google", "stepstone", "career_page", "news")
 REQUESTS_PER_QUERY_BY_SOURCE = {
-    "linkedin": 1,
-    "indeed": 3,
     "stepstone": 3,
 }
 TESTING_MAX_REQUESTS_BY_SOURCE = {
-    "linkedin": 3,
-    "indeed": 3,
     "stepstone": 3,
 }
 DEFAULT_PIPELINE_PHASE = "testing"
 PLACEHOLDER_ENV_VALUES = {
     "your_scrapedo_api_key",
     "your_gemini_api_key",
+    "your_hf_api_key",
     "postgresql+psycopg2://username:password@localhost:5432/ctgt_leads",
 }
 DEFAULT_SMOKE_TEST_QUERIES = 3
@@ -74,7 +72,6 @@ class PipelineSummary:
         if source not in self.source_stats:
             self.source_stats[source] = SourceRunStats()
         return self.source_stats[source]
-
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="CTGT lead engine Phase 1 pipeline")
@@ -186,11 +183,24 @@ def run_pipeline(args: argparse.Namespace) -> int:
         max_requests_by_source,
         phase == "production",
     )
+    logger.info(
+        "nlp runtime config batch_size={} batch_size_env={!r} default_batch_size={} request_timeout_seconds={}",
+        batch_size,
+        os.getenv("BATCH_SIZE"),
+        DEFAULT_BATCH_SIZE,
+        timeout_seconds,
+    )
 
-    with ScrapeDoClient(
-        timeout_seconds=timeout_seconds,
-        max_requests_by_source=max_requests_by_source,
-    ) as scrape_client:
+    scrape_context = (
+        ScrapeDoClient(
+            timeout_seconds=timeout_seconds,
+            max_requests_by_source=max_requests_by_source,
+        )
+        if "stepstone" in selected_sources
+        else nullcontext(None)
+    )
+
+    with scrape_context as scrape_client:
         postings = collect_postings(scrape_client, selected_sources, args.max_queries, summary)
         filtered_postings = filter_postings(postings, summary)
         signals = extract_signals(
@@ -200,7 +210,8 @@ def run_pipeline(args: argparse.Namespace) -> int:
             database=database,
         )
         process_signals(signals, summary, database=database)
-        print_run_summary(summary, scrape_client.stats())
+        scrape_stats = scrape_client.stats() if scrape_client is not None else {"credits_used_total": 0, "request_count": 0}
+        print_run_summary(summary, scrape_stats)
 
     return evaluate_run(summary, selected_sources)
 
@@ -217,18 +228,26 @@ def collect_postings(
     for source in selected_sources:
         stats = summary.ensure_source(source)
         scraper = source_scrapers[source]
-        request_count_before = scrape_client.request_count
+        request_count_before = scrape_client.request_count if scrape_client is not None else 0
         try:
-            source_postings = scraper(scrape_client, max_queries=max_queries)
+            result = scraper(scrape_client, max_queries=max_queries)
         except Exception as exc:
             message = f"{source} scrape failed: {exc}"
             logger.exception(message)
             stats.errors.append(message)
             continue
 
-        stats.pages_scraped += scrape_client.request_count - request_count_before
-        stats.job_cards += len(source_postings)
-        postings.extend(source_postings)
+        source_postings, pages_scraped = _unpack_collector_result(result)
+        if pages_scraped is None:
+            pages_scraped = (
+                scrape_client.request_count - request_count_before
+                if scrape_client is not None
+                else 0
+            )
+        normalized_postings = [_normalize_raw_posting(posting) for posting in source_postings]
+        stats.pages_scraped += pages_scraped
+        stats.job_cards += len(normalized_postings)
+        postings.extend(normalized_postings)
 
     return postings
 
@@ -238,18 +257,16 @@ def build_max_requests_by_source(
     max_queries: int | None,
     phase: str,
 ) -> dict[str, int]:
-    from scrapers.indeed import build_search_plan as build_indeed_search_plan
-    from scrapers.linkedin import build_search_plan as build_linkedin_search_plan
     from scrapers.stepstone import build_search_plan as build_stepstone_search_plan
 
     search_plan_builders: dict[str, Callable[[int | None], list[Any]]] = {
-        "linkedin": build_linkedin_search_plan,
-        "indeed": build_indeed_search_plan,
         "stepstone": build_stepstone_search_plan,
     }
     max_requests_by_source: dict[str, int] = {}
 
     for source in selected_sources:
+        if source not in search_plan_builders:
+            continue
         plan_size = len(search_plan_builders[source](max_queries=max_queries))
         planned_requests = plan_size * REQUESTS_PER_QUERY_BY_SOURCE[source]
         if phase != "production":
@@ -259,13 +276,16 @@ def build_max_requests_by_source(
     return max_requests_by_source
 
 
-def filter_postings(postings: list["RawJobPosting"], summary: PipelineSummary) -> list["RawJobPosting"]:
+def filter_postings(
+    postings: list["RawJobPosting"],
+    summary: PipelineSummary,
+) -> list["RawJobPosting"]:
     from extractors.prefilter import keyword_prefilter
 
     filtered: list[RawJobPosting] = []
     for posting in postings:
         stats = summary.ensure_source(posting.source)
-        if keyword_prefilter(_posting_text(posting)).passed:
+        if keyword_prefilter(_document_text(posting)).passed:
             filtered.append(posting)
             stats.prefilter_hits += 1
 
@@ -279,7 +299,7 @@ def extract_signals(
     debug: bool = False,
     database: "Database" | None = None,
 ) -> list["ExtractedSignal"]:
-    from extractors.nlp import GeminiExtractor
+    from extractors.nlp import build_extractor
 
     if not postings:
         return []
@@ -290,7 +310,7 @@ def extract_signals(
         processed_source_urls = database.get_processed_source_urls()
         recently_processed_companies = database.get_recent_company_names(within_hours=24 * 7)
 
-    with GeminiExtractor(batch_size=batch_size, debug=debug) as extractor:
+    with build_extractor(batch_size=batch_size, debug=debug) as extractor:
         candidates = extractor.from_job_postings(postings)
         return extractor.extract_signals(
             candidates,
@@ -469,10 +489,17 @@ def _group_leads(leads: Iterable["CompanyLead"]) -> dict[str, list["CompanyLead"
     return grouped
 
 
-def _posting_text(posting: "RawJobPosting") -> str:
+def _document_text(posting: "RawJobPosting") -> str:
     return " | ".join(
         value
-        for value in [posting.query, posting.title, posting.company_name, posting.location, posting.snippet]
+        for value in [
+            posting.query,
+            posting.title,
+            posting.company_name,
+            posting.location,
+            posting.snippet,
+            getattr(posting, "description", None),
+        ]
         if value
     )
 
@@ -516,11 +543,18 @@ def validate_runtime_config(args: argparse.Namespace) -> None:
     _validate_positive_int(os.getenv("REQUEST_TIMEOUT_SECONDS"), "REQUEST_TIMEOUT_SECONDS")
     _validate_positive_int(os.getenv("BATCH_SIZE"), "BATCH_SIZE")
 
+    selected_sources = list(SOURCE_NAMES) if args.source == "all" else [args.source]
+    llm_provider = _llm_provider()
     required_env = []
     if args.leads:
         required_env = ["DATABASE_URL"]
     else:
-        required_env = ["SCRAPEDO_API_KEY", "GEMINI_API_KEY"]
+        if llm_provider == "huggingface":
+            required_env = ["HF_API_KEY", "HF_MODEL_ID"]
+        else:
+            required_env = ["GEMINI_API_KEY"]
+        if "stepstone" in selected_sources:
+            required_env.append("SCRAPEDO_API_KEY")
         if not args.dry_run:
             required_env.append("DATABASE_URL")
 
@@ -550,15 +584,53 @@ def _is_missing_or_placeholder(value: str | None) -> bool:
     return not cleaned or cleaned in PLACEHOLDER_ENV_VALUES
 
 
+def _llm_provider() -> str:
+    return (os.getenv("LLM_PROVIDER") or "gemini").strip().lower()
+
+
+def _unpack_collector_result(result: Any) -> tuple[list["RawJobPosting | RawSignalDocument"], int | None]:
+    postings = getattr(result, "postings", None)
+    pages_scraped = getattr(result, "pages_scraped", None)
+    if isinstance(postings, list):
+        return postings, pages_scraped
+    return result, None
+
+
+def _normalize_raw_posting(posting: "RawJobPosting | RawSignalDocument") -> "RawJobPosting":
+    from models.schema import RawJobPosting, RawSignalDocument
+
+    if isinstance(posting, RawJobPosting):
+        return posting
+    if isinstance(posting, RawSignalDocument):
+        return RawJobPosting(
+            source=posting.source,
+            signal_type=posting.signal_type,
+            query=posting.query,
+            title=posting.title,
+            company_name=posting.company_name,
+            location=posting.location,
+            snippet=posting.snippet,
+            description=posting.description,
+            job_url=posting.source_url,
+            posted_date=posting.published_date,
+            scraped_at=posting.scraped_at,
+        )
+    raise TypeError(f"Unsupported raw posting type: {type(posting)!r}")
+
+
 def get_source_scrapers() -> dict[str, ScraperFn]:
-    from scrapers.indeed import scrape_indeed
-    from scrapers.linkedin import scrape_linkedin
+    from scrapers.career_pages import scrape_career_pages
+    from scrapers.jobspy_adapter import scrape_google, scrape_indeed, scrape_linkedin
+    from scrapers.news_rss import scrape_news
     from scrapers.stepstone import scrape_stepstone
 
     return {
         "linkedin": scrape_linkedin,
         "indeed": scrape_indeed,
+        "google": scrape_google,
         "stepstone": scrape_stepstone,
+        "career_page": scrape_career_pages,
+        "news": scrape_news,
     }
 
 

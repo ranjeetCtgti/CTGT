@@ -379,6 +379,7 @@ def _render_dashboard(
               {_option("", "All sources", filters["source"])}
               {_option("linkedin", "LinkedIn", filters["source"])}
               {_option("indeed", "Indeed", filters["source"])}
+              {_option("google", "Google", filters["source"])}
               {_option("stepstone", "Stepstone", filters["source"])}
               {_option("career_page", "Career page", filters["source"])}
               {_option("news", "News", filters["source"])}

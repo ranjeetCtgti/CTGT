@@ -15,6 +15,15 @@ STEPSTONE_SEARCH_URL = f"{STEPSTONE_BASE_URL}/jobs"
 STEPSTONE_LOCATION = "Germany"
 WAIT_SELECTOR = "article[data-at='job-item']"
 
+# scrape.do settings for Stepstone
+# - render=True always: Stepstone is Cloudflare-protected, render=False always 400
+# - force_render=True: prevents the client ever downgrading to render=False
+# - timeout_ms=45_000: Cloudflare JS challenge needs ~10 s extra headroom
+# - NO extra_headers: scrape.do already sets optimised browser headers automatically;
+#   passing Accept-Language ourselves would override their tuned values and risk
+#   causing the 400s we were seeing before
+_STEPSTONE_TIMEOUT_MS = 45_000
+
 CARD_SELECTORS = [
     "article[data-at='job-item']",
     "article[aria-label]",
@@ -61,6 +70,28 @@ def build_search_plan(max_queries: int | None = None) -> list[str]:
     return STEPSTONE_GERMAN_QUERIES
 
 
+def _stepstone_request(query: str, target_url: str) -> ScrapeRequest:
+    """Factory for all Stepstone ScrapeRequests.
+
+    Always render=True + force_render=True.
+    No extra_headers — scrape.do manages browser headers automatically and
+    passing our own Accept-Language was causing the 400 responses.
+    """
+    return ScrapeRequest(
+        source="stepstone",
+        query=query,
+        target_url=target_url,
+        render=True,
+        force_render=True,
+        super_proxy=False,
+        geo_code=GEO_CODE_BY_COUNTRY["germany"],
+        wait_selector=WAIT_SELECTOR,
+        block_resources=True,
+        timeout_ms=_STEPSTONE_TIMEOUT_MS,
+        # extra_headers intentionally empty — let scrape.do handle headers
+    )
+
+
 def scrape_stepstone(
     client: ScrapeDoClient,
     max_queries: int | None = None,
@@ -69,51 +100,28 @@ def scrape_stepstone(
 
     for query in build_search_plan(max_queries=max_queries):
         target_url = build_search_url(query)
-        response = client.scrape(
-            ScrapeRequest(
-                source="stepstone",
-                query=query,
-                target_url=target_url,
-                render=False,
-                geo_code=GEO_CODE_BY_COUNTRY["germany"],
-                wait_selector=WAIT_SELECTOR,
-            )
-        )
+        response = client.scrape(_stepstone_request(query, target_url))
+
         if not response.ok or not response.html:
-            response = client.scrape(
-                ScrapeRequest(
-                    source="stepstone",
-                    query=query,
-                    target_url=target_url,
-                    render=True,
-                    geo_code=GEO_CODE_BY_COUNTRY["germany"],
-                    wait_selector=WAIT_SELECTOR,
-                )
+            logger.warning(
+                "stepstone scrape failed query={} status={} error={}",
+                query,
+                response.status_code,
+                response.error,
             )
-        if not response.ok or not response.html:
-            continue
-        parsed_postings = parse_search_results(response.html, query)
-        if parsed_postings:
-            postings.extend(parsed_postings)
             continue
 
-        logger.warning(
-            "stepstone render=false returned 0 cards, retrying with render=true query={}",
-            query,
-        )
-        response = client.scrape(
-            ScrapeRequest(
-                source="stepstone",
-                query=query,
-                target_url=target_url,
-                render=True,
-                geo_code=GEO_CODE_BY_COUNTRY["germany"],
-                wait_selector=WAIT_SELECTOR,
+        parsed_postings = parse_search_results(response.html, query)
+
+        if not parsed_postings:
+            logger.warning(
+                "stepstone parser found 0 cards query={} html_chars={}",
+                query,
+                len(response.html),
             )
-        )
-        if not response.ok or not response.html:
             continue
-        postings.extend(parse_search_results(response.html, query))
+
+        postings.extend(parsed_postings)
 
     return postings
 

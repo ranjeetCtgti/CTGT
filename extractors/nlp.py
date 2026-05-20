@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from collections import Counter
 from dataclasses import dataclass
 from difflib import SequenceMatcher
 from json import JSONDecodeError
-from typing import Any, Iterable
+from typing import Any, Iterable, Protocol
 
 import httpx
 from loguru import logger
@@ -38,6 +39,10 @@ class GeminiClientError(Exception):
     """Raised when Gemini extraction fails irrecoverably."""
 
 
+class HuggingFaceClientError(Exception):
+    """Raised when Hugging Face extraction fails irrecoverably."""
+
+
 @dataclass
 class ExtractionCandidate:
     source_url: str
@@ -45,6 +50,10 @@ class ExtractionCandidate:
     source_text: str
     signal_source: SignalSource
     signal_type: SignalType
+    query: str
+    title: str
+    snippet: str | None = None
+    description: str | None = None
     company_hint: str | None = None
     location_hint: str | None = None
 
@@ -52,38 +61,55 @@ class ExtractionCandidate:
 def _is_retryable_gemini_error(exc: Exception) -> bool:
     if isinstance(exc, (httpx.TimeoutException, httpx.TransportError)):
         return True
-    if isinstance(exc, GeminiClientError) and "429" in str(exc):
-        return True
-    if isinstance(exc, GeminiClientError) and ("status=500" in str(exc) or '"status": "INTERNAL"' in str(exc)):
+    if isinstance(exc, GeminiClientError):
+        message = str(exc)
+        if "429" in message:
+            return True
+        if any(f"status={status}" in message for status in (500, 502, 503, 504)):
+            return True
+        if any(status in message for status in ('"status": "INTERNAL"', '"status": "UNAVAILABLE"')):
+            return True
+    if isinstance(exc, httpx.HTTPStatusError):
+        return exc.response.status_code == 429 or 500 <= exc.response.status_code < 600
+    return False
+
+
+def _is_retryable_hf_error(exc: Exception) -> bool:
+    if isinstance(exc, HuggingFaceClientError):
+        message = str(exc)
+        if "429" in message:
+            return True
+        if any(f"status={status}" in message for status in (500, 502, 503, 504)):
+            return True
+    if isinstance(exc, (httpx.TimeoutException, httpx.TransportError)):
         return True
     if isinstance(exc, httpx.HTTPStatusError):
         return exc.response.status_code == 429 or 500 <= exc.response.status_code < 600
     return False
 
 
-class GeminiExtractor:
-    def __init__(
+class Extractor(Protocol):
+    def close(self) -> None: ...
+    def __enter__(self) -> "Extractor": ...
+    def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> None: ...
+    def extract_signals(
         self,
-        api_key: str | None = None,
-        timeout_seconds: int = DEFAULT_REQUEST_TIMEOUT_SECONDS,
-        batch_size: int = DEFAULT_BATCH_SIZE,
-        debug: bool = False,
-    ) -> None:
-        self.api_key = api_key or os.getenv("GEMINI_API_KEY")
-        if not self.api_key:
-            raise GeminiClientError("GEMINI_API_KEY is missing")
-        self.batch_size = batch_size
-        self.debug = debug
-        self._http = httpx.Client(timeout=timeout_seconds)
+        candidates: list[ExtractionCandidate],
+        processed_source_urls: set[str] | None = None,
+        recently_processed_companies: set[str] | None = None,
+    ) -> list[ExtractedSignal]: ...
+    def from_job_postings(self, postings: list[RawJobPosting]) -> list[ExtractionCandidate]: ...
 
-    def close(self) -> None:
-        self._http.close()
 
-    def __enter__(self) -> "GeminiExtractor":
+class BaseExtractor:
+    def __enter__(self) -> "BaseExtractor":
         return self
 
     def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> None:
         self.close()
+
+    def from_job_postings(self, postings: list[RawJobPosting]) -> list[ExtractionCandidate]:
+        return [candidate_from_job_posting(posting) for posting in postings]
 
     def extract_signals(
         self,
@@ -97,45 +123,20 @@ class GeminiExtractor:
             recently_processed_companies=recently_processed_companies or set(),
         )
         if self.debug and not deduped_candidates:
-            logger.info("gemini extraction skipped because no candidates survived internal filtering")
+            logger.info("extraction skipped because no candidates survived internal filtering")
         signals: list[ExtractedSignal] = []
         decision_counts: Counter[str] = Counter()
         debug_log_limit = 20
         debug_logged = 0
 
         for batch in _chunked(deduped_candidates, self.batch_size):
-            try:
-                payload = self._build_payload(batch)
-                response_json = self._call_gemini(payload)
-                raw_items = self._extract_response_items(response_json)
-                if len(batch) == 1 and len(raw_items) == 0:
-                    logger.warning(
-                        "gemini returned no usable JSON objects for single-item batch first_try source_url={} raw_preview={!r}",
-                        batch[0].source_url,
-                        _preview_text(self._extract_response_text(response_json)),
-                    )
-                    response_json = self._call_gemini(self._build_payload(batch, single_item_retry=True))
-                    raw_items = self._extract_response_items(response_json)
-                if len(raw_items) != len(batch):
-                    logger.warning(
-                        "gemini response count mismatch first_try expected={} actual={} retrying_once raw_preview={!r}",
-                        len(batch),
-                        len(raw_items),
-                        _preview_text(self._extract_response_text(response_json)),
-                    )
-                    response_json = self._call_gemini(payload)
-                    raw_items = self._extract_response_items(response_json)
-                self._validate_batch_size(batch, raw_items)
-            except Exception as exc:
-                logger.error("gemini batch failed size={} error={}", len(batch), str(exc))
-                continue
-
-            for candidate, raw_item in zip(batch, raw_items):
+            extracted_pairs = self._extract_batch(batch)
+            for candidate, raw_item in extracted_pairs:
                 signal, decision = self._post_process_item(candidate, raw_item)
                 decision_counts[decision] += 1
                 if self.debug and debug_logged < debug_log_limit:
                     logger.info(
-                        "gemini decision source={} company_hint={!r} detected_company={!r} software_raw={} confidence={} decision={} reasoning={!r}",
+                        "model decision source={} company_hint={!r} detected_company={!r} software_raw={} confidence={} decision={} reasoning={!r}",
                         candidate.signal_source,
                         candidate.company_hint,
                         raw_item.get("company_name"),
@@ -149,11 +150,8 @@ class GeminiExtractor:
                     signals.append(signal)
 
         if self.debug:
-            logger.info("gemini extraction summary decisions={}", dict(decision_counts))
+            logger.info("extraction summary decisions={}", dict(decision_counts))
         return signals
-
-    def from_job_postings(self, postings: list[RawJobPosting]) -> list[ExtractionCandidate]:
-        return [candidate_from_job_posting(posting) for posting in postings]
 
     def _filter_candidates(
         self,
@@ -176,70 +174,84 @@ class GeminiExtractor:
             filtered.append(candidate)
         return filtered
 
-    def _build_payload(
+    def _extract_batch(
         self,
         batch: list[ExtractionCandidate],
-        single_item_retry: bool = False,
-    ) -> dict[str, Any]:
-        prompt = _build_prompt(batch, single_item_retry=single_item_retry)
-        return {
-            "contents": [
-                {
-                    "parts": [
-                        {
-                            "text": prompt,
-                        }
-                    ]
-                }
-            ],
-            "generationConfig": {
-                "temperature": 0.1,
-                "maxOutputTokens": 2048,
-                "responseMimeType": "application/json",
-                "responseJsonSchema": _build_response_schema(len(batch)),
-            },
-        }
-
-    @retry(
-        retry=retry_if_exception(_is_retryable_gemini_error),
-        wait=wait_exponential(multiplier=1, min=5, max=45),
-        stop=stop_after_attempt(3),
-        reraise=True,
-    )
-    def _call_gemini(self, payload: dict[str, Any]) -> dict[str, Any]:
-        response = self._http.post(
-            GEMINI_API_URL,
-            params={"key": self.api_key},
-            json=payload,
-        )
-        if response.status_code == 429:
-            raise GeminiClientError("Gemini rate limited (429)")
+    ) -> list[tuple[ExtractionCandidate, dict[str, Any]]]:
+        time.sleep(4)
         try:
-            response.raise_for_status()
-        except httpx.HTTPStatusError as exc:
-            body_preview = response.text[:800].replace("\n", " ")
-            raise GeminiClientError(
-                f"Gemini HTTP error status={response.status_code} body_preview={body_preview!r}"
-            ) from exc
-        try:
-            return response.json()
-        except JSONDecodeError as exc:
-            body_preview = response.text[:400].replace("\n", " ")
-            raise GeminiClientError(
-                f"Gemini returned non-JSON response status={response.status_code} body_preview={body_preview!r}"
-            ) from exc
+            raw_items = self._request_batch_items(batch)
+            return self._pair_batch_items(batch, raw_items)
+        except Exception as exc:
+            logger.error(
+                "model batch failed size={} source_urls={} error={}",
+                len(batch),
+                [candidate.source_url for candidate in batch],
+                str(exc),
+            )
+            return []
 
-    def _extract_response_items(self, response_json: dict[str, Any]) -> list[dict[str, Any]]:
-        text = self._extract_response_text(response_json)
+    def _request_batch_items(self, batch: list[ExtractionCandidate]) -> list[dict[str, Any]]:
+        response_text = self._generate_batch_text(batch)
+        raw_items = self._extract_response_items(response_text)
+        if len(batch) == 1 and len(raw_items) == 0:
+            logger.warning(
+                "model returned no usable JSON objects for single-item batch first_try source_url={} raw_preview={!r}",
+                batch[0].source_url,
+                _preview_text(response_text),
+            )
+            response_text = self._generate_batch_text(batch, single_item_retry=True)
+            raw_items = self._extract_response_items(response_text)
+        if len(raw_items) != len(batch):
+            logger.warning(
+                "model response count mismatch first_try expected={} actual={} retrying_once raw_preview={!r}",
+                len(batch),
+                len(raw_items),
+                _preview_text(response_text),
+            )
+            response_text = self._generate_batch_text(batch)
+            raw_items = self._extract_response_items(response_text)
+        self._validate_batch_size(batch, raw_items)
+        return raw_items
+
+    def _pair_batch_items(
+        self,
+        batch: list[ExtractionCandidate],
+        raw_items: list[dict[str, Any]],
+    ) -> list[tuple[ExtractionCandidate, dict[str, Any]]]:
+        if len(raw_items) == len(batch):
+            return list(zip(batch, raw_items))
+
+        indexed_items: dict[int, dict[str, Any]] = {}
+        for raw_item in raw_items:
+            raw_id = raw_item.get("id")
+            if not isinstance(raw_id, int):
+                continue
+            if 1 <= raw_id <= len(batch) and raw_id not in indexed_items:
+                indexed_items[raw_id] = raw_item
+
+        if not indexed_items:
+            raise GeminiClientError(
+                f"Model response count mismatch expected={len(batch)} actual={len(raw_items)} with no usable item ids"
+            )
+
+        missing_ids = [index for index in range(1, len(batch) + 1) if index not in indexed_items]
+        if missing_ids:
+            logger.warning(
+                "model batch returned partial results expected={} actual={} missing_ids={}",
+                len(batch),
+                len(indexed_items),
+                missing_ids,
+            )
+
+        return [(batch[index - 1], indexed_items[index]) for index in sorted(indexed_items)]
+
+    def _extract_response_items(self, text: str) -> list[dict[str, Any]]:
         if not text:
-            candidates = response_json.get("candidates") or []
-            if not candidates:
-                raise GeminiClientError("Gemini returned no candidates")
-            raise GeminiClientError("Gemini returned no content parts")
-
+            raise GeminiClientError("Model returned empty content text")
         cleaned = _strip_json_fences(text)
         if not cleaned.strip():
-            raise GeminiClientError("Gemini returned empty content text")
+            raise GeminiClientError("Model returned empty content text")
         try:
             parsed = json.loads(cleaned)
         except JSONDecodeError as exc:
@@ -252,27 +264,18 @@ class GeminiExtractor:
                 except JSONDecodeError:
                     preview = cleaned[:400].replace("\n", " ")
                     raise GeminiClientError(
-                        f"Gemini returned invalid JSON payload preview={preview!r}"
+                        f"Model returned invalid JSON payload preview={preview!r}"
                     ) from exc
             else:
                 preview = cleaned[:400].replace("\n", " ")
                 raise GeminiClientError(
-                    f"Gemini returned invalid JSON payload preview={preview!r}"
+                    f"Model returned invalid JSON payload preview={preview!r}"
                 ) from exc
         if isinstance(parsed, dict):
             parsed = [parsed]
         if not isinstance(parsed, list):
-            raise GeminiClientError("Gemini response was not a JSON list")
+            raise GeminiClientError("Model response was not a JSON list")
         return [item for item in parsed if isinstance(item, dict)]
-
-    def _extract_response_text(self, response_json: dict[str, Any]) -> str:
-        candidates = response_json.get("candidates") or []
-        if not candidates:
-            return ""
-        parts = candidates[0].get("content", {}).get("parts", [])
-        if not parts:
-            return ""
-        return "".join(part.get("text", "") for part in parts)
 
     def _post_process_item(
         self,
@@ -323,25 +326,221 @@ class GeminiExtractor:
         batch: list[ExtractionCandidate],
         raw_items: list[dict[str, Any]],
     ) -> None:
+        if len(raw_items) == len(batch):
+            return
+
+        valid_ids = {
+            raw_item.get("id")
+            for raw_item in raw_items
+            if isinstance(raw_item, dict) and isinstance(raw_item.get("id"), int) and 1 <= raw_item["id"] <= len(batch)
+        }
+        if valid_ids:
+            return
+
         if len(raw_items) != len(batch):
             raise GeminiClientError(
-                f"Gemini response count mismatch expected={len(batch)} actual={len(raw_items)}"
+                f"Model response count mismatch expected={len(batch)} actual={len(raw_items)}"
             )
 
 
+class GeminiExtractor(BaseExtractor):
+    def __init__(
+        self,
+        api_key: str | None = None,
+        timeout_seconds: int = DEFAULT_REQUEST_TIMEOUT_SECONDS,
+        batch_size: int = DEFAULT_BATCH_SIZE,
+        debug: bool = False,
+    ) -> None:
+        self.api_key = api_key or os.getenv("GEMINI_API_KEY")
+        if not self.api_key:
+            raise GeminiClientError("GEMINI_API_KEY is missing")
+        self.batch_size = batch_size
+        self.debug = debug
+        self._http = httpx.Client(timeout=timeout_seconds)
+        self.timeout_seconds = timeout_seconds
+
+    def close(self) -> None:
+        self._http.close()
+
+    def _build_payload(
+        self,
+        batch: list[ExtractionCandidate],
+        single_item_retry: bool = False,
+    ) -> dict[str, Any]:
+        prompt = _build_prompt(batch, single_item_retry=single_item_retry)
+        return {
+            "contents": [
+                {
+                    "parts": [{"text": prompt}]
+                }
+            ],
+            # FIX: removed "responseJsonSchema" — that field is only supported
+            # by the Google Gen AI SDK, not the REST API. Sending it causes
+            # 400 INVALID_ARGUMENT on every request.
+            # FIX: removed "responseMimeType": "application/json" — this
+            # triggers strict structured-output mode which caused 500 INTERNAL
+            # errors when Gemini couldn't satisfy the schema constraints on
+            # certain job posting content. We instruct JSON output via the
+            # prompt instead, which is more robust.
+            "generationConfig": {
+                "temperature": 0.1,
+                "maxOutputTokens": 2048,
+            },
+        }
+
+    @retry(
+        retry=retry_if_exception(_is_retryable_gemini_error),
+        wait=wait_exponential(multiplier=1, min=5, max=45),
+        stop=stop_after_attempt(3),
+        reraise=True,
+    )
+    def _call_gemini(self, payload: dict[str, Any]) -> dict[str, Any]:
+        response = self._http.post(
+            GEMINI_API_URL,
+            params={"key": self.api_key},
+            json=payload,
+        )
+        if response.status_code == 429:
+            raise GeminiClientError("Gemini rate limited (429)")
+        try:
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            body_preview = response.text[:800].replace("\n", " ")
+            raise GeminiClientError(
+                f"Gemini HTTP error status={response.status_code} body_preview={body_preview!r}"
+            ) from exc
+        try:
+            return response.json()
+        except JSONDecodeError as exc:
+            body_preview = response.text[:400].replace("\n", " ")
+            raise GeminiClientError(
+                f"Gemini returned non-JSON response status={response.status_code} body_preview={body_preview!r}"
+            ) from exc
+
+    def _extract_response_text(self, response_json: dict[str, Any]) -> str:
+        candidates = response_json.get("candidates") or []
+        if not candidates:
+            return ""
+        parts = candidates[0].get("content", {}).get("parts", [])
+        if not parts:
+            return ""
+        return "".join(part.get("text", "") for part in parts)
+
+    def _generate_batch_text(
+        self,
+        batch: list[ExtractionCandidate],
+        single_item_retry: bool = False,
+    ) -> str:
+        payload = self._build_payload(batch, single_item_retry=single_item_retry)
+        response_json = self._call_gemini(payload)
+        text = self._extract_response_text(response_json)
+        if not text:
+            candidates = response_json.get("candidates") or []
+            if not candidates:
+                raise GeminiClientError("Gemini returned no candidates")
+            raise GeminiClientError("Gemini returned no content parts")
+        return text
+
+
+class HuggingFaceExtractor(BaseExtractor):
+    def __init__(
+        self,
+        api_key: str | None = None,
+        model_id: str | None = None,
+        provider: str | None = None,
+        timeout_seconds: int = DEFAULT_REQUEST_TIMEOUT_SECONDS,
+        batch_size: int = DEFAULT_BATCH_SIZE,
+        debug: bool = False,
+    ) -> None:
+        self.api_key = api_key or os.getenv("HF_API_KEY")
+        if not self.api_key:
+            raise HuggingFaceClientError("HF_API_KEY is missing")
+        self.model_id = model_id or os.getenv("HF_MODEL_ID")
+        if not self.model_id:
+            raise HuggingFaceClientError("HF_MODEL_ID is missing")
+        self.provider = provider or os.getenv("HF_PROVIDER") or None
+        self.batch_size = batch_size
+        self.debug = debug
+        self.timeout_seconds = timeout_seconds
+        try:
+            from huggingface_hub import InferenceClient
+        except ImportError as exc:
+            raise HuggingFaceClientError(
+                "huggingface_hub is not installed; run `pip install -r requirements.txt`"
+            ) from exc
+        self._client = InferenceClient(provider=self.provider, api_key=self.api_key, timeout=timeout_seconds)
+
+    def close(self) -> None:
+        return None
+
+    @retry(
+        retry=retry_if_exception(_is_retryable_hf_error),
+        wait=wait_exponential(multiplier=1, min=5, max=45),
+        stop=stop_after_attempt(3),
+        reraise=True,
+    )
+    def _call_hf_chat(
+        self,
+        messages: list[dict[str, str]],
+    ) -> Any:
+        try:
+            return self._client.chat_completion(
+                model=self.model_id,
+                messages=messages,
+                max_tokens=2048,
+                temperature=0.1,
+            )
+        except Exception as exc:
+            raise HuggingFaceClientError(f"Hugging Face chat completion failed: {exc}") from exc
+
+    def _generate_batch_text(
+        self,
+        batch: list[ExtractionCandidate],
+        single_item_retry: bool = False,
+    ) -> str:
+        prompt = _build_prompt(batch, single_item_retry=single_item_retry)
+        messages = [
+            {"role": "system", "content": "You are a precise information extraction model."},
+            {"role": "user", "content": prompt},
+        ]
+        response = self._call_hf_chat(messages)
+        try:
+            content = response.choices[0].message.content
+        except (AttributeError, IndexError, TypeError) as exc:
+            raise HuggingFaceClientError(f"Unexpected Hugging Face response shape: {response!r}") from exc
+        if not isinstance(content, str) or not content.strip():
+            raise HuggingFaceClientError("Hugging Face returned empty content")
+        return content
+
+
 def candidate_from_job_posting(posting: RawJobPosting) -> ExtractionCandidate:
+    body = posting.description or posting.snippet or ""
     source_text = " | ".join(
-        value for value in [posting.query, posting.title, posting.company_name, posting.location, posting.snippet] if value
+        value for value in [posting.query, posting.title, posting.company_name, posting.location, body] if value
     )
     return ExtractionCandidate(
         source_url=str(posting.job_url),
         source_title=posting.title,
         source_text=source_text,
         signal_source=posting.source,
-        signal_type="job_posting",
+        signal_type=posting.signal_type,
+        query=posting.query,
+        title=posting.title,
+        snippet=posting.snippet,
+        description=posting.description,
         company_hint=posting.company_name,
         location_hint=posting.location,
     )
+
+
+def build_extractor(
+    batch_size: int,
+    debug: bool = False,
+) -> Extractor:
+    provider = (os.getenv("LLM_PROVIDER") or "gemini").strip().lower()
+    if provider == "huggingface":
+        return HuggingFaceExtractor(batch_size=batch_size, debug=debug)
+    return GeminiExtractor(batch_size=batch_size, debug=debug)
 
 
 def compute_raw_score(signal: ExtractedSignal) -> int:
@@ -366,11 +565,17 @@ def _build_prompt(
         items.append(
             {
                 "id": index,
+                "signal_type": candidate.signal_type,
+                "query": candidate.query,
+                "title": candidate.title,
                 "company_hint": candidate.company_hint,
                 "location_hint": candidate.location_hint,
                 "signal_source": candidate.signal_source,
                 "source_title": candidate.source_title,
-                "text": candidate.source_text,
+                # Keep both structured fields and a flattened fallback text blob.
+                "snippet": _sanitise_text(candidate.snippet) if candidate.snippet else None,
+                "description": _sanitise_text(candidate.description) if candidate.description else None,
+                "text": _sanitise_text(candidate.source_text),
             }
         )
 
@@ -379,29 +584,39 @@ def _build_prompt(
             "Return only one JSON array with one object. No prose. No bullets. No markdown. No schema echo.\n"
             f"Allowed industry values: {', '.join(INDUSTRY_CHOICES)}.\n"
             f"Allowed software_detected values: {', '.join(sorted(ALLOWED_SOFTWARE_NAMES))}.\n"
+            "Use the structured fields first: query, title, company_hint, location_hint, snippet, and description.\n"
+            "Use text only as a fallback combined view of the same source item.\n"
+            "The company_name must refer to the source company in the input item, never CTGT Innovations unless the input explicitly says that.\n"
             "If Siemens PLM evidence is weak, return empty software_detected and low confidence instead of explanation text.\n"
             "Required output format:\n"
-            '[{"company_name":"string","location":"string or null","industry":"string","software_detected":["allowed values only"],'
+            '[{"id":1,"company_name":"string","location":"string or null","industry":"string","software_detected":["allowed values only"],'
             '"migration_detected":true,"migration_from":"string or null","pain_signals":["phrases"],'
             '"expansion_signals":["phrases"],"confidence":0.0,"reasoning":"one sentence"}]\n'
             f"Input item:\n{json.dumps(items[0], ensure_ascii=True)}"
         )
 
     return (
-        "You extract Siemens PLM lead signals for CTGT Innovations.\n"
+        "You extract Siemens PLM lead signals from source items.\n"
         "Return only valid JSON as an array with exactly one object per input item in the same order.\n"
         "Do not include markdown, commentary, bullets, prompt restatement, or extra keys.\n"
         f"Allowed industry values: {', '.join(INDUSTRY_CHOICES)}.\n"
         f"Allowed software_detected values: {', '.join(sorted(ALLOWED_SOFTWARE_NAMES))}.\n"
+        "Use the structured fields first: query, title, company_hint, location_hint, snippet, and description.\n"
+        "Use text only as a fallback combined view of the same source item.\n"
+        "Each output object must include the matching input id.\n"
+        "The company_name must refer to the source company in that input item, never CTGT Innovations unless the input explicitly says that.\n"
         "Watch for migration signals such as Windchill, Enovia, CATIA, Autodesk Vault, SAP PLM, or legacy PDM replacements.\n"
         "Each output object must use this schema:\n"
-        '{"company_name":"string","location":"string or null","industry":"string","software_detected":["allowed values only"],'
+        '{"id":1,"company_name":"string","location":"string or null","industry":"string","software_detected":["allowed values only"],'
         '"migration_detected":true,"migration_from":"string or null","pain_signals":["phrases"],'
         '"expansion_signals":["phrases"],"confidence":0.0,"reasoning":"one sentence"}\n'
         f"Input items:\n{json.dumps(items, ensure_ascii=True)}"
     )
 
 
+# NOTE: _build_response_schema is kept for reference but no longer called.
+# responseJsonSchema is not supported by the Gemini REST API — only by the
+# Google Gen AI Python SDK. Sending it via REST causes 400 INVALID_ARGUMENT.
 def _build_response_schema(batch_size: int) -> dict[str, Any]:
     return {
         "type": "array",
@@ -439,6 +654,23 @@ def _build_response_schema(batch_size: int) -> dict[str, Any]:
             },
         },
     }
+
+
+def _sanitise_text(text: str, max_chars: int = 5000) -> str:
+    """Remove null bytes and control characters that cause Gemini 500 errors.
+
+    Also truncates to max_chars — the source_text is a pipe-joined snippet,
+    so 1500 chars is more than enough for signal extraction. Sending full job
+    descriptions inflates token usage and increases 500 error rate.
+    """
+    # Strip null bytes and non-printable control chars (except tab/newline)
+    cleaned = "".join(
+        ch for ch in text
+        if ch == "\t" or ch == "\n" or (ord(ch) >= 32 and ord(ch) != 127)
+    )
+    # Collapse excessive whitespace
+    cleaned = " ".join(cleaned.split())
+    return cleaned[:max_chars]
 
 
 def _normalize_software(values: Any) -> list[str]:

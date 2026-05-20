@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 # Supported software names used throughout extraction/scoring.
 SOFTWARE_CANONICAL = {
     "teamcenter",
@@ -191,6 +193,7 @@ SIGNAL_TYPE_BASE_SCORE = {
 SOURCE_BASE_SCORE = {
     "linkedin": 10,
     "indeed": 10,
+    "google": 10,
     "stepstone": 10,
     "career_page": 25,
     "news": 20,
@@ -236,7 +239,7 @@ INDUSTRY_CHOICES = [
     "Unknown",
 ]
 
-GEMINI_MODEL = "gemini-2.5-flash"
+GEMINI_MODEL = "gemini-2.5-flash-lite"
 GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
 
 # Query sets
@@ -278,8 +281,31 @@ STEPSTONE_GERMAN_QUERIES = [
     "CAD Teamcenter Spezialist",
 ]
 
-LINKEDIN_LOCATIONS = ["Canada", "United States", "United Kingdom"]
-INDEED_LOCATIONS = ["Germany", "Canada", "United States"]
+LINKEDIN_LOCATIONS = ["India", "Canada", "United States", "United Kingdom", "Germany"]
+INDEED_LOCATIONS = ["India", "Germany", "Canada", "United States"]
+GOOGLE_LOCATIONS = ["India", "Germany", "Canada", "United States"]
+
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "data"
+CAREER_PAGE_TARGETS_CSV = DATA_DIR / "career_page_targets.csv"
+
+CAREER_PAGE_USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Safari/605.1.15",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
+]
+
+NEWS_RSS_FEEDS = [
+    "https://news.google.com/rss/search?q=Teamcenter+implementation&hl=en",
+    "https://news.google.com/rss/search?q=Siemens+PLM+rollout&hl=en",
+    'https://news.google.com/rss/search?q="Solid+Edge"+manufacturing&hl=en',
+    "https://news.google.com/rss/search?q=Teamcenter+digital+transformation&hl=en",
+    "https://news.google.com/rss/search?q=Siemens+Xcelerator+implementation&hl=en",
+    "https://news.google.com/rss/search?q=Polarion+ALM+deployment&hl=en",
+    "https://news.google.com/rss/search?q=NX+CAD+Siemens+company&hl=en",
+    "https://news.google.com/rss/search?q=Teamcenter+Implementierung&hl=de",
+    "https://news.google.com/rss/search?q=Siemens+PLM+Einfuhrung&hl=de",
+]
 
 GEO_CODE_BY_COUNTRY = {
     "india": "in",
@@ -292,3 +318,5 @@ GEO_CODE_BY_COUNTRY = {
 # Runtime defaults
 DEFAULT_BATCH_SIZE = 10
 DEFAULT_REQUEST_TIMEOUT_SECONDS = 30
+CAREER_PAGE_MAX_TEXT_CHARS = 12000
+NEWS_RSS_DESCRIPTION_MAX_CHARS = 4000

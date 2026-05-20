@@ -7,7 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 
 
 SignalType = Literal["job_posting", "career_page", "news"]
-SignalSource = Literal["linkedin", "indeed", "stepstone", "career_page", "news"]
+SignalSource = Literal["linkedin", "indeed", "google", "stepstone", "career_page", "news"]
 LeadScore = Literal["hot", "warm", "cold"]
 
 
@@ -15,13 +15,35 @@ class RawJobPosting(BaseModel):
     model_config = ConfigDict(extra="ignore", str_strip_whitespace=True)
 
     source: SignalSource
+    signal_type: SignalType = "job_posting"
     query: str
     title: str
-    company_name: str
+    company_name: str | None = None
     location: str | None = None
     snippet: str | None = None
+    # Full job description — populated by JobSpy (linkedin_fetch_description=True
+    # for LinkedIn; Indeed/Google return it by default). Used as the primary
+    # text input to the NLP extraction layer so Gemini can distinguish
+    # manufacturers from consulting firms and detect detailed PLM signals.
+    description: str | None = None
     job_url: HttpUrl
     posted_date: str | None = None
+    scraped_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class RawSignalDocument(BaseModel):
+    model_config = ConfigDict(extra="ignore", str_strip_whitespace=True)
+
+    source: SignalSource
+    signal_type: Literal["career_page", "news"]
+    query: str
+    title: str
+    company_name: str | None = None
+    location: str | None = None
+    snippet: str | None = None
+    description: str | None = None
+    source_url: HttpUrl
+    published_date: str | None = None
     scraped_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 

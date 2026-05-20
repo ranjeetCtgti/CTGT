@@ -2,7 +2,7 @@
 
 ## Scope
 Phase 1 covers the core pipeline only:
-- Job board scraping via scrape.do: LinkedIn, Indeed, Stepstone
+- JobSpy-backed LinkedIn, Indeed, and Glassdoor collection plus scrape.do-backed Stepstone collection
 - Keyword pre-filtering
 - NLP extraction (Gemini batch processing)
 - PostgreSQL persistence (signals + companies)
@@ -11,9 +11,8 @@ Phase 1 covers the core pipeline only:
 Excluded from Phase 1: career pages, news RSS, scheduling, CSV export, enrichment.
 
 ## Deliverables
+- `scrapers/jobspy_adapter.py`
 - `scrapers/scrapedo_client.py`
-- `scrapers/linkedin.py`
-- `scrapers/indeed.py`
 - `scrapers/stepstone.py`
 - `extractors/prefilter.py`
 - `extractors/nlp.py`
@@ -28,7 +27,7 @@ Excluded from Phase 1: career pages, news RSS, scheduling, CSV export, enrichmen
 ## Implementation Sequence
 1. Bootstrap project structure and dependencies
 - Create package directories from the requirements structure.
-- Add `requirements.txt` with core libs: `httpx`, `beautifulsoup4`, `lxml`, `pydantic`, `sqlalchemy`, `psycopg2-binary`, `tenacity`, `loguru`, `python-dotenv`.
+- Add `requirements.txt` with core libs: `python-jobspy`, `httpx`, `beautifulsoup4`, `lxml`, `pydantic`, `sqlalchemy`, `psycopg2-binary`, `tenacity`, `loguru`, `python-dotenv`.
 - Add `.env.example` for `SCRAPEDO_API_KEY`, `GEMINI_API_KEY`, `DATABASE_URL`, and run settings.
 
 2. Define domain models and config
@@ -36,31 +35,35 @@ Excluded from Phase 1: career pages, news RSS, scheduling, CSV export, enrichmen
   - `RawJobPosting`
   - `ExtractedSignal`
   - `CompanyLead`
+- Add `glassdoor` to `models.schema.SignalSource` and ensure `RawJobPosting.source` accepts it.
 - Implement `config.py` for:
   - software keywords and aliases
   - pain/expansion signal phrases
   - excluded companies
   - score constants and lead thresholds
   - board query sets and location maps
+- Keep `config.py` query sets as the source of truth for search terms; the JobSpy adapter receives the active query string and writes it into each normalized posting.
 
 3. Build shared scrape.do client
 - Implement `scrapers/scrapedo_client.py`:
   - request builder for `render`, `super`, `geoCode`, `waitSelector`, `blockResources`, `timeout`
   - retry behavior and structured logging
   - return payload + metadata needed for credit tracking in-memory during run
+- Scope this client to Stepstone in the default Phase 1 path, while keeping it reusable for explicit future fallbacks.
 
-4. Implement job board scrapers
-- `scrapers/linkedin.py`
-  - build search URLs from query/location matrix
-  - parse result cards: title, company, location, snippet, url, posted date (if available)
-  - LinkedIn defaults: `render=true`, `super=true`
-- `scrapers/indeed.py`
-  - `render=false` first, fallback `render=true` on empty
-  - support EN + IN + DE host variants
+4. Implement job board collectors
+- `scrapers/jobspy_adapter.py`
+  - call JobSpy directly from the pipeline
+  - query LinkedIn, Indeed, and Glassdoor
+  - normalize JobSpy rows into `RawJobPosting`
+  - map `site -> source`, `company -> company_name`, `description -> snippet`, `date_posted -> posted_date`
+  - inject `query` from the active search term because JobSpy rows do not carry it explicitly
+  - filter to supported sources only
+  - use JobSpy `description` as the canonical text field for Gemini input when available
 - `scrapers/stepstone.py`
-  - `render=false` first, fallback `render=true`
-  - German query set only
-- Add 2-3 fallback selectors per element in each scraper.
+  - remain scrape.do-based
+  - keep current fallback render strategy
+  - continue to normalize rows into `RawJobPosting`
 
 5. Implement extraction layer
 - `extractors/prefilter.py`
@@ -81,6 +84,7 @@ Excluded from Phase 1: career pages, news RSS, scheduling, CSV export, enrichmen
   - `save_signal()` with source URL dedup
   - `upsert_company()` with score update, software/source union, lead grade mapping
   - `get_leads()` for summary listing
+- Ensure `glassdoor` survives through persistence, lead aggregation, and summary reporting.
 
 7. Implement pipeline orchestrator
 - `pipeline.py`
@@ -89,22 +93,31 @@ Excluded from Phase 1: career pages, news RSS, scheduling, CSV export, enrichmen
     - `--dry-run`
     - `--max-queries`
     - `--leads`
+  - `--source` should support `linkedin`, `indeed`, `glassdoor`, `stepstone`, and `all`
+  - replace per-board LinkedIn/Indeed collection with a JobSpy collection path
+  - keep per-source stats split by `linkedin`, `indeed`, `glassdoor`, and `stepstone`
+  - convert `get_source_scrapers()` into a source collector registry:
+    - JobSpy-backed collectors emit normalized `RawJobPosting`
+    - Stepstone remains separate
   - execution flow:
-    1) collect from selected job boards
+    1) collect from selected sources
     2) pre-filter
     3) NLP extraction
     4) scoring + persist
-    5) print HOT/WARM/COLD summary + credits used
-  - graceful error handling per-source so one source failure does not kill whole run.
+    5) print HOT/WARM/COLD summary + scrape.do credits used
+  - graceful error handling per-source so one source failure does not kill the whole run.
 
 8. Validate and harden
 - Add smoke test path (dry run, max queries = 1 or 2).
-- Verify selectors against live pages and tune fallback selectors.
+- Test JobSpy normalization and site filtering.
+- Verify LinkedIn description fetch behavior.
+- Verify Glassdoor row shape compatibility.
+- Verify Stepstone still works unchanged.
 - Verify DB constraints, dedup behavior, and score outcomes.
 - Confirm final Definition of Done from requirements.
 
 ## Data Flow (Phase 1)
-1. Scraper returns `RawJobPosting` list.
+1. JobSpy adapter or Stepstone scraper returns `RawJobPosting` list.
 2. Pre-filter removes low-signal items.
 3. NLP converts candidates to `ExtractedSignal` list.
 4. Score is computed and signal is persisted.
@@ -112,30 +125,33 @@ Excluded from Phase 1: career pages, news RSS, scheduling, CSV export, enrichmen
 6. End-of-run summary is printed.
 
 ## Acceptance Criteria (Phase 1 DoD)
-- Pipeline runs end-to-end from CLI with real LinkedIn/Indeed/Stepstone input.
+- Pipeline runs end-to-end from CLI with real LinkedIn, Indeed, Glassdoor, and Stepstone input.
+- Glassdoor is a first-class Phase 1 source in collection, extraction, persistence, and summary output.
 - Signals are extracted with software + company + source URL.
 - `signals` table stores one row per valid unique source URL.
 - `companies` table aggregates score and lead grade (`hot`, `warm`, `cold`).
 - Console summary prints by source and lead band.
+- `--source glassdoor` and `--source all` work as expected.
 - `--dry-run` works without DB writes.
+- scrape.do budgeting no longer counts LinkedIn or Indeed against request caps.
 
 ## Risks and Mitigation
-- LinkedIn anti-bot instability:
-  - always use `super=true`; retry on transient failures.
-- Selector breakage:
-  - keep selectors centralized per scraper and log zero-card events clearly.
-- NLP schema drift:
-  - strict validation and invalid field stripping, skip broken batches safely.
-- Credit overrun in development:
-  - enforce `--max-queries` during dev runs.
+- JobSpy dependency or API shape drift:
+  - pin and review `python-jobspy` updates; validate normalization after upgrades.
+- Site-specific rate limiting and proxy needs:
+  - keep throttling and proxy options available for JobSpy-backed sources.
+- Source normalization mismatches from JobSpy dataframe columns:
+  - validate required columns and reject unsupported `site` values.
+- Stepstone selector and scrape.do risk remains:
+  - keep fallback selectors and render escalation intact.
 
 ## Suggested Timeline (2-3 weeks)
 - Week 1:
-  - project skeleton, config/models, scrape.do client
-  - initial Indeed + Stepstone scrapers
+  - project skeleton, config/models, JobSpy adapter, scrape.do client
+  - initial Stepstone integration
 - Week 2:
-  - LinkedIn scraper, prefilter, NLP module
+  - pipeline collection registry, prefilter, NLP module
   - DB layer + scoring + upsert
 - Week 3:
-  - pipeline integration, dry-run/live-run stabilization
-  - documentation and Definition-of-Done verification
+  - end-to-end integration, dry-run/live-run stabilization
+  - JobSpy normalization checks, Glassdoor validation, documentation verification

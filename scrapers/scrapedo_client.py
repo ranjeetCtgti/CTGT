@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 from urllib.parse import quote_plus
 
@@ -30,7 +30,16 @@ class ScrapeRequest:
     geo_code: str | None = None
     wait_selector: str | None = None
     block_resources: bool = True
-    timeout_ms: int = 30000
+    timeout_ms: int = 30_000
+    # When True the client sends render=True regardless of the render field.
+    # Use for Cloudflare-protected targets (e.g. Stepstone).
+    force_render: bool = False
+    # Headers forwarded to target via scrape.do extraHeaders feature.
+    # Sent as sd-{key} HTTP headers on the scrape.do request itself.
+    # scrape.do strips the "sd-" prefix and forwards to the target.
+    # Do NOT use for common browser headers (UA, Accept-Language) —
+    # scrape.do sets those automatically with better values than we can.
+    extra_headers: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -86,7 +95,14 @@ class ScrapeDoClient:
             params["geoCode"] = req.geo_code
         if req.wait_selector:
             params["waitSelector"] = req.wait_selector
+        # extraHeaders=true activates sd-* header forwarding
+        if req.extra_headers:
+            params["extraHeaders"] = "true"
         return params
+
+    def _build_request_headers(self, req: ScrapeRequest) -> dict[str, str]:
+        """sd-prefixed headers are forwarded by scrape.do to the target site."""
+        return {f"sd-{k}": v for k, v in req.extra_headers.items()}
 
     def _estimate_credits(self, req: ScrapeRequest) -> int:
         if req.render and req.super_proxy:
@@ -96,7 +112,6 @@ class ScrapeDoClient:
         return 1
 
     def _build_final_url(self, params: dict[str, str]) -> str:
-        # URL is built for logging/debugging only.
         encoded_parts = [f"{k}={quote_plus(v)}" for k, v in params.items()]
         return f"{SCRAPEDO_BASE_URL}?{'&'.join(encoded_parts)}"
 
@@ -106,115 +121,90 @@ class ScrapeDoClient:
         stop=stop_after_attempt(3),
         reraise=True,
     )
-    def _do_request(self, params: dict[str, str]) -> httpx.Response:
-        return self._http.get(SCRAPEDO_BASE_URL, params=params)
+    def _do_request(self, params: dict[str, str], headers: dict[str, str]) -> httpx.Response:
+        return self._http.get(SCRAPEDO_BASE_URL, params=params, headers=headers)
 
     def scrape(self, req: ScrapeRequest) -> ScrapeResponse:
+        # ── Per-source cap ────────────────────────────────────────────────────
         source_count = self.request_count_by_source.get(req.source, 0)
         source_limit = self.max_requests_by_source.get(req.source)
         if source_limit is not None and source_count >= source_limit:
             logger.warning(
                 "scrape.do request skipped source={} target={} reason=max_requests_reached_for_source limit={}",
-                req.source,
-                req.target_url,
-                source_limit,
+                req.source, req.target_url, source_limit,
             )
-            return ScrapeResponse(
-                ok=False,
-                status_code=None,
-                html=None,
-                final_url=req.target_url,
-                credits_used=0,
-                error=f"max_requests_reached_for_source:{req.source}:{source_limit}",
-            )
+            return ScrapeResponse(ok=False, status_code=None, html=None,
+                final_url=req.target_url, credits_used=0,
+                error=f"max_requests_reached_for_source:{req.source}:{source_limit}")
 
+        # ── Global cap ────────────────────────────────────────────────────────
         if self.max_requests is not None and self.request_count >= self.max_requests:
             logger.warning(
                 "scrape.do request skipped source={} target={} reason=max_requests_reached limit={}",
-                req.source,
-                req.target_url,
-                self.max_requests,
+                req.source, req.target_url, self.max_requests,
             )
-            return ScrapeResponse(
-                ok=False,
-                status_code=None,
-                html=None,
-                final_url=req.target_url,
-                credits_used=0,
-                error=f"max_requests_reached:{self.max_requests}",
-            )
+            return ScrapeResponse(ok=False, status_code=None, html=None,
+                final_url=req.target_url, credits_used=0,
+                error=f"max_requests_reached:{self.max_requests}")
 
-        params = self._build_params(req)
+        # ── force_render ──────────────────────────────────────────────────────
+        effective_render = True if req.force_render else req.render
+        if req.force_render and not req.render:
+            logger.debug("scrape.do force_render overriding render=False source={} target={}",
+                req.source, req.target_url)
+
+        resolved = ScrapeRequest(
+            source=req.source, query=req.query, target_url=req.target_url,
+            render=effective_render, super_proxy=req.super_proxy,
+            geo_code=req.geo_code, wait_selector=req.wait_selector,
+            block_resources=req.block_resources, timeout_ms=req.timeout_ms,
+            force_render=req.force_render, extra_headers=req.extra_headers,
+        )
+
+        params = self._build_params(resolved)
+        headers = self._build_request_headers(resolved)
         final_url = self._build_final_url(params)
-        estimated_credits = self._estimate_credits(req)
+        estimated_credits = self._estimate_credits(resolved)
         self.request_count += 1
         self.request_count_by_source[req.source] = source_count + 1
 
         logger.info(
             "scrape.do request source={} render={} super={} geo={} target={}",
-            req.source,
-            req.render,
-            req.super_proxy,
-            req.geo_code or "-",
-            req.target_url,
+            req.source, resolved.render, resolved.super_proxy,
+            resolved.geo_code or "-", resolved.target_url,
         )
 
         try:
-            response = self._do_request(params)
+            response = self._do_request(params, headers)
         except Exception as exc:
-            logger.error(
-                "scrape.do request failed source={} target={} error={}",
-                req.source,
-                req.target_url,
-                str(exc),
-            )
-            return ScrapeResponse(
-                ok=False,
-                status_code=None,
-                html=None,
-                final_url=final_url,
-                credits_used=0,
-                error=str(exc),
-            )
+            logger.error("scrape.do request failed source={} target={} error={}",
+                req.source, req.target_url, str(exc))
+            return ScrapeResponse(ok=False, status_code=None, html=None,
+                final_url=final_url, credits_used=0, error=str(exc))
 
         status = response.status_code
         body = response.text
         ok = 200 <= status < 300 and bool(body.strip())
 
-        credits_used = estimated_credits if ok else 0
+        # scrape.do bills on 2xx AND on 400/404/410 — track these separately
+        billable_failure = not ok and status in (400, 404, 410)
+        credits_used = estimated_credits if (ok or billable_failure) else 0
         self.credits_used_total += credits_used
 
         if ok:
-            logger.info(
-                "scrape.do success source={} status={} chars={} credits={}",
-                req.source,
-                status,
-                len(body),
-                credits_used,
-            )
-            return ScrapeResponse(
-                ok=True,
-                status_code=status,
-                html=body,
-                final_url=final_url,
-                credits_used=credits_used,
-            )
+            logger.info("scrape.do success source={} status={} chars={} credits={}",
+                req.source, status, len(body), credits_used)
+            return ScrapeResponse(ok=True, status_code=status, html=body,
+                final_url=final_url, credits_used=credits_used)
 
         error_msg = f"status={status} empty_body={not bool(body.strip())}"
         logger.warning(
-            "scrape.do non-success source={} target={} {}",
-            req.source,
-            req.target_url,
-            error_msg,
+            "scrape.do non-success source={} target={} {} credits_charged={}",
+            req.source, req.target_url, error_msg, credits_used,
         )
-        return ScrapeResponse(
-            ok=False,
-            status_code=status,
+        return ScrapeResponse(ok=False, status_code=status,
             html=body if body.strip() else None,
-            final_url=final_url,
-            credits_used=0,
-            error=error_msg,
-        )
+            final_url=final_url, credits_used=credits_used, error=error_msg)
 
     def stats(self) -> dict[str, int]:
         return {

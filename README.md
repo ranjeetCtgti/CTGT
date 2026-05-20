@@ -1,6 +1,6 @@
 # CTGT Lead Engine - Phase 1
 
-Phase 1 covers scrape.do-powered collection from LinkedIn, Indeed, and Stepstone, keyword prefiltering, Gemini extraction, PostgreSQL persistence, and CLI summaries.
+Phase 1 uses JobSpy for LinkedIn, Indeed, and Google, keeps Stepstone on scrape.do, adds direct career-page crawling and Google News RSS ingestion, and then runs keyword prefiltering, Gemini extraction, PostgreSQL persistence, and CLI summaries.
 
 ## Setup
 
@@ -12,9 +12,10 @@ pip install -r requirements.txt
 
 2. Fill in real values in `.env`:
 
-- `SCRAPEDO_API_KEY`
+- `SCRAPEDO_API_KEY` for Stepstone runs
 - `GEMINI_API_KEY`
 - `DATABASE_URL`
+- optionally expand `data/career_page_targets.csv` with your target companies
 
 ## Commands
 
@@ -28,6 +29,24 @@ Single-source smoke test:
 
 ```powershell
 python pipeline.py --source linkedin --smoke-test
+```
+
+Career page smoke test:
+
+```powershell
+python pipeline.py --source career_page --smoke-test
+```
+
+News RSS smoke test:
+
+```powershell
+python pipeline.py --source news --smoke-test
+```
+
+Google smoke test:
+
+```powershell
+python pipeline.py --source google --smoke-test
 ```
 
 Dry run with explicit query cap:
@@ -70,8 +89,9 @@ python dashboard.py
 ## Request Budget Mode
 
 - Default mode is `testing` (`PIPELINE_PHASE` unset or not `production`)
-- Testing mode is non-production and caps scrape.do requests to `3` each for LinkedIn, Indeed, and Stepstone
-- Default testing budget is `9` scrape.do requests total across all three sources
+- Testing mode is non-production and caps scrape.do requests to `3` for Stepstone
+- LinkedIn, Indeed, and Google are collected via JobSpy and do not consume scrape.do credits in the default path
+- Career pages and news RSS are collected via direct `httpx` requests and do not consume scrape.do credits
 - Set `PIPELINE_PHASE=production` to remove the testing caps and use the normal query-derived request budget
 
 ## Current Constraints

@@ -83,54 +83,62 @@ Companies in these verticals that are hiring or mentioning Siemens PLM tools sho
 The system is composed of four sequential layers. Data flows top-to-bottom; no layer skips another.
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│  LAYER 1 — DATA COLLECTION                                          │
-│                                                                     │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────────┐  │
-│  │ LinkedIn Jobs│  │    Indeed    │  │       Stepstone DE       │  │
-│  │  (scrape.do) │  │  (scrape.do) │  │       (scrape.do)        │  │
-│  └──────┬───────┘  └──────┬───────┘  └────────────┬─────────────┘  │
-│         │                 │                        │                │
-│  ┌──────────────────────────────────────────────┐  │                │
-│  │  Career Page Crawler (own httpx scraper)     │  │                │
-│  │  News Scraper (own httpx + RSS scraper)      │  │                │
-│  └──────────────────────────┬───────────────────┘  │                │
-└─────────────────────────────┼───────────────────────┼───────────────┘
-                              │                       │
-                              ▼                       ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│  LAYER 2 — SIGNAL EXTRACTION                                        │
-│                                                                     │
-│  Fast pre-filter (keyword match) → Gemini API NLP batch extractor  │
-│  Output: structured ExtractedSignal per source item                │
-└──────────────────────────────────┬──────────────────────────────────┘
-                                   │
-                                   ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│  LAYER 3 — ENRICHMENT & SCORING                                     │
-│                                                                     │
-│  Deduplication → Company merge → Score calculation → Lead grade    │
-└──────────────────────────────────┬──────────────────────────────────┘
-                                   │
-                                   ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│  LAYER 4 — STORAGE & OUTPUT                                         │
-│                                                                     │
-│  PostgreSQL → signals table + companies table → CLI output / CSV   │
-└─────────────────────────────────────────────────────────────────────┘
++---------------------------------------------------------------------+
+| LAYER 1 - DATA COLLECTION                                           |
+|                                                                     |
+|  +------------------+  +------------------+  +-------------------+  |
+|  | LinkedIn Jobs    |  | Indeed Jobs      |  | Glassdoor Jobs    |  |
+|  | (JobSpy)         |  | (JobSpy)         |  | (JobSpy)          |  |
+|  +---------+--------+  +---------+--------+  +---------+---------+  |
+|            |                     |                     |            |
+|            +---------------------+---------------------+            |
+|                                  |                                  |
+|                    +-------------v-------------+                    |
+|                    | JobSpy adapter / pipeline |                    |
+|                    +-------------+-------------+                    |
+|                                  |                                  |
+|  +---------------------------+   |   +---------------------------+  |
+|  | Stepstone DE              |---+---| Career Page Crawler      |  |
+|  | (scrape.do)               |       | (own httpx scraper)      |  |
+|  +---------------------------+       +---------------------------+  |
+|                                  +---------------------------+      |
+|                                  | News Scraper              |      |
+|                                  | (own httpx + RSS scraper) |      |
+|                                  +---------------------------+      |
++-----------------------------------------------+---------------------+
+                                                |
+                                                v
++---------------------------------------------------------------------+
+| LAYER 2 - SIGNAL EXTRACTION                                         |
+|                                                                     |
+| Fast pre-filter (keyword match) -> Gemini API NLP batch extractor   |
+| Output: structured ExtractedSignal per source item                  |
++-----------------------------------------------+---------------------+
+                                                |
+                                                v
++---------------------------------------------------------------------+
+| LAYER 3 - ENRICHMENT & SCORING                                      |
+|                                                                     |
+| Deduplication -> Company merge -> Score calculation -> Lead grade   |
++-----------------------------------------------+---------------------+
+                                                |
+                                                v
++---------------------------------------------------------------------+
+| LAYER 4 - STORAGE & OUTPUT                                          |
+|                                                                     |
+| PostgreSQL -> signals table + companies table -> CLI output / CSV   |
++---------------------------------------------------------------------+
 ```
-
----
 
 ## 3. Data Sources
 
-### 3.1 Source A — LinkedIn Jobs (via scrape.do)
+### 3.1 Source A - LinkedIn Jobs (via JobSpy)
 
-**What we collect:** Job search result pages for PLM-related queries  
+**What we collect:** Job search result pages and, when available, description text returned by JobSpy for PLM-related queries  
 **Why:** Largest global job board; many engineering companies post exclusively here  
-**Authentication required:** No — public search results are accessible without login  
-**Anti-bot difficulty:** High — Cloudflare + behavioral fingerprinting  
-**scrape.do mode required:** `render=true` + `super=true` (residential proxy)  
+**Authentication required:** No for public search results, but operational reliability may require proxies depending on geography and query volume  
+**Anti-bot difficulty:** High - LinkedIn is still the strictest board in the set even when accessed through JobSpy  
+**Collector mode:** `python-jobspy` called directly from `pipeline.py` via `scrapers/jobspy_adapter.py`  
 
 **Search queries (per geography):**
 
@@ -160,66 +168,81 @@ German queries (Germany):
 "Polarion ALM Ingenieur"
 ```
 
-**URL pattern:**
-```
-https://www.linkedin.com/jobs/search/?keywords={QUERY}&location={LOCATION}&f_TPR=r86400
-```
-
-**Data to extract per job card:**
+**Data to normalize per JobSpy row:**
 - Job title
 - Company name
 - Location (city, country)
-- Job description snippet (first 500 chars shown in search results)
+- Job description text from JobSpy `description` when available; otherwise use the row snippet
 - Job URL
-- Date posted (if visible)
+- Date posted
+- Active query term injected from `config.py` because JobSpy rows do not carry it explicitly
 
-**Pagination:** Scrape page 1 only per query per location (25 results). If a company appears in results, that is sufficient signal — we do not need to open each job page.
+**Normalization rules:** Map `site -> source`, `company -> company_name`, `description -> snippet`, and `date_posted -> posted_date`. Use `description` as the canonical text field sent to Gemini input when present.
 
-**Rate:** One scrape.do request per (query × location) combination. With 12 English queries × 4 locations + 6 German queries × 1 location = 54 requests per run.
+**Pagination/rate:** Query LinkedIn through JobSpy once per (query x location) combination. Request volume is still driven by the configured query/location matrix, but usage is no longer billed in scrape.do credits.
 
 ---
 
-### 3.2 Source B — Indeed (via scrape.do)
+### 3.2 Source B - Indeed (via JobSpy)
 
 **What we collect:** Job search result pages  
 **Why:** Strong coverage in India (Naukri alternative) and Germany (indeed.de)  
 **Authentication required:** No  
-**Anti-bot difficulty:** Medium — reCAPTCHA on some pages, otherwise manageable  
-**scrape.do mode required:** Try `render=false` first (1 credit); fall back to `render=true` (5 credits) if response is empty  
-
-**URL patterns:**
-```
-# English
-https://www.indeed.com/jobs?q={QUERY}&l={LOCATION}&fromage=7
-
-# India
-https://in.indeed.com/jobs?q={QUERY}&l={LOCATION}&fromage=7
-
-# Germany
-https://de.indeed.com/jobs?q={QUERY}&fromage=7
-```
+**Anti-bot difficulty:** Medium - reliability is usually better than LinkedIn but can still degrade under repeated runs or certain geographies  
+**Collector mode:** `python-jobspy` called directly from `pipeline.py` via `scrapers/jobspy_adapter.py`  
 
 **Search queries:** Same as LinkedIn (English + German sets above)
 
 **Geographies:** India, Germany, Canada, United States
 
-**Data to extract per job card:**
+**Data to normalize per JobSpy row:**
 - Job title
 - Company name
 - Location
-- Job snippet / description excerpt
+- Job description text from JobSpy `description` when available
 - Job URL
+- Date posted
+- Active query term injected from the pipeline search context
 
-**Rate:** ~40 requests per run (10 queries × 4 geographies, minus overlapping German queries handled by Stepstone).
+**Normalization rules:** Same adapter contract as LinkedIn. Filter out any JobSpy rows whose `site` value is not one of the supported Phase 1 sources.
+
+**Rate:** Similar query volume to LinkedIn, but no scrape.do credits are consumed unless a future fallback path is introduced explicitly.
 
 ---
 
-### 3.3 Source C — Stepstone Germany (via scrape.do)
+### 3.3 Source C - Glassdoor (via JobSpy)
+
+**What we collect:** Job search result rows returned by JobSpy for Glassdoor  
+**Why:** Adds another broad hiring signal source for engineering and manufacturing employers that do not consistently overlap with LinkedIn or Indeed  
+**Authentication required:** No for public result access mediated by JobSpy  
+**Anti-bot difficulty:** Medium-High - support quality can drift with upstream Glassdoor changes  
+**Collector mode:** `python-jobspy` called directly from `pipeline.py` via `scrapers/jobspy_adapter.py`  
+
+**Search queries:** Reuse the same English and German PLM query sets from `config.py`
+
+**Geographies:** India, Germany, Canada, United States
+
+**Data to normalize per JobSpy row:**
+- Job title
+- Company name
+- Location
+- Job description text from JobSpy `description` when available
+- Job URL
+- Date posted
+- Active query term injected from the pipeline search context
+
+**Normalization rules:** Treat `glassdoor` as a first-class `SignalSource` alongside `linkedin`, `indeed`, and `stepstone`. Validate JobSpy row shape compatibility before the row enters pre-filtering and NLP extraction.
+
+**Rate:** Follows the same direct JobSpy collection pattern as LinkedIn and Indeed; no scrape.do credits are assumed in the default Phase 1 budget.
+
+---
+
+### 3.4 Source D - Stepstone Germany (via scrape.do)
 
 **What we collect:** Job search result pages  
 **Why:** Dominant job board in DACH region; German Mittelstand manufacturing companies prefer Stepstone over LinkedIn  
 **Authentication required:** No  
-**Anti-bot difficulty:** Low-Medium — mostly server-rendered, `render=false` usually works  
+**Anti-bot difficulty:** Low-Medium - mostly server-rendered, `render=false` usually works  
 **scrape.do mode required:** `render=false` first; fall back to `render=true`  
 
 **URL pattern:**
@@ -242,18 +265,18 @@ https://www.stepstone.de/jobs?q={QUERY}
 "CAD Teamcenter Spezialist"
 ```
 
-**Data to extract:** Same as LinkedIn/Indeed.
+**Data to extract:** Same as other job board sources after normalization into `RawJobPosting`.
 
-**Rate:** ~11 requests per run (one per query, single geography).
+**Rate:** ~11 requests per run (one per query, single geography). This is now the primary scrape.do budget driver in Phase 1.
 
 ---
 
-### 3.4 Source D — Company Career Pages (own httpx scraper, no scrape.do)
+### 3.5 Source E - Company Career Pages (own httpx scraper, no scrape.do)
 
 **What we collect:** HTML content of the `/careers`, `/jobs`, or `/stellenangebote` pages of known target companies  
 **Why:** Companies that post exclusively on their own site are missed by job boards; the career page also reveals the full job description with detailed tool requirements  
 **Authentication required:** No  
-**Anti-bot difficulty:** Very low — company career pages almost never have bot protection  
+**Anti-bot difficulty:** Very low - company career pages almost never have bot protection  
 **Scraper type:** Plain `httpx` with rotating `User-Agent` headers. No scrape.do needed. This is free.
 
 **How we build the target company list:**
@@ -263,7 +286,7 @@ Start with a seed list of known manufacturing companies by region. This list is 
 company_name, domain, careers_url, country, industry
 ```
 
-Initial seed should include ~200–500 companies across:
+Initial seed should include ~200-500 companies across:
 - German automotive suppliers (Bosch, Continental, ZF, Schaeffler, etc.)
 - Indian engineering companies (Tata Technologies, L&T, Mahindra Engineering, etc.)
 - Canadian aerospace/industrial (Bombardier, Pratt & Whitney Canada, etc.)
@@ -275,19 +298,19 @@ Initial seed should include ~200–500 companies across:
 
 **Crawl depth:** Career page index only (no following to individual job pages unless the index is paginated). If the career page uses JavaScript to load jobs, fall back to scrape.do for that specific URL.
 
-**Rate:** Run daily. Process up to 500 URLs per day. At ~0.5s per request with delays, this takes ~10–15 minutes.
+**Rate:** Run daily. Process up to 500 URLs per day. At ~0.5s per request with delays, this takes ~10-15 minutes.
 
 **Selector strategy:** Since career pages vary wildly, use a broad text extraction approach:
-1. Extract all `<p>`, `<li>`, `<div>`, `<h1>`–`<h4>` text
+1. Extract all `<p>`, `<li>`, `<div>`, `<h1>`-`<h4>` text
 2. Run keyword pre-filter (Section 5.1) on the combined text
 3. If any keyword matches, pass the full page text to the NLP extractor
 
 ---
 
-### 3.5 Source E — News & Press (own httpx + RSS scraper, no scrape.do)
+### 3.6 Source F - News & Press (own httpx + RSS scraper, no scrape.do)
 
 **What we collect:** News articles, press releases, and blog posts mentioning Siemens PLM software alongside company names  
-**Why:** A company announcing a Teamcenter implementation or signing a digital transformation partnership is a very hot lead — they are actively in a buying or deployment cycle  
+**Why:** A company announcing a Teamcenter implementation or signing a digital transformation partnership is a very hot lead - they are actively in a buying or deployment cycle  
 **Authentication required:** No  
 **Anti-bot difficulty:** Very low for RSS feeds; low for news sites  
 **Scraper type:** RSS feed polling + targeted Google News RSS queries. Free.
@@ -305,7 +328,7 @@ https://news.google.com/rss/search?q=Polarion+ALM+deployment&hl=en
 https://news.google.com/rss/search?q=NX+CAD+Siemens+company&hl=en
 # German
 https://news.google.com/rss/search?q=Teamcenter+Implementierung&hl=de
-https://news.google.com/rss/search?q=Siemens+PLM+Einführung&hl=de
+https://news.google.com/rss/search?q=Siemens+PLM+Einfuhrung&hl=de
 ```
 
 **What to extract per article:**
@@ -319,15 +342,37 @@ https://news.google.com/rss/search?q=Siemens+PLM+Einführung&hl=de
 
 **Rate:** Poll RSS feeds every 6 hours. Each feed fetch = 1 plain HTTP request. ~10 feeds = negligible cost.
 
----
-
 ## 4. Scraping Infrastructure
 
-### 4.1 scrape.do API Integration
+### 4.1 JobSpy Integration
+
+**Primary use:** Collect job postings for LinkedIn, Indeed, and Glassdoor directly inside `pipeline.py` without a `jobs.csv` intermediary  
+**Runtime dependency:** `python-jobspy`  
+**Integration point:** `scrapers/jobspy_adapter.py` called by a collector registry in `pipeline.py`  
+
+**Responsibilities of the adapter:**
+- Query LinkedIn, Indeed, and Glassdoor using the active search terms from `config.py`
+- Normalize JobSpy dataframe rows into `RawJobPosting`
+- Filter to supported sites only: `linkedin`, `indeed`, `glassdoor`
+- Inject the active query string into each normalized row
+- Prefer JobSpy `description` text over short snippets for Gemini input
+
+**Collector interface decisions for the later code change:**
+- `pipeline.py --source` supports `linkedin`, `indeed`, `glassdoor`, `stepstone`, and `all`
+- `models.schema.SignalSource` must add `glassdoor`
+- `models.schema.RawJobPosting.source` accepts `glassdoor`
+- `get_source_scrapers()` should become a source collector registry where JobSpy-backed collectors emit normalized `RawJobPosting` and Stepstone remains a separate scrape.do-backed collector
+- `config.py` query sets remain the source of truth; the adapter receives the active query string from the pipeline
+
+**Operational note:** JobSpy is not billed through scrape.do credits, but production reliability may still require proxy support and monitoring for site-specific changes.
+
+### 4.2 scrape.do API Integration
 
 **Base URL:** `https://api.scrape.do/`  
 **Authentication:** `token` query parameter  
 **Documentation:** https://scrape.do/documentation/
+
+**Primary use in Phase 1:** Stepstone Germany only. Keep this client reusable for future fallback use, but do not assume scrape.do for LinkedIn, Indeed, or Glassdoor in the default architecture.
 
 **Key parameters used in this project:**
 
@@ -335,11 +380,11 @@ https://news.google.com/rss/search?q=Siemens+PLM+Einführung&hl=de
 |---|---|---|
 | `token` | `{SCRAPEDO_API_KEY}` | Authentication |
 | `url` | URL-encoded target URL | Required |
-| `render` | `true` / `false` | `true` for LinkedIn, Glassdoor; `false` for Indeed, Stepstone first attempt |
-| `super` | `true` / `false` | `true` for LinkedIn (needs residential IP); `false` for others by default |
-| `geoCode` | `de`, `in`, `ca`, `us` | Match proxy location to target site's expected geography |
+| `render` | `true` / `false` | `false` for Stepstone first attempt; `true` for fallback render mode |
+| `super` | `true` / `false` | Reserved for future fallback cases; not required by the default Stepstone path |
+| `geoCode` | `de` | Match proxy geography to Stepstone Germany |
 | `waitSelector` | CSS selector | Wait for job cards to appear before returning HTML |
-| `blockResources` | `true` | Skip images/CSS/fonts — faster, cheaper |
+| `blockResources` | `true` | Skip images/CSS/fonts - faster, cheaper |
 | `timeout` | `30000` | 30s max wait |
 | `device` | `desktop` | Default desktop UA |
 
@@ -369,24 +414,24 @@ def scrape(url: str, render: bool = False, super_proxy: bool = False,
     return None
 ```
 
-**Retry logic:** On failure (non-200, timeout), retry once with `super=true` if not already set. After two failures, log and skip — do not retry infinitely.
+**Retry logic:** For Stepstone, retry first with `render=true` if the initial lightweight request returns empty or incomplete HTML. Keep `super=true` available only for explicit future fallback scenarios.
 
-**Credit tracking:** Log credits consumed per request based on mode:
-- `render=false, super=false` → 1 credit
-- `render=true, super=false` → 5 credits  
-- `render=true, super=true` → 25 credits
-- `render=false, super=true` → 10 credits
+**Credit tracking:** Log credits consumed per request based on mode. In the default Phase 1 design this budget applies primarily to Stepstone:
+- `render=false, super=false` -> 1 credit
+- `render=true, super=false` -> 5 credits
+- `render=true, super=true` -> 25 credits
+- `render=false, super=true` -> 10 credits
 
 Store running total in memory per pipeline run and log at the end.
 
-### 4.2 Own Scraper (Career Pages & News)
+### 4.3 Own Scraper (Career Pages & News)
 
 **Library:** `httpx` (async-capable, modern alternative to requests)  
 **Parsing:** `beautifulsoup4` + `lxml` parser  
-**Rate limiting:** 1 request per 2–4 seconds (randomized delay) per domain  
+**Rate limiting:** 1 request per 2-4 seconds (randomized delay) per domain  
 **User-Agent rotation:** Maintain a list of 10+ real browser User-Agent strings; rotate per request  
 **Timeout:** 15 seconds per request  
-**Failure handling:** Log failed URLs; skip and continue — do not block the pipeline  
+**Failure handling:** Log failed URLs; skip and continue - do not block the pipeline  
 **Robots.txt:** Respect `robots.txt` for career pages. Check once per domain per week.
 
 **User-Agent list (minimum):**
@@ -399,8 +444,6 @@ USER_AGENTS = [
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4.1 Safari/605.1.15",
 ]
 ```
-
----
 
 ## 5. Signal Detection & Keyword Engine
 
@@ -643,7 +686,7 @@ CREATE TABLE signals (
     industry          TEXT,
     software          JSONB,                    -- ["Teamcenter", "NX"]
     signal_type       TEXT,                    -- job_posting | career_page | news
-    signal_source     TEXT,                    -- linkedin | indeed | stepstone | career_page | news
+    signal_source     TEXT,                    -- linkedin | indeed | glassdoor | stepstone | career_page | news
     migration         BOOLEAN DEFAULT FALSE,
     migration_from    TEXT,
     pain_signals      JSONB,                   -- ["implementation", "upgrade"]
@@ -673,7 +716,7 @@ CREATE TABLE companies (
     employee_count  TEXT,                      -- from enrichment (future)
     revenue_range   TEXT,                      -- from enrichment (future)
     software        JSONB,                     -- union of all detected software
-    signal_sources  JSONB,                     -- ["linkedin", "indeed"]
+    signal_sources  JSONB,                     -- ["linkedin", "indeed", "glassdoor"]
     signal_count    INT DEFAULT 0,
     migration_risk  BOOLEAN DEFAULT FALSE,
     total_score     INT DEFAULT 0,
@@ -696,7 +739,7 @@ Tracks every scrape.do request for credit accounting and debugging.
 ```sql
 CREATE TABLE scrape_log (
     id            SERIAL PRIMARY KEY,
-    source        TEXT,                        -- linkedin | indeed | stepstone
+    source        TEXT,                        -- linkedin | indeed | glassdoor | stepstone
     query         TEXT,
     target_url    TEXT,
     status        TEXT,                        -- success | failed | skipped
@@ -721,27 +764,27 @@ CREATE TABLE scrape_log (
 
 ```
 pipeline.py run
-    │
-    ├─ Step 1: Collect raw data
-    │   ├─ scrape_linkedin()     → list[RawJobPosting]
-    │   ├─ scrape_indeed()       → list[RawJobPosting]
-    │   ├─ scrape_stepstone()    → list[RawJobPosting]
-    │   ├─ crawl_career_pages()  → list[RawCareerPage]
-    │   └─ fetch_news_rss()      → list[RawNewsItem]
-    │
-    ├─ Step 2: Pre-filter
-    │   └─ keyword_prefilter()   → discard items with no PLM keywords
-    │
-    ├─ Step 3: NLP extraction
-    │   └─ extract_signals()     → list[ExtractedSignal]
-    │       (batches of 10 → Gemini API)
-    │
-    ├─ Step 4: Persist
-    │   ├─ save_signal()         → signals table (one row per signal)
-    │   └─ upsert_company()      → companies table (merge + rescore)
-    │
-    └─ Step 5: Report
-        └─ print summary: hot/warm counts, credits used, signals found
+    |
+    |-- Step 1: Collect raw data
+    |   |-- collect_jobspy_jobs() -> list[RawJobPosting]
+    |   |   (LinkedIn / Indeed / Glassdoor)
+    |   |-- scrape_stepstone()    -> list[RawJobPosting]
+    |   |-- crawl_career_pages()  -> list[RawCareerPage]
+    |   `-- fetch_news_rss()      -> list[RawNewsItem]
+    |
+    |-- Step 2: Pre-filter
+    |   `-- keyword_prefilter()   -> discard items with no PLM keywords
+    |
+    |-- Step 3: NLP extraction
+    |   `-- extract_signals()     -> list[ExtractedSignal]
+    |       (batches of 10 -> Gemini API)
+    |
+    |-- Step 4: Persist
+    |   |-- save_signal()         -> signals table (one row per signal)
+    |   `-- upsert_company()      -> companies table (merge + rescore)
+    |
+    `-- Step 5: Report
+        `-- print summary: hot/warm counts, credits used, signals found
 ```
 
 ### 9.2 CLI Interface
@@ -751,7 +794,9 @@ pipeline.py run
 python pipeline.py
 
 # Specific sources only
-python pipeline.py --source linkedin indeed
+python pipeline.py --source linkedin
+python pipeline.py --source glassdoor
+python pipeline.py --source all
 
 # Dry run — no DB writes (for testing)
 python pipeline.py --dry-run
@@ -771,7 +816,7 @@ python pipeline.py --export leads_export.csv
 Run the full pipeline once daily, overnight (low traffic on job boards).
 
 **Recommended schedule:**
-- Job board scrapers (LinkedIn, Indeed, Stepstone): 02:00 UTC daily
+- Job board collectors (JobSpy for LinkedIn/Indeed/Glassdoor + scrape.do for Stepstone): 02:00 UTC daily
 - Career page crawler: 03:00 UTC daily
 - News RSS: every 6 hours
 
@@ -785,14 +830,14 @@ Use `apscheduler` (Python) or a simple cron job. Do not run more than once per d
 
 | Source | Queries | Locations | Mode | Credits/req | Total |
 |---|---|---|---|---|---|
-| LinkedIn | 12 EN + 6 DE | 4 EN + 1 DE | render + super | 25 | ~1,125 |
-| Indeed | 10 | 4 | render=false → render=true | 1–5 | ~60–200 |
-| Stepstone | 11 | 1 | render=false → render=true | 1–5 | ~15–55 |
-| **Total per run** | | | | | **~1,200–1,380** |
+| Stepstone | 11 | 1 | render=false -> render=true | 1-5 | ~15-55 |
+| **Total per run** | | | | | **~15-55** |
 
-> **Note on free tier:** The 1,000 free credits are enough for testing. For production daily runs, the Starter plan (~$49/mo for 250,000 credits) is sufficient.
+> **Note on free tier:** Because scrape.do is now budgeted primarily for Stepstone, the free tier is sufficient for early testing and smoke runs. Production sizing depends mostly on Stepstone cadence plus any future fallback traffic you choose to add.
 
-**Development/testing budget:** Use `--max-queries 2` and `--source indeed stepstone` during development. This costs ~20–30 credits per test run, preserving free credits.
+**JobSpy cost note:** LinkedIn, Indeed, and Glassdoor are collected via JobSpy and are not billed through scrape.do credits. They may still require proxies or throttling controls for acceptable reliability.
+
+**Development/testing budget:** Use `--max-queries 2` and `--source stepstone` during scrape.do-focused testing. Use `--source linkedin`, `--source indeed`, or `--source glassdoor` separately when validating direct JobSpy ingestion.
 
 ### 10.2 Gemini API Cost per Run
 
@@ -865,12 +910,13 @@ Log to both console and a rotating file (`logs/pipeline_{date}.log`). Keep 7 day
 Scraping summary:
   LinkedIn:    48 pages scraped | 312 job cards | 18 signals
   Indeed:      40 pages scraped | 280 job cards | 14 signals
+  Glassdoor:   32 pages scraped | 201 job cards | 11 signals
   Stepstone:   11 pages scraped |  87 job cards |  9 signals
   Career pages: 200 pages crawled | 22 signals
   News RSS:    10 feeds | 45 articles | 6 signals
 
-NLP extraction: 69 signals from 520 items (keyword hit rate: 41%)
-scrape.do credits used this run: 847
+NLP extraction: 80 signals from 721 items (keyword hit rate: 39%)
+scrape.do credits used this run: 41
 
 🔴 HOT LEADS (score ≥ 70):
 ──────────────────────────────────────────────────────────────────
@@ -923,7 +969,8 @@ first_seen, last_updated
 | Component | Technology | Version | Purpose |
 |---|---|---|---|
 | Language | Python | 3.11+ | All components |
-| Job board scraping | scrape.do API | — | LinkedIn, Indeed, Stepstone |
+| Job board scraping | JobSpy + scrape.do | latest / service | JobSpy for LinkedIn, Indeed, Glassdoor; scrape.do for Stepstone |
+| Job board integration | python-jobspy | latest | Direct runtime collection and normalization for JobSpy-backed sources |
 | Career/news scraping | httpx | 0.27+ | Own scraper for career pages + RSS |
 | HTML parsing | BeautifulSoup4 + lxml | latest | Parse scraped HTML |
 | NLP extraction | Google Gemini API | gemma-3-27b-it (free tier) | Signal extraction from text |
@@ -934,8 +981,6 @@ first_seen, last_updated
 | Scheduling | apscheduler | 3.x | Daily pipeline runs |
 | Logging | loguru | 0.7+ | Structured log output |
 | Config | python-dotenv | 1.x | Environment variables |
-
----
 
 ## 14. Project Folder Structure
 
@@ -994,7 +1039,7 @@ lead_engine/
 - [ ] `pipeline.py` — CLI orchestrator
 - [ ] `config.py` — keyword dictionary + scoring
 
-**Definition of done for Phase 1:** Pipeline runs end-to-end, collects real job postings from all 3 job boards, extracts signals, stores leads in PostgreSQL, prints HOT/WARM summary.
+**Definition of done for Phase 1:** Pipeline runs end-to-end, collects real job postings from LinkedIn, Indeed, Glassdoor, and Stepstone, extracts signals, stores leads in PostgreSQL, prints HOT/WARM summary.
 
 ### Phase 2 — Own Scrapers (Target: 1–2 weeks after Phase 1)
 
@@ -1022,21 +1067,29 @@ lead_engine/
 
 ## 16. Constraints & Known Limitations
 
-### 16.1 LinkedIn Scraping Reliability
+### 16.1 JobSpy Reliability, Rate Limits, and Proxies
 
-LinkedIn is the most aggressive anti-bot platform. scrape.do's residential proxies (`super=true`) provide good success rates but are not guaranteed. Expect 70–85% success rate on LinkedIn. Mitigation:
-- Always retry failed LinkedIn requests with `super=true` if not already set
-- If a search query consistently fails, rotate the query phrasing
-- Monitor LinkedIn HTML structure changes — their React frontend updates frequently
+LinkedIn remains the most aggressive source in the set, and JobSpy support for LinkedIn/Indeed/Glassdoor can degrade if site markup or anti-bot controls change upstream. Expect periodic rate limiting and occasional row-shape drift. Mitigation:
+- Keep per-source throttling and optional proxy configuration available for JobSpy-backed runs
+- If a search query consistently fails, rotate the query phrasing or lower concurrency
+- Monitor JobSpy dataframe columns and adapt normalization quickly when upstream changes land
+- Validate that LinkedIn description fetches still provide enough text for Gemini input after dependency upgrades
 
-### 16.2 CSS Selector Brittleness
+### 16.2 Glassdoor Support Caveats
 
-All three job boards (LinkedIn, Indeed, Stepstone) render job card HTML using React/Next.js. CSS class names are auto-generated and change with each deploy. Each scraper must:
-- Have 2–3 fallback selectors per element
+Glassdoor is intentionally in scope for Phase 1, but it may be the least stable JobSpy-backed board after LinkedIn. Mitigation:
+- Verify Glassdoor row shape compatibility during smoke tests and dependency upgrades
+- Reject unsupported or malformed JobSpy `site` values before they enter downstream processing
+- Treat Glassdoor as first-class in source stats, persistence, and summaries once rows are normalized successfully
+
+### 16.3 CSS Selector Brittleness
+
+Stepstone remains the main selector-sensitive board in Phase 1 because it still uses scrape.do HTML parsing. CSS class names can change with deploys. The Stepstone scraper must:
+- Have 2-3 fallback selectors per element
 - Log clearly when 0 cards are found (signals a selector break, not empty results)
-- Be easy to update — all selectors should be in one place per scraper file
+- Keep selectors centralized so Stepstone can be updated quickly without touching JobSpy-backed sources
 
-### 16.3 Company Name Disambiguation
+### 16.4 Company Name Disambiguation
 
 "Bosch" and "Robert Bosch GmbH" are the same company. "Siemens AG" (the parent) is NOT a CTGT client — Siemens is the software vendor. The NLP extractor must:
 - Normalize company names
@@ -1051,14 +1104,14 @@ EXCLUDED_COMPANIES = [
 ]
 ```
 
-### 16.4 Data Privacy
+### 16.5 Data Privacy
 
 - Do not collect or store personal data (individual names, emails) in Phase 1
 - The `contacts` field in `companies` table is reserved for Phase 4 (enrichment)
 - Company names, job titles, and public job posting URLs are public data — no GDPR concerns
 - Career page URLs are public — no GDPR concerns
 
-### 16.5 Legal
+### 16.6 Legal
 
 Scraping public job boards is a legally grey area. Key guidelines:
 - Only scrape publicly accessible pages (no login required)

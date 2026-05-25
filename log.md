@@ -1,5 +1,25 @@
 # Change Log
 
+## 2026-05-21
+
+### Changed
+- Added `PROJECT_STATUS.md` as the current authoritative phase-by-phase delivery status.
+- Updated roadmap and requirement documents to treat Google as the intended JobSpy source instead of Glassdoor.
+- Updated architecture documentation to match the actual codebase, including:
+  - JobSpy-backed LinkedIn, Indeed, and Google collection
+  - integrated career page crawling
+  - integrated news RSS ingestion
+  - local dashboard presence
+- Added `pipeline.py --validate-phase1` to run static readiness checks and a Phase 1-only smoke validation pass.
+- Upgraded `scrapers/career_pages.py` from a single-page fetch into a limited career-page plus pagination crawler.
+- Kept `scrapers/news_rss.py` on the lightweight RSS-only ingestion path.
+- Added `scrape_log` persistence for per-source pipeline runs.
+- Added health alerts for repeated failed runs and repeated zero-card runs based on recent persisted `scrape_log` history.
+
+### Notes
+- The implemented source set in code is `linkedin`, `indeed`, `google`, `stepstone`, `career_page`, and `news`.
+- Historical references to Glassdoor in older planning text have been replaced where they described the intended current roadmap.
+
 ## 2026-05-18
 
 ### Changed

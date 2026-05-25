@@ -1,0 +1,643 @@
+from __future__ import annotations
+
+import os
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta, timezone
+from typing import Any
+from urllib.parse import urlparse
+
+import httpx
+from loguru import logger
+
+from enrichment.domain_resolution import build_domain_resolver, canonicalize_domain
+from models.schema import CompanyLead, LeadContact
+
+
+GOOGLE_CUSTOM_SEARCH_URL = "https://customsearch.googleapis.com/customsearch/v1"
+APOLLO_ORGANIZATION_ENRICH_URL = "https://api.apollo.io/api/v1/organizations/enrich"
+APOLLO_PEOPLE_SEARCH_URL = "https://api.apollo.io/api/v1/mixed_people/api_search"
+APOLLO_BULK_PEOPLE_MATCH_URL = "https://api.apollo.io/api/v1/people/bulk_match"
+HUNTER_DOMAIN_SEARCH_URL = "https://api.hunter.io/v2/domain-search"
+APOLLO_TARGET_TITLES = ["PLM Manager", "IT Manager", "Engineering Head", "CTO"]
+GOOGLE_LINKEDIN_HOST = "linkedin.com"
+
+
+@dataclass(slots=True)
+class CompanyProfile:
+    canonical_name: str | None = None
+    domain: str | None = None
+    linkedin_url: str | None = None
+    sector: str | None = None
+    employee_count: str | None = None
+    revenue_range: str | None = None
+    headquarters_location: str | None = None
+
+
+@dataclass(slots=True)
+class EnrichmentStageResult:
+    stage: str
+    provider: str
+    status: str
+    message: str | None = None
+    payload: dict[str, Any] | None = None
+
+
+@dataclass(slots=True)
+class CompanyEnrichmentOutcome:
+    company_name: str
+    company_domain: str | None
+    profile: CompanyProfile = field(default_factory=CompanyProfile)
+    contacts: list[LeadContact] = field(default_factory=list)
+    stages: list[EnrichmentStageResult] = field(default_factory=list)
+
+
+@dataclass(slots=True)
+class LeadEnrichmentPassSummary:
+    candidates: int = 0
+    attempted: int = 0
+    completed: int = 0
+    skipped: int = 0
+    errors: int = 0
+    contacts_found: int = 0
+
+
+class GoogleSearchLinkedInResolver:
+    def __init__(self, api_key: str, search_engine_id: str, timeout_seconds: int) -> None:
+        self._http = httpx.Client(timeout=timeout_seconds)
+        self.api_key = api_key
+        self.search_engine_id = search_engine_id
+
+    def close(self) -> None:
+        self._http.close()
+
+    def resolve(self, company_name: str) -> str | None:
+        response = self._http.get(
+            GOOGLE_CUSTOM_SEARCH_URL,
+            params={
+                "key": self.api_key,
+                "cx": self.search_engine_id,
+                "q": f'site:linkedin.com/company "{company_name}"',
+                "num": 5,
+            },
+        )
+        response.raise_for_status()
+        payload = response.json()
+        for item in payload.get("items", []) or []:
+            if not isinstance(item, dict):
+                continue
+            link = _clean_string(item.get("link"))
+            if _is_linkedin_company_url(link):
+                return link
+        return None
+
+
+class ApolloClient:
+    def __init__(self, api_key: str, timeout_seconds: int) -> None:
+        self._http = httpx.Client(
+            timeout=timeout_seconds,
+            headers={
+                "x-api-key": api_key,
+                "accept": "application/json",
+                "content-type": "application/json",
+                "cache-control": "no-cache",
+            },
+        )
+
+    def close(self) -> None:
+        self._http.close()
+
+    def enrich_company(self, domain: str) -> CompanyProfile:
+        response = self._http.get(APOLLO_ORGANIZATION_ENRICH_URL, params={"domain": domain})
+        response.raise_for_status()
+        payload = response.json()
+        organization = _apollo_organization_object(payload)
+        return CompanyProfile(
+            canonical_name=_clean_string(organization.get("name")) or _clean_string(payload.get("name")),
+            domain=canonicalize_domain(
+                organization.get("primary_domain")
+                or organization.get("domain")
+                or payload.get("primary_domain")
+                or payload.get("domain")
+                or domain
+            ),
+            sector=_coalesce_strings(organization, ["industry", "sector", "industry_tag"]),
+            employee_count=_format_employee_count(organization),
+            revenue_range=_format_revenue_range(organization),
+            headquarters_location=_format_headquarters_location(organization),
+        )
+
+    def find_contacts(self, domain: str, limit: int = 5) -> list[LeadContact]:
+        params: list[tuple[str, str | int]] = [("per_page", limit)]
+        params.append(("q_organization_domains_list[]", domain))
+        for title in APOLLO_TARGET_TITLES:
+            params.append(("person_titles[]", title))
+
+        response = self._http.post(APOLLO_PEOPLE_SEARCH_URL, params=params, json={})
+        response.raise_for_status()
+        payload = response.json()
+        people = [item for item in payload.get("people", []) if isinstance(item, dict)]
+        if not people:
+            return []
+
+        details = [{"id": person["id"]} for person in people if _clean_string(person.get("id"))]
+        enriched_by_id: dict[str, dict[str, Any]] = {}
+        if details:
+            enrich_response = self._http.post(
+                APOLLO_BULK_PEOPLE_MATCH_URL,
+                params={"reveal_personal_emails": "false", "reveal_phone_number": "false"},
+                json={"details": details[:10]},
+            )
+            enrich_response.raise_for_status()
+            enrich_payload = enrich_response.json()
+            matches = enrich_payload.get("matches", []) or []
+            enriched_by_id = {
+                str(match.get("id")): match
+                for match in matches
+                if isinstance(match, dict) and _clean_string(match.get("id"))
+            }
+
+        contacts: list[LeadContact] = []
+        for person in people:
+            enriched = enriched_by_id.get(str(person.get("id")), person)
+            name = _clean_string(enriched.get("name")) or _build_full_name(enriched)
+            if not name:
+                continue
+            contacts.append(
+                LeadContact(
+                    full_name=name,
+                    first_name=_clean_string(enriched.get("first_name")),
+                    last_name=_clean_string(enriched.get("last_name")),
+                    title=_clean_string(enriched.get("title")),
+                    email=_clean_string(enriched.get("email")),
+                    linkedin_url=_clean_string(enriched.get("linkedin_url")),
+                    phone=_extract_apollo_phone(enriched),
+                    source_provider="apollo",
+                    source_stage="people_search",
+                )
+            )
+        return contacts
+
+
+class HunterClient:
+    def __init__(self, api_key: str, timeout_seconds: int) -> None:
+        self._http = httpx.Client(timeout=timeout_seconds)
+        self.api_key = api_key
+
+    def close(self) -> None:
+        self._http.close()
+
+    def find_contacts(self, domain: str, limit: int = 5) -> list[LeadContact]:
+        response = self._http.get(
+            HUNTER_DOMAIN_SEARCH_URL,
+            params={"domain": domain, "api_key": self.api_key, "limit": limit},
+        )
+        response.raise_for_status()
+        payload = response.json()
+        data = payload.get("data") or {}
+        emails = data.get("emails", []) or []
+        contacts: list[LeadContact] = []
+        for item in emails:
+            if not isinstance(item, dict):
+                continue
+            name = _build_full_name(item)
+            email = _clean_string(item.get("value"))
+            if not name and not email:
+                continue
+            contacts.append(
+                LeadContact(
+                    full_name=name or email or domain,
+                    first_name=_clean_string(item.get("first_name")),
+                    last_name=_clean_string(item.get("last_name")),
+                    title=_clean_string(item.get("position")),
+                    email=email,
+                    linkedin_url=_clean_string(item.get("linkedin")),
+                    phone=None,
+                    source_provider="hunter",
+                    source_stage="domain_search",
+                )
+            )
+        return contacts
+
+
+def lead_enrichment_enabled() -> bool:
+    return _env_flag("LEAD_ENRICHMENT_ENABLED", default=False)
+
+
+def should_enrich_lead(lead: CompanyLead, freshness_days: int) -> bool:
+    if lead.lead_score not in {"hot", "warm"}:
+        return False
+    if lead.last_enrichment_at is None:
+        return True
+    freshness_cutoff = datetime.now(timezone.utc) - timedelta(days=freshness_days)
+    if lead.last_enrichment_at <= freshness_cutoff:
+        return True
+    if lead.last_updated > lead.last_enrichment_at:
+        return True
+    return False
+
+
+def enrich_company_lead(lead: CompanyLead) -> CompanyEnrichmentOutcome:
+    timeout_seconds = int(os.getenv("LEAD_ENRICHMENT_TIMEOUT_SECONDS", os.getenv("ENRICHMENT_TIMEOUT_SECONDS", "10")))
+    outcome = CompanyEnrichmentOutcome(
+        company_name=lead.company_name,
+        company_domain=canonicalize_domain(lead.company_domain),
+    )
+
+    domain = outcome.company_domain
+    if not domain:
+        try:
+            with build_domain_resolver() as resolver:
+                resolved = resolver.resolve(lead.company_name, location=lead.location)
+            domain = canonicalize_domain(resolved.company_domain)
+            if domain:
+                outcome.profile.domain = domain
+                outcome.stages.append(
+                    EnrichmentStageResult(
+                        stage="domain_resolution",
+                        provider=resolved.source,
+                        status="success",
+                        message=resolved.reason,
+                        payload={"domain": domain, "confidence": resolved.confidence},
+                    )
+                )
+            else:
+                outcome.stages.append(
+                    EnrichmentStageResult(
+                        stage="domain_resolution",
+                        provider="google_kg",
+                        status="miss",
+                        message=resolved.reason,
+                    )
+                )
+        except Exception as exc:
+            outcome.stages.append(
+                EnrichmentStageResult(
+                    stage="domain_resolution",
+                    provider="google_kg",
+                    status="error",
+                    message=str(exc),
+                )
+            )
+
+    if not domain:
+        return outcome
+
+    outcome.company_domain = domain
+    outcome.profile.domain = domain
+
+    google_client = _build_google_search_client(timeout_seconds=timeout_seconds)
+    if google_client is None:
+        outcome.stages.append(
+            EnrichmentStageResult(
+                stage="linkedin_lookup",
+                provider="google_search",
+                status="skipped",
+                message="Google search provider not configured",
+            )
+        )
+    else:
+        try:
+            linkedin_url = google_client.resolve(lead.company_name)
+            if linkedin_url:
+                outcome.profile.linkedin_url = linkedin_url
+                outcome.stages.append(
+                    EnrichmentStageResult(
+                        stage="linkedin_lookup",
+                        provider="google_search",
+                        status="success",
+                        payload={"linkedin_url": linkedin_url},
+                    )
+                )
+            else:
+                outcome.stages.append(
+                    EnrichmentStageResult(
+                        stage="linkedin_lookup",
+                        provider="google_search",
+                        status="miss",
+                        message="No LinkedIn company URL found",
+                    )
+                )
+        except Exception as exc:
+            outcome.stages.append(
+                EnrichmentStageResult(
+                    stage="linkedin_lookup",
+                    provider="google_search",
+                    status="error",
+                    message=str(exc),
+                )
+            )
+        finally:
+            google_client.close()
+
+    apollo_client = _build_apollo_client(timeout_seconds=timeout_seconds)
+    if apollo_client is None:
+        outcome.stages.append(
+            EnrichmentStageResult(
+                stage="company_profile",
+                provider="apollo",
+                status="skipped",
+                message="Apollo API key not configured",
+            )
+        )
+    else:
+        try:
+            profile = apollo_client.enrich_company(domain)
+            outcome.profile.canonical_name = profile.canonical_name or lead.company_name
+            outcome.profile.sector = profile.sector
+            outcome.profile.employee_count = profile.employee_count
+            outcome.profile.revenue_range = profile.revenue_range
+            outcome.profile.headquarters_location = profile.headquarters_location
+            outcome.stages.append(
+                EnrichmentStageResult(
+                    stage="company_profile",
+                    provider="apollo",
+                    status="success",
+                    payload={
+                        "sector": profile.sector,
+                        "employee_count": profile.employee_count,
+                        "revenue_range": profile.revenue_range,
+                        "headquarters_location": profile.headquarters_location,
+                    },
+                )
+            )
+        except Exception as exc:
+            outcome.stages.append(
+                EnrichmentStageResult(
+                    stage="company_profile",
+                    provider="apollo",
+                    status="error",
+                    message=str(exc),
+                )
+            )
+
+        try:
+            contacts = apollo_client.find_contacts(domain)
+            outcome.contacts = contacts
+            outcome.stages.append(
+                EnrichmentStageResult(
+                    stage="contacts_primary",
+                    provider="apollo",
+                    status="success" if contacts else "miss",
+                    payload={"contacts_found": len(contacts)},
+                )
+            )
+        except Exception as exc:
+            outcome.stages.append(
+                EnrichmentStageResult(
+                    stage="contacts_primary",
+                    provider="apollo",
+                    status="error",
+                    message=str(exc),
+                )
+            )
+        finally:
+            apollo_client.close()
+
+    if outcome.contacts:
+        return outcome
+
+    hunter_client = _build_hunter_client(timeout_seconds=timeout_seconds)
+    if hunter_client is None:
+        outcome.stages.append(
+            EnrichmentStageResult(
+                stage="contacts_fallback",
+                provider="hunter",
+                status="skipped",
+                message="Hunter API key not configured",
+            )
+        )
+        return outcome
+
+    try:
+        contacts = hunter_client.find_contacts(domain)
+        outcome.contacts = contacts
+        outcome.stages.append(
+            EnrichmentStageResult(
+                stage="contacts_fallback",
+                provider="hunter",
+                status="success" if contacts else "miss",
+                payload={"contacts_found": len(contacts)},
+            )
+        )
+    except Exception as exc:
+        outcome.stages.append(
+            EnrichmentStageResult(
+                stage="contacts_fallback",
+                provider="hunter",
+                status="error",
+                message=str(exc),
+            )
+        )
+    finally:
+        hunter_client.close()
+
+    return outcome
+
+
+def persist_enrichment_outcome(database: Any, lead: CompanyLead, outcome: CompanyEnrichmentOutcome) -> CompanyLead | None:
+    for stage in outcome.stages:
+        database.save_enrichment_log(
+            entry=_build_log_entry(outcome, stage)
+        )
+
+    mark_enriched_at = None
+    if any(stage.status == "success" for stage in outcome.stages):
+        mark_enriched_at = datetime.now(timezone.utc)
+
+    updated_lead = database.save_company_enrichment(
+        company_name=lead.company_name,
+        company_domain=outcome.company_domain or lead.company_domain,
+        linkedin_url=outcome.profile.linkedin_url,
+        sector=outcome.profile.sector,
+        employee_count=outcome.profile.employee_count,
+        revenue_range=outcome.profile.revenue_range,
+        headquarters_location=outcome.profile.headquarters_location,
+        contacts=outcome.contacts,
+        enrichment_source=_build_source_summary(outcome.stages),
+        mark_enriched_at=mark_enriched_at,
+    )
+    return updated_lead
+
+
+def run_lead_enrichment_pass(
+    database: Any,
+    *,
+    freshness_days: int | None = None,
+    limit: int | None = None,
+) -> LeadEnrichmentPassSummary:
+    summary = LeadEnrichmentPassSummary()
+    if not lead_enrichment_enabled():
+        return summary
+
+    if freshness_days is None:
+        freshness_days = int(os.getenv("LEAD_ENRICHMENT_FRESHNESS_DAYS", "7"))
+
+    leads = database.get_leads(limit=limit)
+    candidates = [lead for lead in leads if lead.lead_score in {"hot", "warm"}]
+    summary.candidates = len(candidates)
+
+    for lead in candidates:
+        if not should_enrich_lead(lead, freshness_days=freshness_days):
+            summary.skipped += 1
+            continue
+
+        summary.attempted += 1
+        try:
+            outcome = enrich_company_lead(lead)
+            persist_enrichment_outcome(database, lead, outcome)
+            summary.completed += 1
+            summary.contacts_found += len(outcome.contacts)
+        except Exception as exc:
+            logger.warning("lead enrichment failed company={} error={}", lead.company_name, exc)
+            summary.errors += 1
+
+    return summary
+
+
+def _build_log_entry(outcome: CompanyEnrichmentOutcome, stage: EnrichmentStageResult) -> Any:
+    from db import EnrichmentLogEntry
+
+    return EnrichmentLogEntry(
+        company_name=outcome.company_name,
+        company_domain=outcome.company_domain,
+        stage=stage.stage,
+        provider=stage.provider,
+        status=stage.status,
+        message=stage.message,
+        payload=stage.payload,
+    )
+
+
+def _build_google_search_client(timeout_seconds: int) -> GoogleSearchLinkedInResolver | None:
+    api_key = (os.getenv("GOOGLE_SEARCH_API_KEY") or "").strip()
+    search_engine_id = (os.getenv("GOOGLE_SEARCH_ENGINE_ID") or "").strip()
+    if not api_key or not search_engine_id:
+        return None
+    return GoogleSearchLinkedInResolver(api_key=api_key, search_engine_id=search_engine_id, timeout_seconds=timeout_seconds)
+
+
+def _build_apollo_client(timeout_seconds: int) -> ApolloClient | None:
+    api_key = (os.getenv("APOLLO_API_KEY") or "").strip()
+    if not api_key:
+        return None
+    return ApolloClient(api_key=api_key, timeout_seconds=timeout_seconds)
+
+
+def _build_hunter_client(timeout_seconds: int) -> HunterClient | None:
+    api_key = (os.getenv("HUNTER_API_KEY") or "").strip()
+    if not api_key:
+        return None
+    return HunterClient(api_key=api_key, timeout_seconds=timeout_seconds)
+
+
+def _apollo_organization_object(payload: dict[str, Any]) -> dict[str, Any]:
+    for key in ("organization", "account", "company"):
+        value = payload.get(key)
+        if isinstance(value, dict):
+            return value
+    return payload
+
+
+def _format_employee_count(payload: dict[str, Any]) -> str | None:
+    for key in ("estimated_num_employees", "employee_count", "employees_count", "organization_num_employees"):
+        value = payload.get(key)
+        if isinstance(value, int):
+            return str(value)
+        cleaned = _clean_string(value)
+        if cleaned:
+            return cleaned
+    return None
+
+
+def _format_revenue_range(payload: dict[str, Any]) -> str | None:
+    for key in ("estimated_annual_revenue", "annual_revenue", "revenue_range", "organization_revenue_printed"):
+        cleaned = _clean_string(payload.get(key))
+        if cleaned:
+            return cleaned
+    min_value = payload.get("revenue_range", {}).get("min") if isinstance(payload.get("revenue_range"), dict) else None
+    max_value = payload.get("revenue_range", {}).get("max") if isinstance(payload.get("revenue_range"), dict) else None
+    if min_value is not None or max_value is not None:
+        return f"{min_value or 0}-{max_value or 0}"
+    return None
+
+
+def _format_headquarters_location(payload: dict[str, Any]) -> str | None:
+    fields = [
+        _clean_string(payload.get("raw_address")),
+        _clean_string(payload.get("city")),
+        _clean_string(payload.get("state")),
+        _clean_string(payload.get("country")),
+    ]
+    values = [field for field in fields if field]
+    if values:
+        return ", ".join(dict.fromkeys(values))
+    return _clean_string(payload.get("headquarters_location"))
+
+
+def _extract_apollo_phone(payload: dict[str, Any]) -> str | None:
+    direct = _clean_string(payload.get("phone_number"))
+    if direct:
+        return direct
+    organization = payload.get("organization")
+    if isinstance(organization, dict):
+        phone = _clean_string(organization.get("phone"))
+        if phone:
+            return phone
+    contact = payload.get("contact")
+    if isinstance(contact, dict):
+        phone = _clean_string(contact.get("sanitized_phone"))
+        if phone:
+            return phone
+        phone_numbers = contact.get("phone_numbers") or []
+        for item in phone_numbers:
+            if isinstance(item, dict):
+                phone = _clean_string(item.get("sanitized_number") or item.get("raw_number"))
+                if phone:
+                    return phone
+    return None
+
+
+def _build_source_summary(stages: list[EnrichmentStageResult]) -> str:
+    providers = [stage.provider for stage in stages if stage.status == "success"]
+    if not providers:
+        return "lead_enrichment"
+    ordered = list(dict.fromkeys(providers))
+    return ",".join(ordered)
+
+
+def _is_linkedin_company_url(value: str | None) -> bool:
+    if not value:
+        return False
+    parsed = urlparse(value)
+    host = parsed.netloc.lower()
+    path = parsed.path.lower()
+    return GOOGLE_LINKEDIN_HOST in host and "/company/" in path
+
+
+def _coalesce_strings(payload: dict[str, Any], keys: list[str]) -> str | None:
+    for key in keys:
+        cleaned = _clean_string(payload.get(key))
+        if cleaned:
+            return cleaned
+    return None
+
+
+def _build_full_name(payload: dict[str, Any]) -> str | None:
+    first_name = _clean_string(payload.get("first_name"))
+    last_name = _clean_string(payload.get("last_name"))
+    name = " ".join(part for part in [first_name, last_name] if part)
+    return name or _clean_string(payload.get("name"))
+
+
+def _clean_string(value: Any) -> str | None:
+    if not isinstance(value, str):
+        return None
+    cleaned = " ".join(value.split()).strip()
+    return cleaned or None
+
+
+def _env_flag(name: str, default: bool) -> bool:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}

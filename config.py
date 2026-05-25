@@ -282,9 +282,9 @@ STEPSTONE_GERMAN_QUERIES = [
     "CAD Teamcenter Spezialist",
 ]
 
-LINKEDIN_LOCATIONS = ["India", "Canada", "United States", "United Kingdom", "Germany"]
-INDEED_LOCATIONS = ["India", "Germany", "Canada", "United States"]
-GOOGLE_LOCATIONS = ["India", "Germany", "Canada", "United States"]
+LINKEDIN_LOCATIONS = ["Australia", "Canada", "United States", "United Kingdom", "France", "Germany"]
+INDEED_LOCATIONS = ["Australia", "France", "Germany", "Canada", "United Kingdom", "United States"]
+GOOGLE_LOCATIONS = ["Australia", "France", "Germany", "Canada", "United Kingdom", "United States"]
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
@@ -295,6 +295,7 @@ CAREER_PAGE_USER_AGENTS = [
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Safari/605.1.15",
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
 ]
+CAREER_PAGE_MAX_PAGES_PER_TARGET = 4
 
 NEWS_RSS_FEEDS = [
     "https://news.google.com/rss/search?q=Teamcenter+implementation&hl=en",
@@ -307,9 +308,11 @@ NEWS_RSS_FEEDS = [
     "https://news.google.com/rss/search?q=Teamcenter+Implementierung&hl=de",
     "https://news.google.com/rss/search?q=Siemens+PLM+Einfuhrung&hl=de",
 ]
+NEWS_RSS_USER_AGENT = "CTGT-NewsBot/1.0"
 
 GEO_CODE_BY_COUNTRY = {
-    "india": "in",
+    "australia": "au",
+    "france": "fr",
     "germany": "de",
     "canada": "ca",
     "united states": "us",
@@ -321,3 +324,8 @@ DEFAULT_BATCH_SIZE = 5
 DEFAULT_REQUEST_TIMEOUT_SECONDS = 30
 CAREER_PAGE_MAX_TEXT_CHARS = 12000
 NEWS_RSS_DESCRIPTION_MAX_CHARS = 4000
+
+DEFAULT_ENRICHMENT_TIMEOUT_SECONDS = 10
+DEFAULT_ENRICHMENT_MIN_DOMAIN_CONFIDENCE = 0.74
+DEFAULT_LEAD_ENRICHMENT_TIMEOUT_SECONDS = 10
+DEFAULT_LEAD_ENRICHMENT_FRESHNESS_DAYS = 7

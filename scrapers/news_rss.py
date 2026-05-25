@@ -11,7 +11,12 @@ import httpx
 from bs4 import BeautifulSoup
 from loguru import logger
 
-from config import DEFAULT_REQUEST_TIMEOUT_SECONDS, NEWS_RSS_DESCRIPTION_MAX_CHARS, NEWS_RSS_FEEDS
+from config import (
+    DEFAULT_REQUEST_TIMEOUT_SECONDS,
+    NEWS_RSS_DESCRIPTION_MAX_CHARS,
+    NEWS_RSS_FEEDS,
+    NEWS_RSS_USER_AGENT,
+)
 from models.schema import RawSignalDocument
 
 
@@ -31,7 +36,7 @@ def scrape_news(_: object | None = None, max_queries: int | None = None) -> Coll
     with httpx.Client(timeout=timeout_seconds, follow_redirects=True) as client:
         for feed_url in feed_urls:
             try:
-                response = client.get(feed_url, headers={"User-Agent": "CTGT-NewsBot/1.0"})
+                response = client.get(feed_url, headers={"User-Agent": NEWS_RSS_USER_AGENT})
                 response.raise_for_status()
             except Exception as exc:
                 logger.warning("news rss fetch failed feed={} error={}", feed_url, exc)
@@ -88,7 +93,6 @@ def parse_rss_feed(xml_text: str, feed_url: str) -> list[RawSignalDocument]:
 
     return documents
 
-
 def _feed_label(feed_url: str) -> str:
     parsed = urlparse(feed_url)
     query = parse_qs(parsed.query).get("q", [""])[0]
@@ -101,8 +105,6 @@ def _clean_html(value: str | None) -> str | None:
     text = BeautifulSoup(html.unescape(value), "lxml").get_text(" ", strip=True)
     cleaned = " ".join(text.split()).strip()
     return cleaned or None
-
-
 def _normalize_pub_date(value: str | None) -> str | None:
     if not value:
         return None
@@ -115,5 +117,11 @@ def _normalize_pub_date(value: str | None) -> str | None:
 def _text(node: ET.Element | None) -> str | None:
     if node is None or node.text is None:
         return None
-    cleaned = " ".join(node.text.split()).strip()
+    return _normalize_text(node.text)
+
+
+def _normalize_text(value: str | None) -> str | None:
+    if value is None:
+        return None
+    cleaned = " ".join(value.split()).strip()
     return cleaned or None

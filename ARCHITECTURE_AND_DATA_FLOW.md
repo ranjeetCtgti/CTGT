@@ -47,9 +47,10 @@ This file acts as the control plane for the rest of the system.
 Files:
 
 - `scrapers/scrapedo_client.py`
-- `scrapers/linkedin.py`
-- `scrapers/indeed.py`
+- `scrapers/jobspy_adapter.py`
 - `scrapers/stepstone.py`
+- `scrapers/career_pages.py`
+- `scrapers/news_rss.py`
 
 This layer is responsible for fetching raw HTML from job boards and parsing job cards into structured Python objects.
 
@@ -57,9 +58,12 @@ Implemented sources:
 
 - LinkedIn
 - Indeed
+- Google
 - Stepstone
+- Career pages
+- News RSS
 
-All source scrapers depend on the shared `ScrapeDoClient`, which centralizes:
+Stepstone depends on the shared `ScrapeDoClient`, which centralizes:
 
 - scrape.do API requests
 - request parameters
@@ -194,18 +198,17 @@ The orchestrator gets source functions from `get_source_scrapers()`:
 
 - `scrape_linkedin`
 - `scrape_indeed`
+- `scrape_google`
 - `scrape_stepstone`
+- `scrape_career_pages`
+- `scrape_news`
 
-Each scraper performs the same pattern:
+The collectors do not all use the same fetch path:
 
-1. Build query/location search plan
-2. Generate search URL
-3. Call `ScrapeDoClient.scrape()`
-4. Receive HTML
-5. Parse HTML with BeautifulSoup
-6. Extract job-card fields
-7. Build `RawJobPosting`
-8. Return list of postings
+1. JobSpy-backed job boards build query/location plans and return normalized `RawJobPosting` rows
+2. Stepstone uses `ScrapeDoClient` and HTML parsing
+3. Career pages use direct `httpx` fetches and page-text extraction
+4. News uses RSS fetch + XML parsing
 
 ### LinkedIn flow
 
@@ -216,9 +219,13 @@ Each scraper performs the same pattern:
 
 ### Indeed flow
 
-- Tries `render=false` first
-- Falls back to `render=true`
-- Supports Germany, Canada, United States
+- Uses JobSpy
+- Supports configured geographies from `config.py`
+
+### Google flow
+
+- Uses JobSpy
+- Supports configured geographies from `config.py`
 
 ### Stepstone flow
 
@@ -421,8 +428,8 @@ The dashboard never participates in scraping, filtering, or extraction. It only 
 
 The data lifecycle in the current implementation is:
 
-1. External job board HTML is fetched through scrape.do
-2. HTML is parsed into `RawJobPosting`
+1. Source data is collected from JobSpy, scrape.do, direct HTTP career pages, or RSS feeds
+2. The raw source payload is normalized into `RawJobPosting` or `RawSignalDocument`
 3. Text is filtered by keyword rules
 4. Candidate text is sent to Gemini
 5. Gemini response becomes `ExtractedSignal`
@@ -436,9 +443,12 @@ The data lifecycle in the current implementation is:
 
 Implemented in the current repo:
 
-- LinkedIn scraper
-- Indeed scraper
+- LinkedIn JobSpy collector
+- Indeed JobSpy collector
+- Google JobSpy collector
 - Stepstone scraper
+- career page crawler
+- news/RSS ingestion
 - scrape.do wrapper
 - keyword prefilter
 - Gemini extractor
@@ -453,25 +463,27 @@ Implemented in the current repo:
 
 Defined in `REQUIREMENTS.md` but not present as working modules in the current codebase:
 
-- career page crawler
-- news/RSS ingestion
 - `scrape_log` table
 - CSV export command
 - scheduler
 - enrichment APIs
 - contact/person data enrichment
 
-This is consistent with the Phase 1 implementation plan, which explicitly excluded:
+This is no longer fully consistent with the original Phase 1 implementation plan, because the codebase already includes:
 
 - career pages
 - news RSS
+- local dashboard
+
+Still not implemented from later phases:
+
 - scheduling
 - CSV export
 - enrichment
 
 ## 6. Architectural Conclusion
 
-The exact current architecture is a Phase 1 batch lead-detection pipeline centered on job-board scraping.
+The exact current architecture is a Phase 1 core pipeline plus partial Phase 2 source expansion.
 
 The system of record is PostgreSQL.
 
@@ -479,11 +491,12 @@ The authoritative runtime flow is:
 
 `Scrapers -> RawJobPosting -> Prefilter -> GeminiExtractor -> ExtractedSignal -> signals table -> company upsert -> companies table -> CLI summary / dashboard`
 
-The requirement document describes a broader future-state architecture, but the actual running project today is narrower:
+The requirement document describes a broader future-state architecture, but the actual running project today is still missing Phase 3 and Phase 4 operational features:
 
-- only job boards are implemented as sources
-- enrichment is limited to NLP extraction and score aggregation
-- output is DB + terminal summary + local dashboard
+- no scrape log table
+- no CSV export
+- no scheduler
+- no enrichment integrations
 
 ## 7. File Map
 
@@ -496,10 +509,10 @@ Core files for this architecture:
 - `extractors/nlp.py`
 - `db/database.py`
 - `scrapers/scrapedo_client.py`
-- `scrapers/linkedin.py`
-- `scrapers/indeed.py`
+- `scrapers/jobspy_adapter.py`
 - `scrapers/stepstone.py`
+- `scrapers/career_pages.py`
+- `scrapers/news_rss.py`
 - `dashboard.py`
 - `REQUIREMENTS.md`
 - `PHASE1_IMPLEMENTATION_PLAN.md`
-

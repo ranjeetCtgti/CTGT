@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass, field
 from urllib.parse import urlencode, urljoin
 
 from bs4 import BeautifulSoup, Tag
@@ -60,6 +61,13 @@ LINK_SELECTORS = [
 ]
 
 
+@dataclass(slots=True)
+class CollectorResult:
+    postings: list[RawJobPosting]
+    pages_scraped: int
+    errors: list[str] = field(default_factory=list)
+
+
 def build_search_url(query: str) -> str:
     return f"{STEPSTONE_SEARCH_URL}?{urlencode({'q': query})}"
 
@@ -95,19 +103,26 @@ def _stepstone_request(query: str, target_url: str) -> ScrapeRequest:
 def scrape_stepstone(
     client: ScrapeDoClient,
     max_queries: int | None = None,
-) -> list[RawJobPosting]:
+) -> CollectorResult:
     postings: list[RawJobPosting] = []
+    errors: list[str] = []
+    pages_scraped = 0
 
     for query in build_search_plan(max_queries=max_queries):
         target_url = build_search_url(query)
         response = client.scrape(_stepstone_request(query, target_url))
+        pages_scraped += 1
 
         if not response.ok or not response.html:
+            message = "stepstone scrape failed query={} status={} error={}"
             logger.warning(
-                "stepstone scrape failed query={} status={} error={}",
+                message,
                 query,
                 response.status_code,
                 response.error,
+            )
+            errors.append(
+                f"stepstone scrape failed query={query} status={response.status_code} error={response.error}"
             )
             continue
 
@@ -123,7 +138,7 @@ def scrape_stepstone(
 
         postings.extend(parsed_postings)
 
-    return postings
+    return CollectorResult(postings=postings, pages_scraped=pages_scraped, errors=errors)
 
 
 def parse_search_results(html: str, query: str) -> list[RawJobPosting]:

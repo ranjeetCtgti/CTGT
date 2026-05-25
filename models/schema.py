@@ -64,9 +64,25 @@ class ExtractedSignal(BaseModel):
     raw_score: int = 0
     confidence: float = Field(default=0.0, ge=0.0, le=1.0)
     reason: str | None = None
+    domain_resolution_source: str | None = None
+    domain_resolution_confidence: float | None = Field(default=None, ge=0.0, le=1.0)
     source_url: HttpUrl
     source_title: str | None = None
     detected_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+
+class LeadContact(BaseModel):
+    model_config = ConfigDict(extra="ignore", str_strip_whitespace=True)
+
+    full_name: str
+    first_name: str | None = None
+    last_name: str | None = None
+    title: str | None = None
+    email: str | None = None
+    linkedin_url: str | None = None
+    phone: str | None = None
+    source_provider: str
+    source_stage: str
 
 
 class CompanyLead(BaseModel):
@@ -74,14 +90,23 @@ class CompanyLead(BaseModel):
 
     company_name: str
     company_domain: str | None = None
+    linkedin_url: str | None = None
     location: str | None = None
     industry: str | None = None
+    sector: str | None = None
+    headquarters_location: str | None = None
+    employee_count: str | None = None
+    revenue_range: str | None = None
     software: list[str] = Field(default_factory=list)
     signal_sources: list[str] = Field(default_factory=list)
     signal_count: int = 0
     migration_risk: bool = False
     total_score: int = 0
     lead_score: LeadScore = "cold"
-    contacts: list[dict] = Field(default_factory=list)
+    contacts: list[LeadContact] = Field(default_factory=list)
+    enrichment_source: str | None = None
+    enrichment_confidence: float | None = Field(default=None, ge=0.0, le=1.0)
+    enriched_at: datetime | None = None
+    last_enrichment_at: datetime | None = None
     first_seen: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     last_updated: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

@@ -210,12 +210,12 @@ German queries (Germany):
 
 ---
 
-### 3.3 Source C - Glassdoor (via JobSpy)
+### 3.3 Source C - Google Jobs (via JobSpy)
 
-**What we collect:** Job search result rows returned by JobSpy for Glassdoor  
+**What we collect:** Job search result rows returned by JobSpy for Google Jobs  
 **Why:** Adds another broad hiring signal source for engineering and manufacturing employers that do not consistently overlap with LinkedIn or Indeed  
 **Authentication required:** No for public result access mediated by JobSpy  
-**Anti-bot difficulty:** Medium-High - support quality can drift with upstream Glassdoor changes  
+**Anti-bot difficulty:** Medium - support quality can drift with upstream Google Jobs changes  
 **Collector mode:** `python-jobspy` called directly from `pipeline.py` via `scrapers/jobspy_adapter.py`  
 
 **Search queries:** Reuse the same English and German PLM query sets from `config.py`
@@ -231,7 +231,7 @@ German queries (Germany):
 - Date posted
 - Active query term injected from the pipeline search context
 
-**Normalization rules:** Treat `glassdoor` as a first-class `SignalSource` alongside `linkedin`, `indeed`, and `stepstone`. Validate JobSpy row shape compatibility before the row enters pre-filtering and NLP extraction.
+**Normalization rules:** Treat `google` as a first-class `SignalSource` alongside `linkedin`, `indeed`, and `stepstone`. Validate JobSpy row shape compatibility before the row enters pre-filtering and NLP extraction.
 
 **Rate:** Follows the same direct JobSpy collection pattern as LinkedIn and Indeed; no scrape.do credits are assumed in the default Phase 1 budget.
 
@@ -346,21 +346,21 @@ https://news.google.com/rss/search?q=Siemens+PLM+Einfuhrung&hl=de
 
 ### 4.1 JobSpy Integration
 
-**Primary use:** Collect job postings for LinkedIn, Indeed, and Glassdoor directly inside `pipeline.py` without a `jobs.csv` intermediary  
+**Primary use:** Collect job postings for LinkedIn, Indeed, and Google directly inside `pipeline.py` without a `jobs.csv` intermediary  
 **Runtime dependency:** `python-jobspy`  
 **Integration point:** `scrapers/jobspy_adapter.py` called by a collector registry in `pipeline.py`  
 
 **Responsibilities of the adapter:**
-- Query LinkedIn, Indeed, and Glassdoor using the active search terms from `config.py`
+- Query LinkedIn, Indeed, and Google using the active search terms from `config.py`
 - Normalize JobSpy dataframe rows into `RawJobPosting`
-- Filter to supported sites only: `linkedin`, `indeed`, `glassdoor`
+- Filter to supported sites only: `linkedin`, `indeed`, `google`
 - Inject the active query string into each normalized row
 - Prefer JobSpy `description` text over short snippets for Gemini input
 
 **Collector interface decisions for the later code change:**
-- `pipeline.py --source` supports `linkedin`, `indeed`, `glassdoor`, `stepstone`, and `all`
-- `models.schema.SignalSource` must add `glassdoor`
-- `models.schema.RawJobPosting.source` accepts `glassdoor`
+- `pipeline.py --source` supports `linkedin`, `indeed`, `google`, `stepstone`, and `all`
+- `models.schema.SignalSource` must add `google`
+- `models.schema.RawJobPosting.source` accepts `google`
 - `get_source_scrapers()` should become a source collector registry where JobSpy-backed collectors emit normalized `RawJobPosting` and Stepstone remains a separate scrape.do-backed collector
 - `config.py` query sets remain the source of truth; the adapter receives the active query string from the pipeline
 
@@ -372,7 +372,7 @@ https://news.google.com/rss/search?q=Siemens+PLM+Einfuhrung&hl=de
 **Authentication:** `token` query parameter  
 **Documentation:** https://scrape.do/documentation/
 
-**Primary use in Phase 1:** Stepstone Germany only. Keep this client reusable for future fallback use, but do not assume scrape.do for LinkedIn, Indeed, or Glassdoor in the default architecture.
+**Primary use in Phase 1:** Stepstone Germany only. Keep this client reusable for future fallback use, but do not assume scrape.do for LinkedIn, Indeed, or Google in the default architecture.
 
 **Key parameters used in this project:**
 
@@ -686,7 +686,7 @@ CREATE TABLE signals (
     industry          TEXT,
     software          JSONB,                    -- ["Teamcenter", "NX"]
     signal_type       TEXT,                    -- job_posting | career_page | news
-    signal_source     TEXT,                    -- linkedin | indeed | glassdoor | stepstone | career_page | news
+    signal_source     TEXT,                    -- linkedin | indeed | google | stepstone | career_page | news
     migration         BOOLEAN DEFAULT FALSE,
     migration_from    TEXT,
     pain_signals      JSONB,                   -- ["implementation", "upgrade"]
@@ -716,7 +716,7 @@ CREATE TABLE companies (
     employee_count  TEXT,                      -- from enrichment (future)
     revenue_range   TEXT,                      -- from enrichment (future)
     software        JSONB,                     -- union of all detected software
-    signal_sources  JSONB,                     -- ["linkedin", "indeed", "glassdoor"]
+    signal_sources  JSONB,                     -- ["linkedin", "indeed", "google"]
     signal_count    INT DEFAULT 0,
     migration_risk  BOOLEAN DEFAULT FALSE,
     total_score     INT DEFAULT 0,
@@ -739,7 +739,7 @@ Tracks every scrape.do request for credit accounting and debugging.
 ```sql
 CREATE TABLE scrape_log (
     id            SERIAL PRIMARY KEY,
-    source        TEXT,                        -- linkedin | indeed | glassdoor | stepstone
+    source        TEXT,                        -- linkedin | indeed | google | stepstone
     query         TEXT,
     target_url    TEXT,
     status        TEXT,                        -- success | failed | skipped
@@ -795,7 +795,7 @@ python pipeline.py
 
 # Specific sources only
 python pipeline.py --source linkedin
-python pipeline.py --source glassdoor
+python pipeline.py --source google
 python pipeline.py --source all
 
 # Dry run — no DB writes (for testing)
@@ -835,9 +835,9 @@ Use `apscheduler` (Python) or a simple cron job. Do not run more than once per d
 
 > **Note on free tier:** Because scrape.do is now budgeted primarily for Stepstone, the free tier is sufficient for early testing and smoke runs. Production sizing depends mostly on Stepstone cadence plus any future fallback traffic you choose to add.
 
-**JobSpy cost note:** LinkedIn, Indeed, and Glassdoor are collected via JobSpy and are not billed through scrape.do credits. They may still require proxies or throttling controls for acceptable reliability.
+**JobSpy cost note:** LinkedIn, Indeed, and Google are collected via JobSpy and are not billed through scrape.do credits. They may still require proxies or throttling controls for acceptable reliability.
 
-**Development/testing budget:** Use `--max-queries 2` and `--source stepstone` during scrape.do-focused testing. Use `--source linkedin`, `--source indeed`, or `--source glassdoor` separately when validating direct JobSpy ingestion.
+**Development/testing budget:** Use `--max-queries 2` and `--source stepstone` during scrape.do-focused testing. Use `--source linkedin`, `--source indeed`, or `--source google` separately when validating direct JobSpy ingestion.
 
 ### 10.2 Gemini API Cost per Run
 
@@ -1039,7 +1039,7 @@ lead_engine/
 - [ ] `pipeline.py` — CLI orchestrator
 - [ ] `config.py` — keyword dictionary + scoring
 
-**Definition of done for Phase 1:** Pipeline runs end-to-end, collects real job postings from LinkedIn, Indeed, Glassdoor, and Stepstone, extracts signals, stores leads in PostgreSQL, prints HOT/WARM summary.
+**Definition of done for Phase 1:** Pipeline runs end-to-end, collects real job postings from LinkedIn, Indeed, Google, and Stepstone, extracts signals, stores leads in PostgreSQL, prints HOT/WARM summary.
 
 ### Phase 2 — Own Scrapers (Target: 1–2 weeks after Phase 1)
 
@@ -1069,18 +1069,18 @@ lead_engine/
 
 ### 16.1 JobSpy Reliability, Rate Limits, and Proxies
 
-LinkedIn remains the most aggressive source in the set, and JobSpy support for LinkedIn/Indeed/Glassdoor can degrade if site markup or anti-bot controls change upstream. Expect periodic rate limiting and occasional row-shape drift. Mitigation:
+LinkedIn remains the most aggressive source in the set, and JobSpy support for LinkedIn/Indeed/Google can degrade if site markup or anti-bot controls change upstream. Expect periodic rate limiting and occasional row-shape drift. Mitigation:
 - Keep per-source throttling and optional proxy configuration available for JobSpy-backed runs
 - If a search query consistently fails, rotate the query phrasing or lower concurrency
 - Monitor JobSpy dataframe columns and adapt normalization quickly when upstream changes land
 - Validate that LinkedIn description fetches still provide enough text for Gemini input after dependency upgrades
 
-### 16.2 Glassdoor Support Caveats
+### 16.2 Google Jobs Support Caveats
 
-Glassdoor is intentionally in scope for Phase 1, but it may be the least stable JobSpy-backed board after LinkedIn. Mitigation:
-- Verify Glassdoor row shape compatibility during smoke tests and dependency upgrades
+Google Jobs is intentionally in scope for Phase 1, but upstream JobSpy result shape can still drift. Mitigation:
+- Verify Google row shape compatibility during smoke tests and dependency upgrades
 - Reject unsupported or malformed JobSpy `site` values before they enter downstream processing
-- Treat Glassdoor as first-class in source stats, persistence, and summaries once rows are normalized successfully
+- Treat Google as first-class in source stats, persistence, and summaries once rows are normalized successfully
 
 ### 16.3 CSS Selector Brittleness
 

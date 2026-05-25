@@ -111,9 +111,9 @@ def _render_dashboard(
     signal_limit: int,
 ) -> str:
     lead_counts = Counter(lead.lead_score for lead in all_leads)
-    total_leads = len(all_leads)
     total_signals = sum(stat.signal_count for stat in source_stats)
     total_companies = len(all_leads)
+    displayed_leads = len(leads)
     active_filter_count = sum(1 for value in filters.values() if value)
 
     source_cards = "".join(_render_source_card(stat) for stat in source_stats) or _empty_state("No source stats yet.")
@@ -202,6 +202,10 @@ def _render_dashboard(
     .stat .value {{
       font-size: 34px;
       margin-top: 6px;
+      line-height: 1.1;
+    }}
+    .stat .value.compact {{
+      font-size: 24px;
     }}
     .grid {{
       display: grid;
@@ -219,6 +223,9 @@ def _render_dashboard(
     .panel h2 {{
       margin: 0 0 14px;
       font-size: 24px;
+    }}
+    .panel + .panel {{
+      margin-top: 22px;
     }}
     .filters {{
       display: grid;
@@ -273,9 +280,30 @@ def _render_dashboard(
       padding: 16px;
       background: var(--panel-strong);
     }}
+    .card-head {{
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }}
+    .card-title {{
+      font-size: 19px;
+      line-height: 1.2;
+    }}
+    .metric-value {{
+      font-size: 30px;
+      line-height: 1;
+      margin-top: 6px;
+    }}
     .lead-list {{
       display: grid;
       gap: 12px;
+    }}
+    .section-note {{
+      margin-top: 14px;
+    }}
+    .token-list {{
+      margin-top: 10px;
     }}
     .pill {{
       display: inline-block;
@@ -298,6 +326,7 @@ def _render_dashboard(
       width: 100%;
       border-collapse: collapse;
       margin-top: 8px;
+      min-width: 1120px;
     }}
     th, td {{
       text-align: left;
@@ -311,9 +340,16 @@ def _render_dashboard(
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--muted);
+      background: rgba(255, 253, 248, 0.98);
+      position: sticky;
+      top: 0;
+      z-index: 1;
     }}
     .table-wrap {{
       overflow-x: auto;
+      border: 1px solid #e5dccd;
+      border-radius: 18px;
+      background: rgba(255, 253, 248, 0.82);
     }}
     .muted {{
       color: var(--muted);
@@ -333,6 +369,9 @@ def _render_dashboard(
       border-radius: 16px;
       color: var(--muted);
       background: rgba(255,255,255,0.4);
+    }}
+    .section-spacer {{
+      margin-top: 22px;
     }}
     @media (max-width: 980px) {{
       .grid {{
@@ -358,8 +397,8 @@ def _render_dashboard(
       <div class="stats">
         <div class="stat"><div class="label">Signal Rows</div><div class="value">{total_signals}</div></div>
         <div class="stat"><div class="label">Companies Seen</div><div class="value">{total_companies}</div></div>
-        <div class="stat"><div class="label">Top Leads Loaded</div><div class="value">{total_leads}</div></div>
-        <div class="stat"><div class="label">Hot / Warm / Cold</div><div class="value">{lead_counts.get("hot", 0)} / {lead_counts.get("warm", 0)} / {lead_counts.get("cold", 0)}</div></div>
+        <div class="stat"><div class="label">Lead Cards Shown</div><div class="value">{displayed_leads}</div></div>
+        <div class="stat"><div class="label">Hot / Warm / Cold</div><div class="value compact">{lead_counts.get("hot", 0)} / {lead_counts.get("warm", 0)} / {lead_counts.get("cold", 0)}</div></div>
         <div class="stat"><div class="label">Active Filters</div><div class="value">{active_filter_count}</div></div>
       </div>
     </section>
@@ -403,7 +442,7 @@ def _render_dashboard(
             <a class="button secondary" href="/">Clear</a>
           </div>
         </form>
-        <div class="meta" style="margin-top:14px;">
+        <div class="meta section-note">
           Showing up to {signal_limit} cleaned signal rows. Use the job link in the table to open the original posting.
         </div>
       </section>
@@ -419,17 +458,17 @@ def _render_dashboard(
         <h2>Quick Links</h2>
         <div class="lead-list">
           <div class="lead-card">
-            <div><strong>All signals</strong></div>
+            <div class="card-title"><strong>All signals</strong></div>
             <div class="meta">Review every cleaned NLP signal row currently stored in PostgreSQL.</div>
             <div class="meta"><a href="/?{_query_string({'source': '', 'lead_score': '', 'company': ''})}">Reset all filters</a></div>
           </div>
           <div class="lead-card">
-            <div><strong>Hot accounts</strong></div>
+            <div class="card-title"><strong>Hot accounts</strong></div>
             <div class="meta">Focus on the most actionable companies first.</div>
             <div class="meta"><a href="/?{_query_string({'lead_score': 'hot'})}">Show hot signal rows</a></div>
           </div>
           <div class="lead-card">
-            <div><strong>LinkedIn-only</strong></div>
+            <div class="card-title"><strong>LinkedIn-only</strong></div>
             <div class="meta">Inspect cleaned results coming from LinkedIn job scraping.</div>
             <div class="meta"><a href="/?{_query_string({'source': 'linkedin'})}">Show LinkedIn rows</a></div>
           </div>
@@ -437,7 +476,7 @@ def _render_dashboard(
       </section>
     </div>
 
-    <section class="panel" style="margin-top:22px;">
+    <section class="panel section-spacer">
       <h2>Clean NLP Signals</h2>
       <div class="table-wrap">
         <table>
@@ -470,7 +509,7 @@ def _render_source_card(stat: Any) -> str:
     return f"""
     <div class="source-card">
       <div class="eyebrow">{_escape(stat.source)}</div>
-      <div style="font-size:30px;">{stat.signal_count}</div>
+      <div class="metric-value">{stat.signal_count}</div>
       <div class="meta">
         Companies: {stat.company_count}<br>
         HOT / WARM / COLD: {stat.hot_count} / {stat.warm_count} / {stat.cold_count}
@@ -487,16 +526,16 @@ def _render_lead_card(lead: Any) -> str:
     industry = _escape(lead.industry or "Unknown industry")
     return f"""
     <div class="lead-card">
-      <div style="display:flex; justify-content:space-between; gap:12px; align-items:flex-start;">
+      <div class="card-head">
         <div>
-          <strong>{_escape(lead.company_name)}</strong>
+          <div class="card-title"><strong>{_escape(lead.company_name)}</strong></div>
           <div class="meta">{location} | {industry}</div>
         </div>
         <span class="pill {lead.lead_score}">{lead.lead_score}</span>
       </div>
       <div class="meta">Score: {lead.total_score} | Signals: {lead.signal_count} | Sources: {_escape(sources)}</div>
       <div class="meta">{domain}</div>
-      <div style="margin-top:10px;">{software}</div>
+      <div class="token-list">{software}</div>
     </div>
     """
 

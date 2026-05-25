@@ -35,6 +35,9 @@ from extractors.prefilter import PrefilterResult, keyword_prefilter
 from models.schema import ExtractedSignal, RawJobPosting, SignalSource, SignalType
 
 DEFAULT_LLM_REQUESTS_PER_MINUTE = 25
+PLACEHOLDER_COMPANY_NAMES = {"unknown", "n/a", "none", "null"}
+
+
 class GeminiClientError(Exception):
     """Raised when Gemini extraction fails irrecoverably."""
 
@@ -56,6 +59,7 @@ class ExtractionCandidate:
     description: str | None = None
     company_hint: str | None = None
     location_hint: str | None = None
+    prefilter: PrefilterResult | None = None
 
 
 def _is_retryable_gemini_error(exc: Exception) -> bool:
@@ -168,9 +172,10 @@ class BaseExtractor:
                 normalized_company_hint, recently_processed_companies
             ):
                 continue
-            prefilter = keyword_prefilter(candidate.source_text)
+            prefilter = candidate.prefilter or keyword_prefilter(candidate.source_text)
             if not prefilter.passed:
                 continue
+            candidate.prefilter = prefilter
             filtered.append(candidate)
         return filtered
 
@@ -303,7 +308,11 @@ class BaseExtractor:
         raw_item: dict[str, Any],
     ) -> tuple[ExtractedSignal | None, str]:
         company_name = str(raw_item.get("company_name") or candidate.company_hint or "").strip()
-        if not company_name or company_name.lower() in EXCLUDED_COMPANIES:
+        if (
+            not company_name
+            or company_name.lower() in EXCLUDED_COMPANIES
+            or company_name.lower() in PLACEHOLDER_COMPANY_NAMES
+        ):
             return None, "excluded_or_missing_company"
 
         software = _normalize_software(raw_item.get("software_detected", []))
@@ -570,6 +579,7 @@ def candidate_from_job_posting(posting: RawJobPosting) -> ExtractionCandidate:
     source_text = " | ".join(
         value for value in [posting.query, posting.title, posting.company_name, posting.location, body] if value
     )
+    prefilter = keyword_prefilter(source_text)
     return ExtractionCandidate(
         source_url=str(posting.job_url),
         source_title=posting.title,
@@ -582,6 +592,7 @@ def candidate_from_job_posting(posting: RawJobPosting) -> ExtractionCandidate:
         description=posting.description,
         company_hint=posting.company_name,
         location_hint=posting.location,
+        prefilter=prefilter,
     )
 
 
@@ -630,6 +641,10 @@ def _build_prompt(
                 "location_hint": candidate.location_hint,
                 "signal_source": candidate.signal_source,
                 "source_title": candidate.source_title,
+                "prefilter_products": _software_from_prefilter(candidate.prefilter),
+                "prefilter_context": _sanitise_text(candidate.prefilter.relevant_context, max_chars=1200)
+                if candidate.prefilter and candidate.prefilter.relevant_context
+                else None,
                 # Avoid sending the same article/job text multiple times.
                 "snippet": snippet,
                 "description": description,
@@ -645,6 +660,7 @@ def _build_prompt(
             f"Allowed industry values: {', '.join(INDUSTRY_CHOICES)}.\n"
             f"Allowed software_detected values: {', '.join(sorted(ALLOWED_SOFTWARE_NAMES))}.\n"
             "Use the structured fields first: query, title, company_hint, location_hint, snippet, and description.\n"
+            "Use prefilter_products as deterministic keyword hits and prefilter_context as the most relevant local context.\n"
             "Use text only as a fallback combined view of the same source item.\n"
             "The company_name must refer to the source company in the input item, never CTGT Innovations unless the input explicitly says that.\n"
             "If Siemens PLM evidence is weak, return empty software_detected and low confidence instead of explanation text.\n"
@@ -679,6 +695,7 @@ def _build_prompt(
         f"Allowed industry values: {', '.join(INDUSTRY_CHOICES)}.\n"
         f"Allowed software_detected values: {', '.join(sorted(ALLOWED_SOFTWARE_NAMES))}.\n"
         "Use the structured fields first: query, title, company_hint, location_hint, snippet, and description.\n"
+        "Use prefilter_products as deterministic keyword hits and prefilter_context as the most relevant local context.\n"
         "Use text only as a fallback combined view of the same source item.\n"
         "Each output object must include the matching input id.\n"
         "The company_name must refer to the source company in that input item, never CTGT Innovations unless the input explicitly says that.\n"
@@ -767,6 +784,26 @@ def _normalize_software(values: Any) -> list[str]:
             continue
         display = SOFTWARE_CANONICAL_TO_DISPLAY[canonical]
         if display in seen:
+            continue
+        seen.add(display)
+        normalized.append(display)
+    return normalized
+
+
+def _software_from_prefilter(prefilter: PrefilterResult | None) -> list[str]:
+    if prefilter is None:
+        return []
+
+    normalized: list[str] = []
+    seen: set[str] = set()
+    for product_name in prefilter.matched_products:
+        canonical = SOFTWARE_DISPLAY_TO_CANONICAL.get(product_name)
+        if canonical is None:
+            canonical = SOFTWARE_DISPLAY_TO_CANONICAL.get(product_name.title())
+        if canonical is None:
+            canonical = product_name.strip().lower()
+        display = SOFTWARE_CANONICAL_TO_DISPLAY.get(canonical)
+        if not display or display in seen:
             continue
         seen.add(display)
         normalized.append(display)

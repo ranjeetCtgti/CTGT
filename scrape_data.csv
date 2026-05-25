@@ -1,1 +1,2868 @@
 source,query,title,company_name,location,posted_date,job_url,snippet,scraped_at
+"in-3956918bebee418c","indeed","https://de.indeed.com/viewjob?jk=3956918bebee418c","http://de.indeed.com/job/software-developer-web-react-wmd-3956918bebee418c","Software Developer - Web & React (w/m/d)","in-motion GmbH","München, BY, DE","2026-05-22","fulltime","","","","","",True,"","","","","**Stellenbeschreibung**  
+Du möchtest nicht einfach nur codieren, sondern aktiv digitale Produkte mitgestalten? Dann schwimm mit uns im digitalen Workflow und entwickle moderne Webanwendungen, die wirklich genutzt werden. Wir suchen einen Software Developer (w/m/d), der:die Spaß daran hat, mit React und modernen Webtechnologien Lösungen für interne Prozesse und Kundenanwendungen zu entwickeln, bestehende Ideen zu hinterfragen und gemeinsam im Team bessere digitale Wege zu gestalten.
+
+**Aufgaben**
+
+* Entwicklung moderner Web\\-Frontends mit React und TypeScript für interne Anwendungen und Kundenlösungen
+* Analyse bestehender Anwendungen und Prozesse, Identifikation von Verbesserungspotenzialen sowie Entwicklung und Umsetzung von Optimierungs\\- und Automatisierungslösungen
+* Entwicklung einfacher Backend\\-Services und APIs (Node.js, Python) zur Datenanbindung und \\-verarbeitung sowie Unterstützung bei Schnittstellen und Datenmodellen
+* Zusammenarbeit mit internen und externen Ansprechpartnern sowie Kunden zur gemeinsamen Umsetzung technischer Lösungen
+* Übersetzung fachlicher Anforderungen in technische Konzepte und aktive Mitgestaltung der Lösungsfindung
+* Unterstützung von Anwender:innen bei neuen Tools und Anwendungen
+
+**Qualifikationen**
+
+* Abgeschlossene Ausbildung im IT\\-Bereich oder abgeschlossenes Studium der Informatik bzw. einer vergleichbaren Fachrichtung
+* Gute Kenntnisse in JavaScript/TypeScript, HTML5 und CSS3 sowie Erfahrung mit React und modernen Frontend\\-Frameworks
+* Erfahrung mit Git und gängigen Versionskontroll\\-Workflows
+* Grundverständnis von Backend\\-Technologien und Schnittstellen (z. B. Node.js, Python oder REST\\-APIs)
+* Strukturierte, agile und lösungsorientierte Arbeitsweise mit Fokus auf saubere technische Lösungen
+* Teamfähigkeit, Kommunikationsstärke und Freude an der Zusammenarbeit mit Kolleg:innen und Kund:innen
+* Hohes Interesse an moderner Webentwicklung mit React und der Weiterentwicklung digitaler Anwendungen
+* Sehr gute Deutschkenntnisse (mindestens B2\\) sowie sichere Englischkenntnisse in Wort und Schrift
+
+**WICHTIG: Quereinsteiger:nnen mit IT\\-Affinität und Leidenschaft für Softwareentwicklung sind herzlich willkommen.**
+
+**BITTE BEWERBEN SIE SICH ÜBER UNSERE WEBSITE:**
+
+**https://in\\-motion.mypersis.de/persis/public?fn\\=bm.jobs.details\\&projectID\\=424812086\\&configKey\\=(BE(dGVjaG5pc2NoZXJfYmVyZWljaA(1(1**
+
+Gehalt: 48\\.000,00€ \\- 53\\.000,00€ pro Jahr
+
+Leistungen:
+
+* Betriebliche Altersvorsorge
+* Betriebsarzt/Betriebsärztin
+* Empfehlungsprogramm
+* Firmenhandy
+* Homeoffice\\-Möglichkeit
+* Kostenlose Getränke
+* Kostenloser Parkplatz
+* Mitarbeiter\\-Rabatt
+* Sabbatical
+* Zusätzliche Urlaubstage
+
+Arbeitsort: Zum Teil im Homeoffice in 80807 München","","https://de.indeed.com/cmp/In--motion-Gmbh","","https://www.in-motion.de","Altomünster","11 to 50","","","","","","","",""
+"in-08bb4f5597474ae6","indeed","https://de.indeed.com/viewjob?jk=08bb4f5597474ae6","https://lumaserv.jobs.personio.de/job/2419729","PHP Laravel Engineer [gn]","LUMASERV","Koblenz, RP, DE","2026-05-22","fulltime","","","","","",False,"","","","","**Summary**
+-----------
+
+
+As a PHP Backend Engineer at LUMASERV, you'll play a key role in developing and maintaining customer projects that serve millions of users daily. You'll work closely with our product managers, developers, and architects to build robust, scalable backend solutions using modern PHP frameworks, particularly Laravel. If you appreciate clean code, domain\\-driven design, and the elegance that Laravel brings to application development, this position offers you the opportunity to shape the technical direction of projects while writing high\\-quality code every day.**Description**
+---------------
+
+* You love working with Laravel (or Symfony) and leverage its full capabilities—including queues, broadcasting, dependency injection, storage and notification systems and Artisan
+* You design and develop REST APIs (sometimes GraphQL) using domain\\-driven design that integrate seamlessly with frontend applications and external systems
+* You perform regular code reviews and help establish best practices within the team
+* You want to dive deeper into AI protocols like MCP and implement them in large enterprise applications
+* You monitor application performance and gain insights using state\\-of\\-the\\-art APM tools (application performance monitoring)
+* You write and maintain comprehensive tests using Laravel's built\\-in testing capabilities (PHPUnit and PEST), supported by AI
+* You challenge and improve coding standards with your colleagues
+* You work with scalable databases (MySQL, MariaDB, Redis) to design efficient data models and queries
+* You participate in technical planning sessions and contribute to architectural decisions with your team
+* You understand the concepts behind Laravel Inertia
+**Qualifications**
+------------------
+
+* Extensive professional experience in PHP backend development on enterpriseenter level
+* Strong expertise with Laravel (or similar modern frameworks like Symfony) and the Framework's core concepts including dependency injection
+* Experience with schema design and and software modelling
+* Proficiency in writing automated tests (PHPUnit, Pest)
+* Familiarity with HTTP REST/RPC interfaces and API documentation formats (Swagger/OpenAPI)
+* Experience with project management tools (e.g. Linear or Notion)
+* Strong understanding of web security principles and common vulnerabilities
+* Strong experience with local development setups based on Docker (and Laravel Sail)
+**Desired qualifications**
+--------------------------
+
+* Experience with domain\\-driven design and software architecture
+* Knowledge of CI/CD processes and DevOps practices
+* Experience with message queues and asynchronous processing
+* Contributions to open\\-source projects or active participation in the developer community
+* Familiary with application performance monitoring
+
+**About us**
+------------
+
+
+At LUMASERV, we work on high\\-impact cloud and infrastructure projects – from high\\-availability platforms for public administrations to scalable solutions for education and research. We develop and operate systems that millions of users rely on every day – secure, compliant with data protection regulations, and meeting European standards.  
+
+  
+
+If you like to take responsibility, implement things pragmatically, and create solutions that really work as part of a team, then you've come to the right place.  
+
+  
+
+You can expect an environment with short decision\\-making processes, modern technical equipment, and the freedom to contribute and implement your own ideas.","","https://de.indeed.com/cmp/Lumaserv","","","","","","","","","","","",""
+"in-367b7dd59108fc03","indeed","https://de.indeed.com/viewjob?jk=367b7dd59108fc03","https://join.com/companies/linear-softwarede/16194527-freelance-full-stack-developer-next-js-m-w-d?pid=a13795120131dbe48464","Freelance Full-Stack Developer Next.js (m/w/d)","LINEAR SERVICE GMBH","Berlin, BE, DE","2026-05-22","","","","","","",True,"","","","","Die **Linear Software GmbH** blickt auf eine 35\\-jährige Erfolgsgeschichte im Bereich Vereinsverwaltung und Buchhaltung für Vereine, Verbände und Schulen zurück. Nach der Übernahme durch die **Chapters Group AG** im Jahr 2025 wird das Unternehmen nun modernisiert, um es langfristig erfolgreich und technologisch aufgestellt in die Zukunft zu führen.
+
+
+
+Im Zuge dessen werden die Kernsysteme in eine neue Moderne Cloud\\-Produktline überführt und die Plattform um agentenbasierte KI\\-Features (Chatbot, Copilot, MCP) erweitert. Für die Weiterentwicklung dieser neuen Cloud\\-Plattform suchen wir einen erfahrenen Full\\-Stack Freelancer, der eng mit dem CTO zusammenarbeitet und die Umsetzung von der Benutzeroberfläche bis hinunter zur Datenbankschicht mit vorantreibt. In dieser Rolle liegt der Fokus ganz klar auf dem Mitaufbau dieser neuen Cloud\\-Produktlinie.
+
+
+**Aufgaben**
+------------
+
+
+**Full\\-Stack Development:** Konzeption und Implementierung von performanten Features mit **Next.js** (React, JavaScript/TypeScript, PostgreSQL, LangGraph).
+
+
+**Frontend\\-Fokus:** Umsetzung von modernen, responsiven und hochgradig interaktiven Benutzeroberflächen.
+
+
+**Datenbank\\-Management:** Design, Optimierung und Anbindung von SQL Datenbanken.
+
+
+**API\\-Design:** Entwicklung und Integration von nahtlosen, sicheren APIs für unsere Cloud\\-Architektur.
+
+
+**Qualifikation**
+-----------------
+
+
+**Senior\\-Level Next.js:** Du beherrschst das Next.js\\-Ökosystem blind und hast ein exzellentes Auge für saubere Web\\-Implementierung und Performance (JavaScript, React, Next.js, SQL, git,)
+
+
+**End\\-to\\-End Skillset:** Du deckst die gesamte Spanne vom interaktiven UI bis hin zum soliden Datenbank\\-Management (SQL) ab.
+
+
+**AI\\-Native Development:** Du programmierst routiniert mit KI\\-gestützten Tools (wie Cursor / Claude Code / GitHub Copilot etc.).
+
+
+**Sprache \\& Rechtliches:** Fließende Deutschkenntnisse sowie eine gültige Arbeitserlaubnis für Deutschland.
+
+
+**Nice\\-to\\-have (Bonus):** Erste praktische Erfahrung mit LLM\\-Orchestrierungs\\-Frameworks wie **LangGraph** oder **LangChain** ist ein Plus, aber kein Muss.
+
+
+**Benefits**
+------------
+
+
+**Freier Gestaltungsspielraum:** Du hast die volle Freiheit bei der Wahl deines Development\\-Setups und deiner bevorzugten Coding\\-KI.
+
+
+**Echte Grüne Wiese:** Keine unstrukturierten Altlasten – du baust an vorderster Front die Zukunft unseres Cloud\\-Produkts mit auf.
+
+
+**100% Flexibilität:** Komplett remote\\-fähig, flexible Zeiteinteilung.","","https://de.indeed.com/cmp/Linear-Service-Gmbh","","","","","","","","","","","",""
+"in-5207aa725373f8e7","indeed","https://de.indeed.com/viewjob?jk=5207aa725373f8e7","https://jobs.sap.com/job/Berlin-Fullstack-Developer-%28fmd%29-SAP-Leanix-10557/1395929833/?feedId=118200&utm_source=Indeed&utm_campaign=SAP_Indeed","Fullstack Developer (f/m/d) - SAP Leanix","SAP","Berlin, BE, DE","2026-05-21","fulltime","","","","","",False,"","","","Careers@sap.com","**We help the world run better**  
+
+At SAP, we keep it simple: you bring your best to us, and we'll bring out the best in you. We're builders touching over 20 industries and 80% of global commerce, and we need your unique talents to help shape what's next. The work is challenging – but it matters. You'll find a place where you can be yourself, prioritize your wellbeing, and truly belong. What's in it for you? Constant learning, skill growth, great benefits, and a team that wants you to grow and succeed. **What you\\`ll do:**
+
+ **Summary:**
+
+  
+
+Join a high\\-impact engineering team building enterprise integrations and AI\\-powered workflows that help global organizations connect strategy with execution. As a Fullstack Engineer, you will work on scalable integrations across multiple domains including IT systems, HCM platforms, and workflow automation tools while contributing to modern SaaS products used by leading enterprises worldwide. You’ll work in an empowered product team with strong ownership, modern engineering practices, AI\\-assisted development workflows, and clear opportunities for technical and career growth.
+
+ **The Role:**
+
+  
+
+As a Fullstack Engineer, you will design, build, and operate scalable cloud services and modern frontend applications that power integrations between SAP LeanIX and enterprise platforms. You will develop backend services using Node.js and TypeScript, and create intuitive frontend experiences using Angular in a micro\\-frontend environment. The role involves building and extending integrations across multiple domains including IT systems, HCM platforms, project management solutions, and AI\\-powered workflows. You will collaborate closely with Product Management and UX teams to transform complex business requirements into reliable software solutions that deliver measurable customer value. In addition, you will contribute to improving architecture, CI/CD pipelines, observability, and engineering practices while working in a fast\\-paced SaaS environment with strong ownership and continuous learning.
+
+ **What you bring:**
+
+* 2\\+ years of experience with Angular and TypeScript in a professional software engineering environment
+* Experience building backend services with Node.js
+* Strong understanding of modern web application development and SaaS architectures
+* Experience working with APIs, distributed systems, or integration\\-heavy applications
+* Ability to collaborate effectively in cross\\-functional agile teams
+* Strong communication skills in English
+* Based in Germany and willing to work onsite in Berlin at least once per week
+
+We are looking for engineers who enjoy solving complex technical challenges, taking ownership of features end\\-to\\-end, and continuously learning new technologies and engineering practices. Experience with AI\\-assisted development tools, enterprise integrations, Kubernetes, or cloud\\-native architectures is a plus.
+
+ **Meet your team:**
+
+  
+
+You will join a cross\\-functional and customer\\-focused engineering team responsible for building strategic integrations and AI\\-powered workflows within SAP LeanIX. The team develops scalable integration capabilities across multiple enterprise domains and values ownership, collaboration, continuous improvement, and knowledge sharing while building products used by global enterprise customers.
+
+  
+
+
+
+**Bring out your best**  
+
+SAP innovations help more than four hundred thousand customers worldwide work together more efficiently and use business insight more effectively. Originally known for leadership in enterprise resource planning (ERP) software, SAP has evolved to become a market leader in end\\-to\\-end business application software and related services for database, analytics, intelligent technologies, and experience management. As a cloud company with two hundred million users and more than one hundred thousand employees worldwide, we are purpose\\-driven and future\\-focused, with a highly collaborative team ethic and commitment to personal development. Whether connecting global industries, people, or platforms, we help ensure every challenge gets the solution it deserves. At SAP, you can bring out your best.
+  
+
+  
+
+**We win with inclusion**  
+
+SAP’s culture of inclusion, focus on health and well\\-being, and flexible working models help ensure that everyone – regardless of background – feels included and can run at their best. At SAP, we believe we are made stronger by the unique capabilities and qualities that each person brings to our company, and we invest in our employees to inspire confidence and help everyone realize their full potential. We ultimately believe in unleashing all talent and creating a better world.  
+
+  
+
+SAP is committed to the values of Equal Employment Opportunity and provides accessibility accommodations to applicants with physical and/or mental disabilities. If you are interested in applying for employment with SAP and are in need of accommodation or special assistance to navigate our website or to complete your application, please send an e\\-mail with your request to Recruiting Operations Team: Careers@sap.com.  
+
+  
+
+For SAP employees: Only permanent roles are eligible for the SAP Employee Referral Program, according to the eligibility rules set in the SAP Referral Policy. Specific conditions may apply for roles in Vocational Training. **AI Usage in the Recruitment Process**
+For information on the responsible use of AI in our recruitment process, please refer to our Guidelines for Ethical Usage of AI in the Recruiting Process.
+Please note that any violation of these guidelines may result in disqualification from the hiring process.  
+
+  
+
+Requisition ID: 454106 \\| Work Area: Software\\-Design and Development \\| Expected Travel: 0 \\- 10% \\| Career Status: Professional \\| Employment Type: Regular Full Time \\| Additional Locations: \\#LI\\-Hybrid","Internet And Software","https://de.indeed.com/cmp/SAP","https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/d17f7c102a43b1dce3ba341c8dbad2b0","http://jobs.sap.com","Dietmar-Hopp-Allee 16
+Walldorf, 69190
+Germany","10,000+","more than $10B (USD)","SAP's purpose is to help the world run better and improve people's lives with sustainability at the core.","","","","","",""
+"in-fcbff3996e4a6350","indeed","https://de.indeed.com/viewjob?jk=fcbff3996e4a6350","https://job-boards.greenhouse.io/dkbcodefactory/jobs/7736823003","Engineering Manager Pega (x,f,m)","DKB Code Factory GmbH","Berlin, BE, DE","2026-05-21","","","","","","",True,"","","","","**Welcome at DKB Code Factory**
+
+
+**a\\_place\\_to\\_stay\\_yourself:**
+
+  
+
+
+**a\\_place\\_to\\_stay\\_curious:**
+
+
+
+At **DKB Code Factory**, you will take on a key engineering leadership role within our Pega low\\-code engineering chapter, growing and developing a high\\-performing group of engineers working at the heart of DKB’s digital transformation. You will lead two Pega teams distributed over Germany who are building digital self\\-service solutions that automate operations and enable fast, reliable customer service, helping shape the experience of millions of customers.
+
+
+
+Although this is a hands\\-off role, a strong software engineering background is required; Pega experience is a plus, but not expected. You’ll benefit from a start\\-up–like environment and modern leadership culture, backed by the stability of DKB Bank. This is reflected in our culture, with DKB Code Factory being repeatedly recognized as a *Great Place to Work* based on employee feedback.
+
+  
+
+
+**your\\_****responsibilities****:**
+
+
+
+To be successfull in this role, you become a trusted **people leader, team and delivery coach**. Your teams grow, perform, and collaborate better due to your leadership. In detail, you'll...
+
+
+* **Foster a Safe Remote Team Culture:** Within your first weeks, you establish a regular cadence of weekly 1:1s and take the time to truly get to know and understand your engineers. You foster an environment of trust and psychological safety on your teams, while building strong, collaborative relationships with the Product Owners of your teams, other key stakeholders, the Pega Chapter Lead, and your peer EMs.
+* **Build Your Own Pega Foundation** (if not present already): In your first month you use the Pega Academy (online) to get a solid and basic overview of Pega low\\-code technology, including the case lifecycle, rules\\-based architecture, deployment with branches and pipelines, and how testing Pega software works.
+* **Coach and Grow Your Pega Engineers:** In your first 3 months, build a deep understanding of each of your direct’s career aspirations and create and document individual development plans based on our career map that align their goals with your concrete expectations. You provide regular, actionable feedback, offer supportive career coaching, and establish structured 360° reviews and participate in our cross\\-team performance calibration meetings.
+* **Accelerate Delivery in your Teams:** In month 3, you start taking more ownership of the software delivery performance of your Pega teams. You use our own KPI tooling and Jira to review key delivery metrics like velocity, Say/Do ratio, and bugs created vs. resolved to identify areas for improvement, and coach your team to make the right process changes to unlock better performance. Your improvements start showing results and positive trends by month 4 of your employment.
+* **Strengthen Dev\\-QA Collaboration:** Within your first six months, you foster a strong culture of quality. You promote a shift\\-left testing approach, enabling developers and testers to collaborate more closely and improve handoffs, test coverage, automation, and overall release reliability and confidence. You support a risk\\-based testing strategy and the cost\\-effective implementation of the testing pyramid.
+* **Hire and Retain Great Talent:** Starting in month 4, you begin supporting our structured hiring and onboarding to bring in new junior talent and more experienced high\\-performing Pega engineers, who pass probation and deliver real value. You propose at least two hiring or onboarding process improvements which contribute to a well\\-balanced internal talent pool with good retention over time.
+* **Strengthen chapter capabilities (typically in year two)**: As you gain deeper understanding of the organization, you’ll be expected to identify and drive a long\\-term, high\\-impact initiative that enhances our Pega chapter’s capabilities and supports the ongoing development of the team and its leadership.
+
+  
+
+
+**following\\_qualifications\\_would\\_be\\_in\\_line\\_with\\_our\\_desired\\_profile\\_for\\_this\\_position:**
+
+
+
+This is a hands\\-off people leadership role. You won’t be writing code, but you’ll need a solid technical foundation to guide your teams. So ideally you bring a background in...
+
+
+* **Software development:** Several years of hands\\-on experience building and delivering production software in teams and proficiency in multiple programming languages. Experience with low\\-code technology or a QA background is a bonus.
+* **Leadership**: Several years of experience managing people and leading high\\-performance software engineering teams.
+* **Language skills**: Fluent in German and English, with strong overall communication skills.
+* *You are passionate about your work, but also know how to enjoy your free time!*
+
+  
+
+
+**Got the feeling not to match every single requirement? Don’t worry! We encourage you to apply anyways, even if your qualifications do not align perfectly. You might still be just the right candidate for us!**
+
+
+**a\\_place\\_to\\_stay\\_together:**
+
+
+
+From Morning Daily to Afterwork Drink, team spirit is essential to us. The heart of our togetherness is that we truly are connected with each other: We not only share fun \\& laughter, but also honest opinions \\- because that's how we grow: We exchange ideas, give support in our personal development, and celebrate success together! Besides our great community, we also offer numerous other*benefits*","","https://de.indeed.com/cmp/Dkb-Code-Factory-Gmbh","","https://www.dkbcodefactory.com","Berlin","11 to 50","","","","","","","",""
+"in-26bcabbfdf814c73","indeed","https://de.indeed.com/viewjob?jk=26bcabbfdf814c73","https://codecentric.jobs.personio.de/job/2325413","Software Developer und Consultant mit Schwerpunkt Data (w/d/m)","codecentric AG","Karlsruhe, BW, DE","2026-05-21","parttime, fulltime","","","","","",False,"","","","-recruiting@codecentric.de","Karlsruhe, Berlin, Bielefeld, Dortmund, Erfurt, Frankfurt, Hamburg... Alle anzeigen
+
+
+Voll\\- oder Teilzeit
+Festanstellung
+  
+**Willkommen bei codecentric**
+------------------------------
+
+
+Wir sind ein IT\\-Consulting Unternehmen mit Leidenschaft für **individuelle Softwarelösungen**, die wirklich zu unseren Kunden passen. Gemeinsam schaffen wir innovative, nachhaltige und ganzheitliche Lösungen mit spürbarem Mehrwert. Unsere Schwerpunkte sind Retail, Insurance, Manufacturing und Energy.
+
+
+Unser Arbeitsumfeld basiert auf **Vertrauen, Wertschätzung und gemeinsamen Lernen**. Denn gute Arbeit entsteht dort, wo Menschen sich entfalten und weiterentwickeln können.
+
+**Deine Aufgaben**
+------------------
+
+* **Architekturen gestalten:** Du nutzt deine Expertise im Data\\-Bereich, um in Kundenprojekten skalierbare Architekturen, Plattformen und Datenpipelines zu designen und aufzubauen.
+* **Daten aufbereiten \\& bereitstellen:** Du konsumierst externe Datenquellen, transformierst Daten und stellst sie über APIs den Stakeholdern zur Verfügung – dabei achtest du auf hohe Datenqualität und Aktualität.
+* **Lösungen entwickeln:** Nach einer umfassenden Analyse der Kundenanforderungen entwirfst und implementierst du passgenaue Individualsoftware und sorgst für eine saubere, nachvollziehbare Dokumentation.
+* **Qualität sichern:** Du behältst die Softwarequalität stets im Blick und nutzt dafür Methoden wie Test Driven Development, Pair Programming sowie Architektur\\- und Code\\-Reviews.
+**Deine Qualifikationen**
+-------------------------
+
+* Du bringst **Erfahrung im Data\\-Bereich** mit den Cloud Anbietern AWS, GCP oder Azure mit und kennst dich in einem oder mehreren dieser Gebiete gut aus: **Data Warehousing** (z. B. BigQuery, Snowflake oder Redshift), **Pipelines** (z. B. AWS Glue, dbt oder Databricks), **Datenbank\\-Technologien** (z. B. SQL oder noSQL) oder **Orchestrierung** (z. B. Argo Workflows oder Airflow).
+* Du **arbeitest gerne mit SQL sowie Python**, kennst den Unterschied zwischen ETL und ELT und hast erste Erfahrungen mit Machine Learning in Production.
+* Trotz der schnell wachsenden Anzahl an Technologien und möglichen Lösungen in der IT, vor allem aber im Data\\-Bereich, macht es dir Spaß, **selbstständig am Ball zu bleiben**, **neue Themen einzuordnen** und diese für Kunden auch **sinnvoll einzusetzen.**
+* Weil du nicht nur selbst dazu lernst, sondern dein Wissen auch gerne weitergibst, kannst du **Kunden technologisch und/oder methodisch schulen und beraten**. Dafür bringst du eine **hohe Kommunikationsfähigkeit und verhandlungssicheres Deutsc****h** mit.
+* **Wir arbeiten hybrid:** Regelmäßiger persönlicher Austausch ist uns wichtig, um Zusammenarbeit zu fördern. Daher ist es für dich selbstverständlich, deine Kunden während wichtiger Projektphasen und Meetings direkt vor Ort zu begleiten. Du pflegst gerne die kollegialen Beziehungen, indem du mindestens alle paar Wochen im Büro bist und an unseren Team\\-Events teilnimmst.
+**Das bieten wir dir**
+----------------------
+
+* **Weiterbildung / OffProject Time:** Bis zu 20 % deiner Arbeitszeit stehen dir für Weiterbildung, Community Engagement oder interne Initiativen zur Verfügung – neben spannenden Kundenprojekten.
+* **Projektvielfalt:** Du arbeitest selbstorganisiert und eigenverantwortlich in crossfunktionalen Teams mit neuesten Technologien. Dein Team ist immer für dich da.
+* **Eigene Hardware \\& Geräte:** Du wählst deinen Rechner aus einer Auswahl an Mac und Lenovo Laptops. Auch das Firmenhandy wählst du aus. Beide Geräte kannst du auch privat nutzen.
+* **Flexible Arbeitsbedingungen \\& Familienfreundlichkeit:** Vertrauensarbeitszeit, hybride Arbeitsweise, 30 Tage Urlaub, Sonderurlaub, zukaufbarer Urlaub sowie Weihnachten und Silvester frei. Zusätzlich kannst du ein Sabbatical nehmen oder im Zeitwertkonto für besondere Lebensphase wie z.B. Rente sparen. Unterstützung bei der Kinderbetreuung erhältst du über HeyCare.
+* **Offene Unternehmenskultur:** Vertrauen statt Kontrolle, Gestaltungsfreiraum, Knowledge\\-Sharing, Mitspracherecht und eine gelebte Fehlerkultur werden bei uns Wirklichkeit.
+* **Team \\& Zusammenarbeit:** Du triffst auf motivierte, kluge Kolleg\\*innen, die ihr Wissen teilen, gemeinsam an Lösungen tüfteln und dich bei deiner Arbeit unterstützen.
+* **Wohlbefinden \\& Gesundheit:** Wir bieten dir ein EAP\\-System (Employee Assistance Program), gesundheitsfördernde Maßnahmen und Coaching\\-Angebote, damit du sowohl beruflich als auch persönlich unterstützt wirst.
+**Deine Ansprechpartnerin**
+---------------------------
+
+
+Wenn du Fragen hast, melde dich gern bei mir.  
+
+  
+
+Lisa Möllinger  
+
+lisa.moellinger\\-recruiting@codecentric.de
+**Über uns**
+------------
+
+
+Bei uns zählst du als Mensch – mit allem, was dich ausmacht: deinen Ideen, deinen Eigenschaften und deinen Zielen. Wir schaffen ein Umfeld, in dem du dich wohlfühlst, wachsen und Neues ausprobieren kannst. Bei uns bekommst du Rückhalt und Zeit für Entwicklung. Hier arbeitest du mit klugen, motivierten Köpfen zusammen, die ihr Wissen teilen, voneinander und miteinander lernen und gemeinsam Dinge voranbringen.","Internet And Software","https://de.indeed.com/cmp/Codecentric-Ag","https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/0a8fb85577ed99e985471959d60d6394","https://www.codecentric.de/","Hochstraße 11 in
+42697 Solingen","501 to 1,000","","Die codecentric AG versteht sich als Vordenkerin für agile Software­entwicklung und innovative Technologien in Deutschland.","","","","","",""
+"in-c4ef0c010d4b7040","indeed","https://de.indeed.com/viewjob?jk=c4ef0c010d4b7040","https://in-motion.mypersis.de/persis/public?fn=bm.jobs.details&projectID=424812086&configKey=(BE(dGVjaG5pc2NoZXJfYmVyZWljaA(1(1","Software Developer - Web & React (w/m/d)","in-motion GmbH","München, BY, DE","2026-05-21","","","","","","",False,"","","","","Details
+Code:
+IT\\_intern
+Job opening from:
+05/21/2026
+Personnel unit:
+in\\-motion GmbH
+Location:
+München
+Job description:
+IT (intern)
+Contract type:
+Stellenangebot
+Dein Profil
+* Abgeschlossene Ausbildung im IT\\-Bereich oder abgeschlossenes Studium der Informatik bzw. einer vergleichbaren Fachrichtung
+* Gute Kenntnisse in JavaScript/TypeScript, HTML5 und CSS3 sowie Erfahrung mit React und modernen Frontend\\-Frameworks
+* Erfahrung mit Git und gängigen Versionskontroll\\-Workflows
+* Grundverständnis von Backend\\-Technologien und Schnittstellen (z. B. Node.js, Python oder REST\\-APIs)
+* Strukturierte, agile und lösungsorientierte Arbeitsweise mit Fokus auf saubere technische Lösungen
+* Teamfähigkeit, Kommunikationsstärke und Freude an der Zusammenarbeit mit Kolleg:innen und Kund:innen
+* Hohes Interesse an moderner Webentwicklung mit React und der Weiterentwicklung digitaler Anwendungen
+* Sehr gute Deutschkenntnisse (mindestens B2\\) sowie sichere Englischkenntnisse in Wort und Schrift
+
+
+WICHTIG: Quereinsteiger:nnen mit IT\\-Affinität und Leidenschaft für Softwareentwicklung sind herzlich willkommen.
+
+
+
+Deine Aufgaben
+* Entwicklung moderner Web\\-Frontends mit React und TypeScript für interne Anwendungen und Kundenlösungen
+* Analyse bestehender Anwendungen und Prozesse, Identifikation von Verbesserungspotenzialen sowie Entwicklung und Umsetzung von Optimierungs\\- und Automatisierungslösungen
+* Entwicklung einfacher Backend\\-Services und APIs (Node.js, Python) zur Datenanbindung und \\-verarbeitung sowie Unterstützung bei Schnittstellen und Datenmodellen
+* Zusammenarbeit mit internen und externen Ansprechpartnern sowie Kunden zur gemeinsamen Umsetzung technischer Lösungen
+* Übersetzung fachlicher Anforderungen in technische Konzepte und aktive Mitgestaltung der Lösungsfindung
+* Unterstützung von Anwender:innen bei neuen Tools und Anwendungen
+Deine Perspektive
+* Unbefristetes Arbeitsverhältnis in einem wachstumsorientierten Unternehmen
+* Intensives Einarbeitungsprogramm durch eine:n Paten:in und Wissensmanager:innen
+* Interessantes und abwechslungsreiches Tätigkeitsfeld
+* Individuelle Weiterbildungsangebote im Rahmen unserer in\\-motion Academy
+* Top Ausstattung mit Arbeitsmitteln (Laptop und Firmen Smartphone)
+* 30 Tage Urlaub, Flexible Arbeitszeiten, bis zu 100% mobiles Arbeiten (teilweise auch im europäischen Ausland) und Möglichkeit für ein Sabbatical
+* Betriebsrente und Maßnahmen des betrieblichen Gesundheitsmanagements (EGYM, jobrad und ein eigenes Fußballteam)
+* Mitarbeiterrabatte für viele Produkte und Freizeitangebote (corporate benefits)
+* Kicker, Tischtennis, Billard sowie Obst, Getränke und Kaffee
+* Ein Team , welches Dich stets kollegial unterstützt sowie ein Betriebsklima, in dem Arbeiten Freude macht
+
+
+Haben wir Dein Interesse geweckt?
+
+Bei Fragen kontaktiere bitte Sadina Zepcan unter 0155 \\- 60 42 00 85\\.  
+
+Wir freuen uns schon Dich näher kennenzulernen!
+
+
+
+Name/Bezeichnung
+
+Software Developer \\- Web \\& React (w/m/d)
+
+
+
+Einleitung
+
+Du möchtest nicht einfach nur codieren, sondern aktiv digitale Produkte mitgestalten? Dann schwimm mit uns im digitalen Workflow und entwickle moderne Webanwendungen, die wirklich genutzt werden. Wir suchen einen Software Developer (w/m/d), der:die Spaß daran hat, mit React und modernen Webtechnologien Lösungen für interne Prozesse und Kundenanwendungen zu entwickeln, bestehende Ideen zu hinterfragen und gemeinsam im Team bessere digitale Wege zu gestalten.","","https://de.indeed.com/cmp/In--motion-Gmbh","","https://www.in-motion.de","Altomünster","11 to 50","","","","","","","",""
+"in-f85342bde4650072","indeed","https://de.indeed.com/viewjob?jk=f85342bde4650072","https://climatepartner-gmbh.jobs.personio.de/job/2633073","Microsoft Dynamics 365 Sales (CE/CRM) Developer (m/f/d)","ClimatePartner","München, BY, DE","2026-05-21","fulltime","","","","","",False,"","","","jobs@climatepartner.com","Munich
+Full\\-time
+Permanent employee
+  
+**What you will do**
+--------------------
+
+* Design, develop and enhance solutions within Microsoft Dynamics 365 (Sales, Customer Service, Marketing)
+* Collaborate with Product Owners and Business Analysts to turn requirements into scalable solutions
+* Build and maintain integrations with internal and external systems
+* Support users and continuously improve system performance and usability
+* Contribute to code quality through reviews and structured deployments
+* Maintain clear and up\\-to\\-date technical documentation
+**Who you are**
+---------------
+
+* Experience developing solutions in Microsoft Dynamics 365 CE/CRM (3\\+ years preferred)
+* Strong skills in C\\#, JavaScript, plugins, workflows, and Power Platform (Power Automate, PCF)
+* Solid understanding of system integration patterns
+* Experience working with Azure (Azure Blobs storage, Logic Apps, Azure functions, etc) and Canvas Apps
+* Familiarity with Microsoft best practices and modern development approaches
+* Comfortable communicating in English in an international environment
+**Benefits**
+------------
+
+* Our bright, modern offices are centrally located and easily accessible by all modes of transport.
+* Sport clears your head and makes us feel good! We support you with a subsidy for various sports programmes.
+* We offer 30 days holiday, because we believe that time off is important.
+* We enable you to work flexibly and in a hybrid way (with 60% on\\-site presence) so that you can achieve an even better work\\-life balance.
+* Regular check\\-ins and development meetings are part of our feedback culture.
+* You have the opportunity to take out a company pension scheme with an employer subsidy.
+* It goes without saying that we provide free tea, coffee and fruit to ensure your well\\-being at work.
+**How to apply**
+----------------
+
+  
+
+  
+
+Have any questions? Feel free to contact Sebastian Robl (jobs@climatepartner.com) from the Business Applications team.  
+
+  
+
+Creating an inclusive environment is important to us. We provide equal opportunities to all qualified applicants without regard to any aspect that makes them unique. If you need any reasonable adjustments to make the application process accessible for you, we’ll do our best to accommodate you.  
+
+  
+
+Find out more about working at ClimatePartner and see all our current job openings at Career \\| ClimatePartner  
+
+  
+
+We look forward to your application!
+**About us**
+------------
+
+
+ClimatePartner supports companies in decarbonisation. Our hybrid model combines software that simplifies and scales processes with expert advice at every step on the path to net zero – from calculating and reducing emissions to supporting climate projects and communicating transparently.  
+
+  
+
+For over 20 years, more than 6,000 companies have worked with ClimatePartner to achieve decarbonisation. For the climate. And for business.","","https://de.indeed.com/cmp/Climatepartner","https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/a0d4307f6d8f20b5070eaab22f4db6b4","http://www.climatepartner.com","Munich","201 to 500","","ClimatePartner is a solution provider for corporate climate action.","","","","","",""
+"in-1d4cf3c65cda857a","indeed","https://de.indeed.com/viewjob?jk=1d4cf3c65cda857a","https://careers.boozallen.com/careers/JobDetail?jobId=124765","Data Engineer","Booz Allen Hamilton","Stuttgart, BW, DE","2026-05-21","parttime, fulltime","","","","","",True,"","","","","Data Engineer**The Opportunity:**
+
+
+Ever\\-expanding technology like IoT, machine learning, and artificial intelligence means that there’s more structured and unstructured data available today than ever before. As a data engineer, you know that organizing data can yield pivotal insights when it’s gathered from disparate sources. We need an experienced data engineer like you to help our clients find answers in their data to impact important missions—from fraud detection to cancer research to national intelligence.
+
+
+As a data engineer at Booz Allen, you’ll help build advanced technology solutions and implement data engineering activities on some of the most mission\\-driven projects in the industry. You’ll deploy and develop pipelines and platforms that organize and make disparate data meaningful.
+
+
+Here, you’ll work with and guide a multi\\-disciplinary team of analysts, data engineers, developers, and data consumers in a fast\\-paced, agile environment. You’ll use your experience in analytical exploration and data examination while you manage the assessment, design, building, and maintenance of scalable platforms for your clients.
+
+
+Work with us to use data for good.
+
+
+Join us. The world can't wait.
+
+**You Have:**
+
+* 5\\+ years of experience in application development
+* 5\\+ years of experience with designing, developing, operationalizing and maintaining complex data applications at enterprise scale
+* 3\\+ years of experience creating software for retrieving, parsing and processing structured and unstructured data
+* 3\\+ years of experience building scalable ETL and ELT workflows for reporting and analytics
+* Experience creating solutions within a collaborative, cross\\-functional team environment
+* Ability to develop scripts and programs for converting various types of data into usable formats and support project team to scale, monitor and operate data platforms
+* Secret clearance
+* Bachelor’s degree
+
+**Nice If You Have:**
+
+* Experience with Python, SQL, or TypeScript
+* Experience with geospatial data
+* Experience with military exercise planning
+* Experience with distributed data or computing tools, including Spark, Databricks, Hadoop, Hive, AWS EMR, or Kafka
+* Experience working on real\\-time data and streaming applications
+* Experience with Palantir tools, such as Foundry
+* Experience with synthetic or bootstrapped data methods
+* Experience with Agile engineering practices
+* TS/SCI clearance
+
+**Clearance:**
+
+
+Applicants selected will be subject to a security investigation and may need to meet eligibility requirements for access to classified information; Secret clearance is required.
+
+**Compensation**
+
+
+At Booz Allen, we celebrate your contributions, provide you with opportunities and choices, and support your total well\\-being. Our offerings include health, life, disability, financial, and retirement benefits, as well as paid leave, professional development, tuition assistance, work\\-life programs, and dependent care. Our recognition awards program acknowledges employees for exceptional performance and superior demonstration of our values. Full\\-time and part\\-time employees working at least 20 hours a week on a regular basis are eligible to participate in Booz Allen’s benefit programs. Individuals that do not meet the threshold are only eligible for select offerings, not inclusive of health benefits. We encourage you to learn more about our total benefits by visiting the Resource page on our Careers site and reviewing Our Employee Benefits page.
+
+
+Salary at Booz Allen is determined by various factors, including but not limited to location, the individual’s particular combination of education, knowledge, skills, competencies, and experience, as well as contract\\-specific affordability and organizational requirements. The projected compensation range for this position is $77,500\\.00 to $176,000\\.00 (annualized USD). The estimate displayed represents the typical salary range for this position and is just one component of Booz Allen’s total compensation package for employees. This posting will close within 90 days from the Posting Date.**Identity Statement**
+
+
+As part of the hiring process, we will ask you to complete an identity verification process that leverages advanced biometrics and artificial intelligence to ensure authenticity and protect against identity fraud. You are expected to be on camera during interviews and assessments. We reserve the right to take your picture to verify your identity and prevent fraud.
+
+**Candidate AI Usage Policy**
+
+
+AI is a part of our daily work at Booz Allen, and we are committed to the responsible and ethical use of AI tools. However, we want to ensure a fair candidate process based on **your** own skills and knowledge. As part of this commitment, the use of artificial intelligence (AI) or other tools to assist with responses during interviews (whether in\\-person or virtual) is prohibited **unless permission is explicitly provided**.
+
+
+**Work Model**  
+
+Our people\\-first culture prioritizes the benefits of collaboration, whether it occurs in person or virtually. To support engagement and effective communication, employees working virtually are generally expected to have their cameras on during meetings.
+
+* **Remote**: If this position is listed as remote, there may still be occasions when you are required to work in person at a Booz Allen or customer facility.
+* **Hybrid**: If this position is listed as hybrid, you will be expected to work from a Booz Allen facility frequently, in alignment with leadership expectations and the needs of the role. You may also be required to work from or visit a customer facility.
+* **Onsite**: If this position is listed as onsite, work will primarily be performed at a Booz Allen office or customer facility, where employees will collaborate directly with colleagues and customers as required by the role.
+
+**Commitment to Non\\-Discrimination**
+
+
+All qualified applicants will receive consideration for employment without regard to disability, status as a protected veteran or any other status protected by applicable federal, state, local, or international law.","","https://de.indeed.com/cmp/Booz-Allen-Hamilton","https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/028f57a66dfd2b7345223765e5cac9ec","http://www.boozallen.com","McLean, VA","10,000+","$5B to $10B (USD)","Booz Allen is an advanced technology company delivering outcomes with speed for America’s most critical defense, civil, and national security priorities. ","","","","","",""
+"in-02d4853356bd3dfb","indeed","https://de.indeed.com/viewjob?jk=02d4853356bd3dfb","https://tasko.info/komm-ins-tasko-team/full-stack-developer/","Full-Stack Developer (m/w/d)","Donau Data Engineering GmbH","Oldenburg, NI, DE","2026-05-21","fulltime","","","","","",True,"","","","","AB SOFORT
+VOLLZEIT / OLDENBURG
+
+
+Was Du über Donau Data Engineering wissen musst:
+
+
+Seit unserer Gründung 2013 in Oldenburg revolutionieren wir den Markt für Prozessmanagementsysteme im gesamten DACH\\-Raum.  
+
+Mit unserer inhouse entwickelten Prozessmanagement\\-Software TASKO digitalisieren und automatisieren unsere Kunden selbst die komplexesten Geschäftsprozesse innerhalb weniger Tage. Wir haben uns über die letzten Jahre zur best\\-in\\-class Softwarelösung für unsere Zielgruppen entwickelt; allein im letzten Jahr haben wir ein Wachstum von über 70% verzeichnet.  
+
+Jetzt bereiten wir den nächsten Schritt vor: Wir richten uns zunehmend international aus und planen den Eintritt in weitere europäische Märkte. Um unseren Wachstumskurs fortzuführen, vergrößern wir unser Team und suchen kreative Teamplayer, die Teil unserer Mission werden wollen.
+
+
+Das erwartet Dich bei uns:
+
+
+* Bei uns hast Du nicht nur die Möglichkeit, Ideen des Produktteams umzusetzen, sondern Du wirst **aktiv an der Gestaltung und Weiterentwicklung unserer Produkte beteiligt sein**. **Deine Meinung zählt** und wir ermutigen Dich, **eigene Projekte** anzustoßen!
+* Du nimmst Front\\- und Backend\\-Programmierungen von unseren Systemen sowie deren Pflege und Erweiterung vor
+* Entwicklung von Webanwendungen mit JavaScript, HTML 5, CSS3, React und PHP (Laravel)
+* App\\-Entwicklung (Android/iOS) mit Java und Dart/Flutter
+* Datenbankdesign und \\-optimierung mit MySQL
+* Du hältst Rücksprache mit Kunden
+Das bringst Du mit:
+
+
+* Erfolgreicher Abschluss eines Bachelor\\- oder Masterstudiums der Informatik oder einer verwandten Studienrichtung (oder gleichwertige Berufserfahrung)
+* Du hast fundierte Kenntnisse in mindestens einer Programmiersprache (vorzugsweise eine der oben genannten)
+* Du kannst sicher mindestens ein Framework wie Laravel anwenden
+* Du hast Erfahrung mit MySQL oder einem anderen relationalen / objektorientierten Datenbanksystem
+* Du begeisterst dich für die oben genannten Programmiersprachen und Frameworks
+* Du verfügst über ein gutes Verständnis von Best Practices in der Softwareentwicklung, z.B. in Bezug auf Codequalität
+* Verantwortungsbewusste, engagierte Persönlichkeit mit einer schnellen Auffassungsgabe, starker Teamfähigkeit und ausgeprägten Kommunikationsfähigkeiten
+Warum wir?
+
+
+* **Schnelle Aufstiegschancen:** Unser Entwicklungsteam befindet sich noch im Aufbau; du hast die Chance, schnell in eine Schlüsselrolle mit viel Verantwortung hineinzuwachsen.
+* **Top\\-Gehalt:** Deine Leistung verdient mehr als nur Anerkennung: Unsere Gehälter bieten langfristige Sicherheit.
+* **Ownership \\& Impact:** Bei uns bist du nicht nur ein kleines Rädchen im Getriebe, sondern übernimmst eigene Projekte und gestaltest aktiv mit.
+* **Firmenfitness inklusive:** Mit Wellpass kannst du aus über 13\\.500 Sport\\- und Wellnessangeboten frei wählen.
+* **Flexibilität:** Echte Freiheit dank flexibler Arbeitszeiten und Homeoffice\\-Regelung.
+* **Vertrauen:** Eigenverantwortung steht im Mittelpunkt; kein lästiges Micromanagement.
+* **Start\\-up\\-Mentalität:** Flache Hierarchien, offene Feedback\\-Kultur und kurze Entscheidungswege. Null Bürokratie!
+* **Erstklassige Ausstattung:** Wir sorgen für hochwertige Hardware und einen modernen Tech\\-Stack.
+* **Modernes Büro:** Unser Büro im Herzen Oldenburgs lädt zum Wohlfühlen ein. Wir freuen uns schon auf dich!
+Wie wirst Du Teil des Teams?
+
+
+Unser Interviewprozess dauert zwischen 3 und 14 Tagen und besteht aus:
+
+
+* kurzem ersten Kennenlernen mit dem Talent Acquisition Team
+* erstem inhaltlichen Gespräch inkl. Fallstudie mit dem Fachbereich
+* finalem Gespräch mit dem Geschäftsführer
+
+Ein transparenter und schneller Prozess hat für uns höchste Priorität. Wir bemühen uns daher, auf alle Bewerbungen innerhalb von 72 Stunden zu antworten.
+
+
+Auch wenn Du befürchtest, dass Du möglicherweise nicht alle Kriterien erfüllst, kannst Du Dich immer bei Donau Data Engineering bewerben.
+
+
+Das klingt nach Dir? Schreib uns!","","https://de.indeed.com/cmp/Donau-Data-Engineering-Gmbh","","","","","","","","","","","",""
+"in-1400162030bfed6f","indeed","https://de.indeed.com/viewjob?jk=1400162030bfed6f","https://tasko.info/komm-ins-tasko-team/backend-developer/","Backend Developer (m/w/d)","Donau Data Engineering GmbH","Oldenburg, NI, DE","2026-05-21","fulltime","","","","","",True,"","","","","AB SOFORT
+VOLLZEIT / OLDENBURG
+
+
+Was Du über Donau Data Engineering wissen musst:
+
+
+Seit unserer Gründung 2013 in Oldenburg revolutionieren wir den Markt für Prozessmanagementsysteme im gesamten DACH\\-Raum.  
+
+Mit unserer inhouse entwickelten Prozessmanagement\\-Software TASKO digitalisieren und automatisieren unsere Kunden selbst die komplexesten Geschäftsprozesse innerhalb weniger Tage. Wir haben uns über die letzten Jahre zur best\\-in\\-class Softwarelösung für unsere Zielgruppen entwickelt; allein im letzten Jahr haben wir ein Wachstum von über 70% verzeichnet.  
+
+Jetzt bereiten wir den nächsten Schritt vor: Wir richten uns zunehmend international aus und planen den Eintritt in weitere europäische Märkte. Um unseren Wachstumskurs fortzuführen, vergrößern wir unser Team und suchen kreative Teamplayer, die Teil unserer Mission werden wollen.
+
+
+Das erwartet Dich bei uns:
+
+
+* Bei uns hast Du nicht nur die Möglichkeit, Ideen des Produktteams umzusetzen, sondern Du wirst **aktiv an der Gestaltung und Weiterentwicklung unserer Produkte beteiligt sein**. **Deine Meinung zählt** und wir ermutigen Dich, **eigene Projekte** anzustoßen!
+* Du nimmst Backend\\-Programmierungen von unseren Systemen sowie deren Pflege und Erweiterung vor
+* Du designst betriebswirtschaftliche und energietechnische Berichte für unsere Kunden, z.B. CO2\\-Fußabdruck pro Besucher, mit Tools wie Jasper Studio
+* App\\-Entwicklung (Android/iOS) mit Java
+* Datenbankdesign und \\-optimierung mit MySQL
+* Du hältst Rücksprache mit Kunden
+Das bringst Du mit:
+
+
+* Erfolgreicher Abschluss eines Bachelor\\- oder Masterstudiums der Informatik oder einer verwandten Studienrichtung (oder gleichwertige Berufserfahrung)
+* Du hast fundierte Kenntnisse in mindestens einer Programmiersprache (vorzugsweise eine der oben genannten)
+* Du kannst sicher mindestens ein Framework wie Laravel anwenden
+* Du hast Erfahrung mit MySQL oder einem anderen relationalen / objektorientierten Datenbanksystem
+* Du begeisterst dich für die oben genannten Programmiersprachen und Frameworks
+* Du bist mit den grundlegenden Prinzipien der Betriebswirtschaft vertraut
+* Verantwortungsbewusste, engagierte Persönlichkeit mit einer schnellen Auffassungsgabe, starker Teamfähigkeit und ausgeprägten Kommunikationsfähigkeiten
+Warum wir?
+
+
+* **Schnelle Aufstiegschancen:** Unser Entwicklungsteam befindet sich noch im Aufbau; du hast die Chance, schnell in eine Schlüsselrolle mit viel Verantwortung hineinzuwachsen.
+* **Top\\-Gehalt:** Deine Leistung verdient mehr als nur Anerkennung: Unsere Gehälter bieten langfristige Sicherheit.
+* **Ownership \\& Impact:** Bei uns bist du nicht nur ein kleines Rädchen im Getriebe, sondern übernimmst eigene Projekte und gestaltest aktiv mit.
+* **Firmenfitness inklusive:** Mit Wellpass kannst du aus über 13\\.500 Sport\\- und Wellnessangeboten frei wählen.
+* **Flexibilität:** Echte Freiheit dank flexibler Arbeitszeiten und Homeoffice\\-Regelung.
+* **Vertrauen:** Eigenverantwortung steht im Mittelpunkt; kein lästiges Micromanagement.
+* **Start\\-up\\-Mentalität:** Flache Hierarchien, offene Feedback\\-Kultur und kurze Entscheidungswege. Null Bürokratie!
+* **Erstklassige Ausstattung:** Wir sorgen für hochwertige Hardware und einen modernen Tech\\-Stack.
+* **Modernes Büro:** Unser Büro im Herzen Oldenburgs lädt zum Wohlfühlen ein. Wir freuen uns schon auf dich!
+Wie wirst Du Teil des Teams?
+
+
+Unser Interviewprozess dauert zwischen 3 und 14 Tagen und besteht aus:
+
+
+* kurzem ersten Kennenlernen mit dem Talent Acquisition Team
+* erstem inhaltlichen Gespräch inkl. Fallstudie mit dem Fachbereich
+* finalem Gespräch mit dem Geschäftsführer
+
+Ein transparenter und schneller Prozess hat für uns höchste Priorität. Wir bemühen uns daher, auf alle Bewerbungen innerhalb von 72 Stunden zu antworten.
+
+
+Auch wenn Du befürchtest, dass Du möglicherweise nicht alle Kriterien erfüllst, kannst Du Dich immer bei Donau Data Engineering bewerben.
+
+
+Das klingt nach Dir? Schreib uns!","","https://de.indeed.com/cmp/Donau-Data-Engineering-Gmbh","","","","","","","","","","","",""
+"in-9c91a00edd0820c5","indeed","https://de.indeed.com/viewjob?jk=9c91a00edd0820c5","https://tasko.info/komm-ins-tasko-team/senior-full-stack-developer/","Senior Full-Stack Developer (m/w/d)","Donau Data Engineering GmbH","Oldenburg, NI, DE","2026-05-21","fulltime","","","","","",True,"","","","","AB SOFORT
+VOLLZEIT / OLDENBURG
+
+
+Was Du über Donau Data Engineering wissen musst:
+
+
+Seit unserer Gründung 2013 in Oldenburg revolutionieren wir den Markt für Prozessmanagementsysteme im gesamten DACH\\-Raum.  
+
+Mit unserer inhouse entwickelten Prozessmanagement\\-Software TASKO digitalisieren und automatisieren unsere Kunden selbst die komplexesten Geschäftsprozesse innerhalb weniger Tage. Wir haben uns über die letzten Jahre zur best\\-in\\-class Softwarelösung für unsere Zielgruppen entwickelt; allein im letzten Jahr haben wir ein Wachstum von über 70% verzeichnet.  
+
+Jetzt bereiten wir den nächsten Schritt vor: Wir richten uns zunehmend international aus und planen den Eintritt in weitere europäische Märkte. Um unseren Wachstumskurs fortzuführen, vergrößern wir unser Team und suchen kreative Teamplayer, die Teil unserer Mission werden wollen.
+
+
+Das erwartet Dich bei uns:
+
+
+* Du bist **aktiv an der Gestaltung und Weiterentwicklung unserer Produkte beteiligt**
+* Du treibst Projekte eigenständig voran und entwickelst innovative Lösungen für komplexe Probleme
+* Du nimmst Front\\- und Backend\\-Programmierungen von unseren Systemen sowie deren Pflege und Erweiterung vor
+* Entwicklung von Webanwendungen mit JavaScript, HTML 5, CSS3, React und PHP (Laravel)
+* App\\-Entwicklung (Android/iOS) mit Java und Dart/Flutter
+* Datenbankdesign und \\-optimierung mit MySQL
+* Kommunikation mit Stakeholdern wie Kunden, Management und anderen Teammitgliedern
+Das bringst Du mit:
+
+
+* Erfolgreicher Abschluss eines Bachelor\\- oder Masterstudiums der Informatik oder einer verwandten Studienrichtung
+* Du bringst mehrjährige Berufserfahrung in der Entwicklung mit, idealerweise mit ersten Erfahrungen in der Projektleitung oder Teamführung
+* Du hast fundierte Kenntnisse in mehreren Programmiersprachen (vorzugsweise die oben genannten)
+* Du kannst sicher mindestens ein Framework wie Laravel anwenden
+* Du hast Erfahrung mit MySQL oder anderen relationalen / objektorientierten Datenbanksystemen
+* Du verfügst über ein tiefgehendes Verständnis von Best Practices in der Softwareentwicklung, z.B. in Bezug auf Codequalität
+* Verantwortungsbewusste, engagierte Persönlichkeit mit einer schnellen Auffassungsgabe, starker Teamfähigkeit und ausgeprägten Kommunikationsfähigkeiten
+Warum wir?
+
+
+* **Schnelle Aufstiegschancen:** Unser Entwicklungsteam befindet sich noch im Aufbau; du hast die Chance, schnell in eine Schlüsselrolle mit viel Verantwortung hineinzuwachsen.
+* **Top\\-Gehalt:** Deine Leistung verdient mehr als nur Anerkennung: Unsere Gehälter bieten langfristige Sicherheit.
+* **Ownership \\& Impact:** Bei uns bist du nicht nur ein kleines Rädchen im Getriebe, sondern übernimmst eigene Projekte und gestaltest aktiv mit.
+* **Firmenfitness inklusive:** Mit Wellpass kannst du aus über 13\\.500 Sport\\- und Wellnessangeboten frei wählen.
+* **Flexibilität:** Echte Freiheit dank flexibler Arbeitszeiten und Homeoffice\\-Regelung.
+* **Vertrauen:** Eigenverantwortung steht im Mittelpunkt; kein lästiges Micromanagement.
+* **Start\\-up\\-Mentalität:** Flache Hierarchien, offene Feedback\\-Kultur und kurze Entscheidungswege. Null Bürokratie!
+* **Erstklassige Ausstattung:** Wir sorgen für hochwertige Hardware und einen modernen Tech\\-Stack.
+* **Modernes Büro:** Unser Büro im Herzen Oldenburgs lädt zum Wohlfühlen ein. Wir freuen uns schon auf dich!
+Wie wirst Du Teil des Teams?
+
+
+Unser Interviewprozess dauert zwischen 3 und 14 Tagen und besteht aus:
+
+
+* kurzem ersten Kennenlernen mit dem Talent Acquisition Team
+* erstem inhaltlichen Gespräch inkl. Fallstudie mit dem Fachbereich
+* finalem Gespräch mit dem Geschäftsführer
+
+Ein transparenter und schneller Prozess hat für uns höchste Priorität. Wir bemühen uns daher, auf alle Bewerbungen innerhalb von 72 Stunden zu antworten.
+
+
+Auch wenn Du befürchtest, dass Du möglicherweise nicht alle Kriterien erfüllst, kannst Du Dich immer bei Donau Data Engineering bewerben.
+
+
+Das klingt nach Dir? Schreib uns!","","https://de.indeed.com/cmp/Donau-Data-Engineering-Gmbh","","","","","","","","","","","",""
+"in-ba2a741be76fe54d","indeed","https://de.indeed.com/viewjob?jk=ba2a741be76fe54d","https://authada.de/jobs/festanstellung/mobile-developer-ios-w/m/d/","MOBILE-DEVELOPER – iOS (W/M/D)","AUTHADA GmbH","Darmstadt, HE, DE","2026-05-21","fulltime","","","","","",True,"","","","","*In Vollzeit, zum nächstmöglichen Zeitpunkt, Darmstadt/hybrid*
+
+
+
+Bei AUTHADA wirst Du Teil eines starken und wachsenden Teams von rund 30 Mitarbeitenden. Wir entwickeln Lösungen für sichere digitale Identitäten und gestalten einen Markt, der aktuell stark an Dynamik gewinnt.
+
+
+
+Unser Fokus liegt auf Identitäts\\- und Signaturlösungen für regulierte Branchen. Von der eID bis zur neuen EUDI\\-Wallet: Unsere Lösungen digitalisieren Antragsstrecken, vereinfachen Prozesse und machen auch stark regulierte Märkte nutzerfreundlicher und digitaler. Dabei arbeiten wir täglich daran, die Zukunft der sicheren digitalen Identifizierung aktiv mitzugestalten.
+
+
+
+Vertrauen, Innovation und Lösungsorientierung prägen unsere Zusammenarbeit – teamintern wie extern.
+
+
+
+In dieser Rolle gestaltest du die technische Basis unserer Produkte aktiv mit. Als **iOS\\-****Developer** entwickelst du leistungsfähige, sichere und benutzerfreundliche Apps und begleitest unsere Lösungen von der Konzeption über die Implementierung bis hin zum Release im AppStore – stets mit agilen Methoden und der Unterstützung des gesamten Teams.
+
+
+
+Du möchtest Deine Ideen einbringen und wirklich etwas bewegen? Wir freuen uns auf Dich!
+
+
+
+Deine Aufgaben* Du bist verantwortlich für die **Entwicklung** und **Mitgestaltung unserer** **iOS\\-Apps und Frameworks** und trägst damit direkt zum Erfolg unserer Produkte bei.
+* Du begleitest unsere Produkte **von der** **Designphase bis in den Betrieb** und arbeitest dabei nach **agilen Methoden** in cross\\-funktionalen Teams.
+* Dein Schwerpunkt liegt auf der **Entwicklung** sicherer, skalierbarer und moderner iOS\\-Applikationen in **Swift \\& Objective\\-C**.
+* Du implementierst **aktuelle Standards** **und Spezifikationen** und stellst deren Einhaltung sicher.
+* Du trägst zur **Qualitätssicherung** bei, indem du sorgfältig strukturierte **Unit**‑ **und UI**‑**Tests** entwickelst und implementierst.
+* Du analysierst unsere Software, identifizierst Schwachstellen und führst kontinuierlich Stabilitäts\\- und **Performance\\-Optimierungen** durch.
+* Du stellst eine **reibungslose Integration** von Softwarekomponenten innerhalb der iOS\\-Plattform sicher.
+**Dein Profil*** Du hast ein **abgeschlossenes Studium der** **Informatik** oder einer vergleichbaren Fachrichtung und bringst damit eine **solide theoretische Basis** für die Entwicklung benutzerfreundlicher Apps mit.
+* Du verfügst über praktische Erfahrung in der Entwicklung von **iOS\\-Applikationen** via **Xcode** und hast idealerweise bereits in einem **agilen Umfeld** oder in der **Produktentwicklung** gearbeitet.
+* Du hast **umfangreiche Erfahrung** in der Entwicklung mit **Swift oder Objective\\-C**.
+* Idealerweise hast Du bereits Erfahrung mit **SwiftUI und UIKit sowie** der Entwicklung von **XCFrameworks**.
+* Du stellst **hohe Ansprüche an die** **Qualität deiner Arbeit** und bist motiviert, dich fachlich und persönlich kontinuierlich weiterzuentwickeln.
+* Du begeisterst dich für deine Themen und **teilst dein Wissen aktiv im Team**, um gemeinsam optimale Lösungen zu entwickeln.
+* Du verfügst über **sehr gute Deutsch**– sowie **gute Englischkenntnisse**.
+Das erwartet Dich bei uns
+Flexible Vertrauensarbeitszeit
+
+
+
+Arbeitsplatz in Zukunftsbranche
+
+
+
+Remote Work
+
+
+
+Individuelle Förderung \\& Weiterentwicklung
+
+
+
+Individuelle technische Ausstattung
+
+
+
+Teamevents
+
+
+
+Nintendo Switch \\& Tischkicker für gemeinsame Pausen
+
+
+
+Internationales \\& motiviertes Team
+
+
+
+Individuelle Teilzeitmodelle
+
+
+
+Obst\\- \\& Getränkeflatrate
+
+
+
+Jobrad
+
+
+
+Kostenlose Parkplätze
+
+
+
+mehr zu uns
+zum Karrierebereich
+Wir haben dein Interesse geweckt? Du hast eine Frage?
+Laura, Head of Human Resources, freut sich auf deine Kontaktaufnahme!","","https://de.indeed.com/cmp/Authada-Gmbh","","","","","","","","","","","",""
+"in-991f59e7b9cceda3","indeed","https://de.indeed.com/viewjob?jk=991f59e7b9cceda3","https://forterro.pinpointhq.com/postings/a17e2a1e-6acb-4bb5-8e2f-836697a8a177?utm_medium=job_board&utm_source=indeed","Quality Assurance Engineer (m/f/d)","Forterro","Leer, NI, DE","2026-05-21","","","","","","",False,"","","","","### **Description**
+
+  
+
+The Professional, Quality Assurance Engineer (m/f/d) supports the delivery of high quality software (Logikal) by designing and executing test activities within an established framework. The role works independently on defined testing tasks and contributes directly to functional results. The Professional develops test cases, executes manual and automated tests, tracks defects and collaborates with development and product teams to clarify requirements. The role checks QA processes, recommends improvements and may provide informal support to less experienced colleagues.### **Responsibilities**
+
+  
+
+* Designs and maintains test cases, test plans and test scenarios.
+* Executes manual and automated tests across multiple platforms.
+* Reviews requirements and supports the creation of accurate test scenarios.
+* Tracks defects and issues and communicates them to development teams.
+* Supports functional, regression, UI and integration testing activities.
+* Describes QA practices, solutions and procedures to stakeholders.
+* Escalates complex issues to senior team members.
+* Checks testing processes and recommends improvements that enhance efficiency.
+* Solves routine testing problems using prior experience and available guidance.
+* Proposes solutions and enhancements for review by leaders.
+* Provides informal day to day support to less experienced QA colleagues.
+
+  
+
+### **Skills, Knowledge \\& Expertise**
+
+  
+
+* Experience in software quality assurance or related testing roles.
+* Understanding of test design, test execution and defect tracking.
+* Ability to work independently within established QA frameworks.
+* Clear communication skills with developers, product teams and other stakeholders.
+* Ability to identify routine issues and recommend practical improvements.
+* Education and experience in software testing, computer science or a related field.
+
+  
+
+### **About Forterro**
+
+
+Founded in 2012, **Forterro** has grown to become a category leader in industrial software – with strongholds in Europe’s top production economies, as well as regional service hubs and development centres around the world. From more than 40 office locations, our 2,500\\+ employees provide and support software for more than 13,000 industrial businesses. **Our products** are deeply rooted in the demands of their local geography. And each is designed to strengthen and accelerate our customers’ ability to operate efficiently and compete effectively.","","https://de.indeed.com/cmp/Forterro","","","","","","","","","","","",""
+"in-467c3ede22a352e8","indeed","https://de.indeed.com/viewjob?jk=467c3ede22a352e8","https://sii-group.com/fr-FR/node/22230","Embedded Developer C / System Integration Engineer (m/w/x) Aerospace","Groupe SII","Ottobrunn, BY, DE","2026-05-21","","","","","","",False,"","","","","**Publié le 21/05/2026**
+
+
+**CDI****/** **SII Germany**
+
+**MISSION**
+-----------
+
+
+Bei der SII Group Germany sind es nicht nur Ideen oder Technologien, die uns voranbringen – es Im heutigen, dynamischen Umfeld technologischen Wandels sind intelligente IT\\-, Software\\- und Systemlösungen von zentraler Bedeutung – in komplexen, sicherheitskritischen und regulierten Technologiefeldern wie Automotive, Defence und der Luft\\- und Raumfahrt.
+
+
+Wir vereinen fundierte Expertise in Avionik, Systemintegration, Verifikation und Qualifikation sowie im Test komplexer sicherheitskritischer Systeme. So entstehen zuverlässige, zertifizierungsfähige Lösungen für zivile und militärische Hubschrauberprogramme, bei denen technische Präzision, strukturierte Prozesse und höchste Qualitätsstandards im Mittelpunkt stehen.
+
+
+Du möchtest an anspruchsvollen Technologien im Bereich Navigation, Systemintegration und Testvalidierung mitwirken? In dieser Position übernimmst du eine zentrale Rolle beim Bring\\-up komplexer Hardware\\-/Software\\-Umgebungen und stellst durch präzise Tests die Funktionalität und Performance moderner GNSS\\-basierter Systeme sicher. Freu dich auf ein technisch vielseitiges Umfeld, in dem du dein Know\\-how in Signalverarbeitung, RF\\-Testequipment und Systemintegration gezielt einbringen kannst.
+
+
+Werde jetzt Teil unseres Teams – in einer internen und unbefristeten Festanstellung als **Embedded Developer C / System Integration Engineer (m/w/x) Aerospace** mit folgenden Aufgaben:
+
+* Bring\\-up und Inbetriebnahme der bestehenden Hardware\\-/Software\\-Umgebung, bestehend aus EGSE\\-Testsoftware, Application Software, Testfällen, Testskripten und DUT\\-Hardware
+* Durchführung und Dokumentation detaillierter Testfälle zur Validierung von Systemfunktionalität und Performance
+* Interpretation, Verifikation und Aufbereitung von Testergebnissen in Testberichten
+* Analyse technischer Abweichungen sowie Unterstützung bei der Fehlerbehebung während Bring\\-up, Testdurchführung und Systemintegration
+* Enge Zusammenarbeit mit internen Hardware\\-Teams, Softwarelieferanten, externen Partnern und lokalen Systemingenieuren
+* Einsatz von RF\\-Testequipment wie Signal Generatoren, Spectrum Analyzern und Channel Emulatoren
+* Mitwirkung an der Integration und Verifikation von GNSS\\-basierten Systemen
+
+**PROFIL**
+----------
+
+
+* Abgeschlossenes Studium im Bereich Elektrotechnik, Nachrichtentechnik, Luft\\- und Raumfahrttechnik, Informatik oder vergleichbare Qualifikation
+* Gutes Verständnis von Digital Signal Processing und Interesse an komplexen technischen Systemen
+* Kenntnisse im GNSS\\-Umfeld, idealerweise zu Signalakquisition und korrelatorbasierten Empfängern
+* Erfahrung mit DPP, FLL und PLL von Vorteil
+* Vertrautheit mit RF\\-Testequipment wie Signal Generatoren, Spectrum Analyzern oder Channel Emulatoren
+* Kenntnisse in C, Python, Linux und MATLAB
+* Idealerweise Know\\-how in Navigationsprinzipien, CCSDS, PUS\\-C oder Real\\-Time\\-Systems
+* Erfahrung in Systemintegration, Testdurchführung, Fehleranalyse oder technischer Dokumentation wünschenswert
+* Strukturierte, analytische und lösungsorientierte Arbeitsweise
+
+**NOTRE AGENCE**
+----------------
+
+
+**Deine Benefits****–** **ein echter Great Place To Work®**
+
+* **Flexibles Arbeiten**: 30 Urlaubstage \\& flexible Zeiten – für echte Vereinbarkeit
+* **Modernes Setup**: Cloudbasiertes Arbeiten mit Microsoft 365 für effizientes, kollaboratives Arbeiten
+* **Kultur, die trägt**: Offene Kommunikation, klare Verantwortung und Vertrauen auf allen Ebenen
+* **Individuelle Entwicklung**: Förderung deiner Stärken – persönlich und fachlich
+* **Finanzielle Extras**: Zuschüsse zur Altersvorsorge, Kinderbetreuung \\& Mobilität (Deutschland\\-Ticket)
+* **Gesundheit \\& Balance**: Hansefit\\-Sportkooperation \\& JobRad\\-Leasing
+
+
+Jetzt als **Embedded Developer C / System Integration Engineer (m/w/x) Aerospace** bewerben – schnell \\& direkt über unser **Bewerbungsformular**.
+
+
+Für deine Fragen steht dir Uladzislau Tsarou gerne über E\\-Mail gerne zur Verfügung karriere@sii\\-germany.com
+
+*(*Alle personenbezogenen Formulierungen in dieser Stellenanzeige sind geschlechtsneutral zu betrachten.*)*
+
+
+**GROUPE SII**
+--------------
+
+
+Bei der SII Germany sind es nicht nur Ideen oder Technologien, die uns voranbringen – es sind vor allem die Menschen dahinter. Ihre Leidenschaft, ihr Know\\-how und ihr Mut, neue Wege zu gehen, machen den Unterschied.  
+
+  
+
+Wir verbinden wir globale Kompetenz mit lokaler Nähe und arbeiten partnerschaftlich mit unseren Kunden zusammen, um wirkungsvolle technische Lösungen zu realisieren. Dabei erbringen wir anspruchsvolle IT\\- und Engineering\\-Dienstleistungen in technologiegetriebenen Märkten.  
+
+  
+
+Wir suchen Persönlichkeiten, die nicht nur fachlich überzeugen, sondern mitdenken, mitgestalten und gemeinsam mit uns wachsen wollen. Let’s tech together!","","https://de.indeed.com/cmp/Groupe-Sii","https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/620b1e993c08160c247b976b2a3c402f","https://www.sii-group.com","Paris","10,000+","$500M to $1B (USD)","Le Groupe SII est au cœur de l’innovation au service de grands comptes dans des secteurs d’ingénierie variés.","","","","","",""
+"in-bfacf1b056a48eff","indeed","https://de.indeed.com/viewjob?jk=bfacf1b056a48eff","https://sii-group.com/de-DE/offers/embedded-developer-c-system-integration-engineer-mwx-aerospace","Embedded Developer C / System Integration Engineer (m/w/x) Aerospace","Groupe SII","Ottobrunn, BY, DE","2026-05-21","","","","","","",False,"","","","","**Publié le 21/05/2026**
+
+
+**FESTANSTELLUNG****/** **SII Germany**
+
+**MISSION**
+-----------
+
+
+Bei der SII Group Germany sind es nicht nur Ideen oder Technologien, die uns voranbringen – es Im heutigen, dynamischen Umfeld technologischen Wandels sind intelligente IT\\-, Software\\- und Systemlösungen von zentraler Bedeutung – in komplexen, sicherheitskritischen und regulierten Technologiefeldern wie Automotive, Defence und der Luft\\- und Raumfahrt.
+
+
+Wir vereinen fundierte Expertise in Avionik, Systemintegration, Verifikation und Qualifikation sowie im Test komplexer sicherheitskritischer Systeme. So entstehen zuverlässige, zertifizierungsfähige Lösungen für zivile und militärische Hubschrauberprogramme, bei denen technische Präzision, strukturierte Prozesse und höchste Qualitätsstandards im Mittelpunkt stehen.
+
+
+Du möchtest an anspruchsvollen Technologien im Bereich Navigation, Systemintegration und Testvalidierung mitwirken? In dieser Position übernimmst du eine zentrale Rolle beim Bring\\-up komplexer Hardware\\-/Software\\-Umgebungen und stellst durch präzise Tests die Funktionalität und Performance moderner GNSS\\-basierter Systeme sicher. Freu dich auf ein technisch vielseitiges Umfeld, in dem du dein Know\\-how in Signalverarbeitung, RF\\-Testequipment und Systemintegration gezielt einbringen kannst.
+
+
+Werde jetzt Teil unseres Teams – in einer internen und unbefristeten Festanstellung als **Embedded Developer C / System Integration Engineer (m/w/x) Aerospace** mit folgenden Aufgaben:
+
+* Bring\\-up und Inbetriebnahme der bestehenden Hardware\\-/Software\\-Umgebung, bestehend aus EGSE\\-Testsoftware, Application Software, Testfällen, Testskripten und DUT\\-Hardware
+* Durchführung und Dokumentation detaillierter Testfälle zur Validierung von Systemfunktionalität und Performance
+* Interpretation, Verifikation und Aufbereitung von Testergebnissen in Testberichten
+* Analyse technischer Abweichungen sowie Unterstützung bei der Fehlerbehebung während Bring\\-up, Testdurchführung und Systemintegration
+* Enge Zusammenarbeit mit internen Hardware\\-Teams, Softwarelieferanten, externen Partnern und lokalen Systemingenieuren
+* Einsatz von RF\\-Testequipment wie Signal Generatoren, Spectrum Analyzern und Channel Emulatoren
+* Mitwirkung an der Integration und Verifikation von GNSS\\-basierten Systemen
+
+**PROFIL**
+----------
+
+
+* Abgeschlossenes Studium im Bereich Elektrotechnik, Nachrichtentechnik, Luft\\- und Raumfahrttechnik, Informatik oder vergleichbare Qualifikation
+* Gutes Verständnis von Digital Signal Processing und Interesse an komplexen technischen Systemen
+* Kenntnisse im GNSS\\-Umfeld, idealerweise zu Signalakquisition und korrelatorbasierten Empfängern
+* Erfahrung mit DPP, FLL und PLL von Vorteil
+* Vertrautheit mit RF\\-Testequipment wie Signal Generatoren, Spectrum Analyzern oder Channel Emulatoren
+* Kenntnisse in C, Python, Linux und MATLAB
+* Idealerweise Know\\-how in Navigationsprinzipien, CCSDS, PUS\\-C oder Real\\-Time\\-Systems
+* Erfahrung in Systemintegration, Testdurchführung, Fehleranalyse oder technischer Dokumentation wünschenswert
+* Strukturierte, analytische und lösungsorientierte Arbeitsweise
+
+**NOTRE AGENCE**
+----------------
+
+
+**Deine Benefits****–** **ein echter Great Place To Work®**
+
+* **Flexibles Arbeiten**: 30 Urlaubstage \\& flexible Zeiten – für echte Vereinbarkeit
+* **Modernes Setup**: Cloudbasiertes Arbeiten mit Microsoft 365 für effizientes, kollaboratives Arbeiten
+* **Kultur, die trägt**: Offene Kommunikation, klare Verantwortung und Vertrauen auf allen Ebenen
+* **Individuelle Entwicklung**: Förderung deiner Stärken – persönlich und fachlich
+* **Finanzielle Extras**: Zuschüsse zur Altersvorsorge, Kinderbetreuung \\& Mobilität (Deutschland\\-Ticket)
+* **Gesundheit \\& Balance**: Hansefit\\-Sportkooperation \\& JobRad\\-Leasing
+
+
+Jetzt als **Embedded Developer C / System Integration Engineer (m/w/x) Aerospace** bewerben – schnell \\& direkt über unser **Bewerbungsformular**.
+
+
+Für deine Fragen steht dir Uladzislau Tsarou gerne über E\\-Mail gerne zur Verfügung karriere@sii\\-germany.com
+
+*(*Alle personenbezogenen Formulierungen in dieser Stellenanzeige sind geschlechtsneutral zu betrachten.*)*
+
+
+**GROUPE SII**
+--------------
+
+
+Bei der SII Germany sind es nicht nur Ideen oder Technologien, die uns voranbringen – es sind vor allem die Menschen dahinter. Ihre Leidenschaft, ihr Know\\-how und ihr Mut, neue Wege zu gehen, machen den Unterschied.  
+
+  
+
+Wir verbinden wir globale Kompetenz mit lokaler Nähe und arbeiten partnerschaftlich mit unseren Kunden zusammen, um wirkungsvolle technische Lösungen zu realisieren. Dabei erbringen wir anspruchsvolle IT\\- und Engineering\\-Dienstleistungen in technologiegetriebenen Märkten.  
+
+  
+
+Wir suchen Persönlichkeiten, die nicht nur fachlich überzeugen, sondern mitdenken, mitgestalten und gemeinsam mit uns wachsen wollen. Let’s tech together!","","https://de.indeed.com/cmp/Groupe-Sii","https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/620b1e993c08160c247b976b2a3c402f","https://www.sii-group.com","Paris","10,000+","$500M to $1B (USD)","Le Groupe SII est au cœur de l’innovation au service de grands comptes dans des secteurs d’ingénierie variés.","","","","","",""
+"in-398bf99c53161909","indeed","https://de.indeed.com/viewjob?jk=398bf99c53161909","https://grnh.se/ec33a85f1us","Software Engineer, Python","ENGELHART","Berlin, BE, DE","2026-05-21","fulltime","","","","","",False,"","","","","**About Us**
+------------
+
+
+
+Engelhart was founded in 2013 by BTG Pactual Group as a commodities trading company. Our business model is ""asset light"" and highly diversified – giving us the ability to adapt effectively and nimbly to changing market conditions. We have assembled successful multidisciplinary teams, leveraging advanced fundamental analysis with deep quantitative and weather research capabilities. Our activities are underpinned by strong risk management practices and by powerful technology and operational excellence. We have exceptional teams with diverse global backgrounds and decades of experience, and are driven by a highly collaborative culture, across products and competencies.
+
+
+
+In 2024, Engelhart acquired Trailstone, a global energy trading and technology company. The acquisition provides us with new expertise, analytics and proprietary technology which is being used to provide risk management and optimisation services to help maximise the value of our clients' renewable power. The acquisition also expanded Engelhart's capabilities into physical natural gas across North America, a critical fuel to support the energy transition.
+
+
+
+Our talented and experienced individuals work together according to its four company values: **Performance, Agility, Collaboration, Entrepreneurship**.
+
+### **About the Role**
+
+
+
+We are looking for an experienced back\\-end \\[Python] software engineer to join our growing Berlin office. This role will join the Trading \\& Commercial Development Team, developing best in class back\\-end services and microservices for our renewables trading platform, with Python.
+
+
+
+The team is building a world\\-class product to help us scale and bring renewables to many more power markets in the world, while trading many more smaller electricity assets. This project is expanding at pace, following Trailstone's merger with Engelhart Commodities Trading Partners. As a result, this role will be joining an international team with tangible impact on our platform's success from day one.
+
+
+
+This will be a full\\-time role, owning the following **responsibilities**:
+
+
+* Designing, developing and maintaining containerised services for auction\\-based renewables trading.
+* Working in a cross\\-functional team with engineers, business analysts, traders, data engineers and data scientists.
+* Staying up to date with the latest trends in technology and continuously improving our code base, systems and processes.
+* Mentoring junior members of the team by emphasising code quality and conducting pull requests and code reviews.
+
+  
+
+
+### **About You**
+
+
+
+This person will be a seasoned Python developer, experienced working with time\\-sensitive hybrid\\-cloud systems in order to deliver immediate impact to our growing renewables trading platform. This person will be working closely with commercial stakeholders on a regular basis, so tangible experience collaborating with non\\-technical staff is highly desirable.
+
+
+
+We believe the following **skills \\& experiences** will best set someone up for success in this role, therefore will be prioritising the following essential criteria:
+
+
+* Significant relevant Python experience.
+* Strong knowledge of object\\-oriented, functional and asynchronous programming and design patterns.
+* Substantial SQL experience and understanding of relational database fundamentals.
+* A passion for delivering clean code and working with a test\\-driven mindset.
+* An appreciation of working in a hybrid\\-cloud and container\\-driven architecture (partly on\\-premise and partly AWS).
+
+
+In addition to the above, the following experience is highly desirable but not essential for application:
+
+
+* Domain knowledge in the energy or financial sector.
+* Experience developing services in C\\#
+
+  
+
+
+### **Our Tech Stack**
+
+
+
+Our tech stack includes Python (FastAPI, Pandas), AWS (ECS, Aurora), Redis, Docker, Atlassian (Jira, Bitbucket), SQL Server, C\\# and more.
+
+ *We believe in inclusivity and are therefore dedicated to ensuring all employees – across gender identity, race, ethnicity, sexual orientation, religion, life experience, background and more – feel welcome and included in the company. We promote diversity because we believe it is essential to our ability to think holistically.*","","https://de.indeed.com/cmp/Engelhart","","","","","","","","","","","",""
+"in-ba43b5f0b92719ef","indeed","https://de.indeed.com/viewjob?jk=ba43b5f0b92719ef","https://grnh.se/m9p9vjtr1us","AI Engineer (Enablement)","FREE NOW","Berlin, BE, DE","2026-05-21","","","","","","",False,"","","","","***Location****: We are flexible! Come and join us either in Hamburg, Berlin, Barcelona or Athens.*
+
+
+
+Freenow empowers smarter mobility decisions helping people to move freely and cities to thrive.
+
+
+
+Be ready to work in a multinational, diverse, highly motivated and collaborative team of passionate developers who strive for excellence and like to have fun.
+
+
+
+Are you passionate about data engineering and ready to revolutionize how data is managed and utilized within an organization? We are looking for a skilled and innovative **Analytics Engineer** to join our dynamic team and help us implement a cutting\\-edge Data Mesh architecture.
+
+
+
+At Freenow we believe in data driven decisions that drive our business forward. We are currently transitioning into a data mesh architecture to establish a very close collaboration between data engineers, data analysts, data scientists and machine learning engineers.
+
+
+
+Are you ready for your next ride?
+
+
+
+**YOUR DAILY ADVENTURES WILL INCLUDE:**
+---------------------------------------
+
+
+* Collaborate with cross\\-functional teams including data analysts, data scientists, and software engineers to understand data requirements and design optimal data solutions in the Data Mesh environment.
+* Develop, implement, and maintain scalable data products that enable the seamless flow of data from various sources to the Data Mesh architecture.
+* Create and manage data models that cater to the specific needs of data consumers while adhering to data governance and security standards.
+* Design and build data quality monitoring frameworks to ensure data accuracy, consistency, and reliability.
+* Stay updated with the latest industry trends and best practices in Data Engineering and Data Mesh to continuously improve data pipelines and processes.
+* Build high\\-performance APIs to access and query data from data warehouse.
+* Perform data analysis required to troubleshoot data related issues and assist in the resolution of data issues.
+* Coordinate and oversee the successful delivery of complex data engineering projects, ensuring alignment with timelines, objectives and stakeholders.
+
+### **Our Techstack****: Airflow \\| Databricks \\| Trino \\| Spark \\| Kafka \\| AWS**
+
+
+**TO BE SUCCESSFUL IN THIS ROLE:**
+----------------------------------
+
+
+* You have advanced knowledge of at least one programming language and are happy to learn more. Our core languages are Scala and Python.
+* Expert level of SQL (especially SparkSQL) and Datawarehouse concept, Database. Experience in building data pipelines is a core requirement. Love getting your hands dirty with the data implementing custom ETLs to craft it into information
+* You have knowledge of distributed system, Lambda, AWS S3, AWS Cloud watch ...
+* Experience with AWS, Hive, Spark, Trino, Databricks is helpful.
+* Enjoy working with stream processing frameworks like Spark structured streaming, Kafka streams.
+* You understand requirements beyond the written word. Whether you're working on an API used by other developers, an internal tool consumed by our operation teams, or a feature used by many customers, your attention to detail leads to a delightful user experience.
+* Fluent proficiency in Business English.
+* Exceptional analytical skills, lateral thinking and experience in solving challenging problems. Experiences in working with Data Visualisation tools (e.g. Tableau, Metabase) is a plus.","Internet And Software","https://de.indeed.com/cmp/Free-Now","https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/40dbded895fc01ecc60c38adef4be576","https://free-now.com/de/career/jobs","Große Elbstraße 273
+22767 Hamburg","501 to 1,000","$1M to $5M (USD)","Join a fun, global team of top engineers, marketeers and seasoned entrepreneurs for the challenge of a lifetime. Impressum: https://free-now.com/de/impressum/ Datenschutz: https://free-now.com/de/agb","","","","","",""
+"in-0a53769960afb367","indeed","https://de.indeed.com/viewjob?jk=0a53769960afb367","https://zendesk.wd1.myworkdayjobs.com/en-US/zendesk/job/Berlin-Germany/Senior-Software-Engineer_R34778-1","Senior Frontend Engineer","Zendesk","Berlin, BE, DE","2026-05-21","fulltime","","","","","",True,"","","","peopleandplaces@zendesk.com","**Job Description**
+-------------------
+
+As a Senior Frontend Engineer at Zendesk AI Agents you'll play a key role in shaping and building our backend, collaborating closely with our Product Manager, AI and Machine Learning Engineers / Scientists, Backend developers, and the broader tech team to deliver groundbreaking features focused on speed and reliability, all while keeping a strong focus on user experience.
+
+
+As an engineer on our team, you'll be at the forefront of this exciting technology, contributing to a product that's redefining how businesses and users interact. You will have full responsibility to build, test, and iterate rapidly to bring high\\-quality AI products to our massive user base at an unparalleled scale.
+
+
+Join us in revolutionizing the chatbot/agent landscape and be part of a team that's shaping the future of AI interactions. Neat architecture and good software engineering practices are your guiding principles, as you believe that excellent user experience is best built over a solid codebase.
+
+
+**Your responsibilities:**
+--------------------------
+
+* Maintain and develop the Zendesk AI Agents platform using TypeScript, React and other state\\-of\\-the\\-art libraries.
+* Proactively suggest and pursue improvements on our codebase and architecture, from code\\-changes and testing to CI/CD and deployment.
+* Contribute to modularisation and to scalable architecture solutions to both new and existing components.
+* Build user\\-friendly frontend applications that help our clients to design conversations and automate workflows.
+* Work closely with other members of the development team to ensure new product features are built stable and intuitive.
+* Learn and experiment with new tools and technologies aiming to develop new product features, improve UX, and reduce code complexity.
+* Stay up to date on industry trends, helping drive Ultimate to innovate.
+
+**Who you are**
+---------------
+
+We’re looking for a communicative, experienced engineer with a product mindset who takes pride in producing slick applications which are easy and fun to use, built upon logical, simple and effective solutions to complex issues.
+
+
+* You feel confident with the Web Standards and the inner workings of the browser and the internet.
+* Writing tests for your code is a regular practice for you, you encourage a testing culture in your team and supervise it if necessary.
+* You have excellent programming skills in TypeScript and in React or similar tools (Angular, Vue, etc’).
+* Server side, infrastructure and micro\\-frontends experience is a plus!
+* You know how to approach performance bottlenecks and have the ability to come up with realistic solutions.
+* You care deeply about engineering practices, as well as the end\\-user and your team.
+* You love your job, you enjoy mentoring and enabling others and you know how to ask for help when you need it.
+* You understand feedback as a tool for growth and utilize it to grow and encourage growth in others.
+* You are curious and continuously learning new things that can add value to your job.
+* You are a positive, proactive team player, have strong communication skills and high proficiency in English.
+
+**How do we measure success in this position?**
+-----------------------------------------------
+
+* You contribute to the overall architecture and performance of our frontend application.
+* You ship features with your team that solve real customer problems.
+* You influence your team’s product direction with your ideas.
+
+\\#LI\\-MK12
+
+
+**The intelligent heart of customer experience**
+
+Zendesk software was built to bring a sense of calm to the chaotic world of customer service. Today we power billions of conversations with brands you know and love.
+
+
+Zendesk believes in offering our people a fulfilling and inclusive experience. Our hybrid way of working, enables us to purposefully come together in person, at one of our many Zendesk offices around the world, to connect, collaborate and learn whilst also giving our people the flexibility to work remotely for part of the week.
+
+
+As part of our commitment to fairness and transparency, we inform all applicants that artificial intelligence (AI) or automated decision systems may be used to screen or evaluate applications for this position, in accordance with Company guidelines and applicable law.
+
+
+Zendesk is an equal opportunity employer, and we’re proud of our ongoing efforts to foster global diversity, equity, \\& inclusion in the workplace. Individuals seeking employment and employees at Zendesk are considered without regard to race, color, religion, national origin, age, sex, gender, gender identity, gender expression, sexual orientation, marital status, medical condition, ancestry, disability, military or veteran status, or any other characteristic protected by applicable law. We are an AA/EEO/Veterans/Disabled employer. If you are based in the United States and would like more information about your EEO rights under the law, please click here .
+
+
+Zendesk endeavors to make reasonable accommodations for applicants with disabilities and disabled veterans pursuant to applicable federal and state law. If you are an individual with a disability and require a reasonable accommodation to submit this application, complete any pre\\-employment testing, or otherwise participate in the employee selection process, please send an e\\-mail to peopleandplaces@zendesk.com with your specific accommodation request.","","https://de.indeed.com/cmp/Zendesk","https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/e9b65446d564adfe9d12e1c7a6bb1488","http://www.zendesk.com","San Francisco, CA","5,001 to 10,000","$1B to $5B (USD)","Zendesk is redefining customer and employee experience. Our AI-powered solutions help over 100,000 companies build better relationships and grow.","","","","","",""
+"in-6c36ad0d8683eb3a","indeed","https://de.indeed.com/viewjob?jk=6c36ad0d8683eb3a","https://betasystems.softgarden.io/job/63936804/Senior-Software-Engineer-Backend-m-w-d-?jobDbPVId=273665177&l=en","Senior Software Engineer (Backend) (m/w/d)","BETA Systems Software AG","Berlin, BE, DE","2026-05-02","fulltime","","","","","",True,"","","","","**Über uns**
+------------
+
+
+Wir sind ein unabhängiger, mittelständischer Softwareanbieter. 50 Prozent der größten europäischen Banken sowie öffentliche Einrichtungen und Unternehmen aller Branchen sichern ihre sensiblen Geschäftsprozesse mit unseren Lösungen ab.
+
+
+Hochwertige Softwareprodukte im Bereich **Sicherheit und Nachvollziehbarkeit in der IT** und zur automatisierten Verarbeitung größter Daten\\- und Dokumentenmengen lassen uns als deutsches Unternehmen zu einem der **führenden Mittelständler in Europa** zählen.
+
+
+Es gibt deutschlandweit vier Standorte in **Berlin, München, Köln und Neustadt an der** Weinstraße. Zusätzlich gibt es über 20 Tochtergesellschaften weltweit.
+
+
+Wir sind ein führender Anbieter im Bereich Identity \\& Access Management und unterstützen Unternehmen dabei, ihre digitale Sicherheit effizient zu gestalten. Unsere Lösungen ermöglichen es, Nutzeridentitäten zentral zu verwalten, Zugriffe zu kontrollieren und Compliance\\-Anforderungen zu erfüllen. Zur Verstärkung unseres Entwicklungsteams am Standort Berlin suchen wir ab sofort einen:
+
+**Senior Software Engineer (Backend) (m/w/d)**
+
+**Deine Aufgaben**
+------------------
+
+
+Als Senior Backend Developer bist du Teil eines europäischen Entwicklungsteams (Schwerpunkt Deutschland) und entwickelst moderne, skalierbare Backend\\-Systeme im Umfeld von Identity \\& Access Management (IAM). Du gestaltest aktiv Architektur, Datenmodelle und Entwicklungsprozesse – inklusive des Einsatzes von KI zur Unterstützung in der Softwareentwicklung. Zu den wichtigsten Aufgaben gehören:
+
+* Entwicklung und Weiterentwicklung von Backend\\-Systemen auf Basis von **Java / Spring Boot**
+* Design und Implementierung von **Microservices und API\\-basierten Architekturen**
+* Modellierung und Optimierung von **Datenbanken** (MS SQL Server Fokus) inkl. **Performance\\-Tuning**
+* Aufbau und Pflege von **CI/CD\\-Pipelines** (GitLab) sowie **Build\\- und Deployment\\-Prozessen**
+* Umsetzung fachlicher Anforderungen in robuste, **wartbare Softwarelösungen**
+* Einsatz von **KI\\-Tools** zur Unterstützung von Entwicklung, Testing und Refactoring
+* Enge **Zusammenarbeit** im agilen Team sowie **Mentoring** von Kollegen
+**Dein Profil**
+---------------
+
+* Begeisterung und Leidenschaft für die Softwareentwicklung
+* Mehrjährige Erfahrung in der Backend\\-Entwicklung mit Java / Spring Boot
+* Sehr gute Kenntnisse in relationalen Datenbanken, insbesondere Microsoft SQL Server, Postgre SQL
+* Erfahrung mit GitLab CI/CD, Build\\- und Deployment\\-Prozessen
+* Erfahrung mit Cloud\\-nativen Architekturen und Microservices
+* Fundiertes Verständnis von Softwarearchitektur, Design Patterns und Clean Code
+* Praktische Erfahrung mit KI\\-gestützter Softwareentwicklung
+* Strukturierte, eigenverantwortliche Arbeitsweise und ausgeprägte Teamfähigkeit
+* Gute Deutsch\\- und Englischkenntnisse
+**Was wir anbieten:**
+---------------------
+
+* Unbefristeter Arbeitsvertrag und 30 Tage Urlaub
+* Flexible Arbeitszeiten, Homeoffice\\-Option und moderne Arbeitsmittel
+* Betriebliche Altersvorsorge, die von uns bezuschusst wird
+* Arbeitgeberfinanzierte Unfall\\- und Berufsunfähigkeitsversicherung
+* Zuschuss zum Jobticket
+* Fahrrad\\-Leasing mit Zuschuss
+* Kontinuierliche Weiterbildungs\\- und Weiterentwicklungsmöglichkeiten
+* Exklusive Mitarbeiterangebote mit Sonderkonditionen für Produkte und Leistungen renommierter Hersteller und Marken
+* Eine angenehme und lockere Arbeitsatmosphäre mit gelebter Du\\-Kultur
+* Ein betriebliches Gesundheitsmanagement (Yoga\\- und Rückenfitkurse, Psychologie\\- und Facharztservice doQtor)
+**Kontakt**
+-----------
+
+
+Haben wir Dein Interesse geweckt?
+
+
+Dann bewirb Dich über unseren Online\\-Bewerberbogen. Wir freuen uns!
+
+**Garancy AG**
+--------------
+
+
+Vivien Böhm  
+
+Human Resources","","https://de.indeed.com/cmp/Beta-Systems-Software-Ag","https://d2q79iu7y748jz.cloudfront.net/s/_squarelogo/256x256/3045a6c184c7113f191cc0dbeef77bba","https://www.betasystems.com","Berlin, 16","201 to 500","$25M to $100M (USD)","","","","","","",""
+"li-4417710351","linkedin","https://www.linkedin.com/jobs/view/4417710351","","Software Engineer (Full-Stack)","Clera","Berlin, Berlin, Germany","2026-05-21","fulltime","","","","","",False,"mid-senior level","Engineering and Information Technology","","","**About The Role**
+ Our client is an early\\-stage AI\\-focused platform looking for a Full\\-Stack Software Engineer to own features end\\-to\\-end. This is a full\\-time, on\\-site role in Berlin offering substantial ownership over product features, architecture decisions, and rapid delivery in a fast\\-paced environment.
+   
+
+  
+
+ What you'll do
+   
+
+  
+
+* Design and implement robust backend systems and APIs for an AI platform
+* Build end\\-to\\-end solutions spanning backend (Node.js), database layers, and frontend integration
+* Develop and optimize database schemas, queries, and data models for performance and scalability
+* Implement API endpoints and integrate with third\\-party services and AI providers
+* Collaborate on technical architecture decisions and system design
+* Maintain and optimize the codebase for performance, reliability, and maintainability
+* Participate in support engineer rotations to assist customers and the customer support team
+
+
+ What we're looking for
+   
+
+  
+
+* 3\\+ years of full\\-stack web development experience
+* Strong collaboration and communication skills with product leadership and cross\\-functional teams
+* Proficiency in PostgreSQL and SQL for data modeling, querying, and optimization
+* Proficiency with Tailwind CSS for frontend styling and implementation
+* Experience owning features end\\-to\\-end from conception to deployment in production environments
+* Experience building AI\\-powered features or integrating AI/ML services into applications
+* Experience with Node.js, React/Next.js, and TypeScript
+* Strong CS fundamentals
+
+
+*This role is presented by a recruiting partner. Company name shared after an initial conversation.*","Technology, Information and Internet","https://www.linkedin.com/company/getclera","https://media.licdn.com/dms/image/v2/D4E0BAQHWsehAXf8O7g/company-logo_100_100/B4EZ3S18.nKQAQ-/0/1777358852264/getclera_logo?e=2147483647&v=beta&t=zQijzvst1gyniO5RIXQ_lGbUVn-owdQzweVr9DKHu60","","","","","","","","","","",""
+"li-4416103544","linkedin","https://www.linkedin.com/jobs/view/4416103544","","Software Engineer - Fully Remote","Mercor","Berlin, Berlin, Germany","2026-05-20","parttime","","","","","",True,"not applicable","Engineering and Information Technology","","support@mercor.com","**About The Job**
+**Mercor** 
+ connects elite creative and technical talent with leading AI research labs. Headquartered in San Francisco, our investors include
+ **Benchmark** 
+ ,
+ **General Catalyst** 
+ ,
+ **Peter Thiel** 
+ ,
+ **Adam D'Angelo** 
+ ,
+ **Larry Summers** 
+ , and
+ **Jack Dorsey** 
+ .
+   
+
+  
+
+**Position:** 
+ Enterprise SWEs
+   
+
+  
+
+**Type:** 
+**Contract**
+**Compensation:** 
+**$50–$70/hour**
+**Location:** 
+**Remote**
+**Role Responsibilities**
+* Develop and complete coding tasks in various enterprise languages.
+* Evaluate and improve systems and build toolchains using C and Rust.
+* Enhance enterprise JVM and build ecosystems with C\\#, Kotlin, Scala, and Swift.
+* Optimize production web and ops scripting with Ruby, PHP, and Perl.
+* Advance scientific and quant computing using R.
+* Work independently and asynchronously to meet project deadlines.
+
+
+**Qualifications**
+**Must\\-Have**
+* Strong professional experience in at least one listed domain.
+* Deep understanding of language internals, tooling, and real\\-world production constraints.
+* Ability to reason about edge cases, performance, and system design trade\\-offs.
+* Detail\\-oriented with strong written feedback skills.
+
+
+**Application Process (Takes 20–30 mins to complete)**
+* Upload resume
+* AI interview based on your resume
+* Submit form
+
+
+**Resources \\& Support**
+* For details about the interview process and platform information, please check: https://talent.docs.mercor.com/welcome
+* For any help or support, reach out to: support@mercor.com
+
+
+*PS: Our team reviews applications daily. Please complete your AI interview and application steps to be considered for this opportunity.*","Software Development","https://www.linkedin.com/company/mercor-ai","https://media.licdn.com/dms/image/v2/D560BAQGcXYycU1ExMQ/company-logo_100_100/B56Zs5S_mvJoAU-/0/1766192839354/mercor_ai_logo?e=2147483647&v=beta&t=kdzYrfdTDCtqk7IVgNC_2hgj8o1vFeu3AEFeXdhDaHI","","","","","","","","","","",""
+"li-4416189078","linkedin","https://www.linkedin.com/jobs/view/4416189078","","Software Engineer (m/w/d)","Bertrandt Group","Bremen, Bremen, Germany","2026-05-20","fulltime","","","","","",False,"mid-senior level","Engineering and Information Technology","","","**Wir sind Bertrandt.**
+ Ein eigenständiger und internationaler Engineering Dienstleister mit langjähriger Expertise. Mit branchenüber\\-greifendem Know\\-how und einem ganzheitlichen System\\- und Produktverständnis schaffen wir technologische Lösungen entlang der gesamten Wertschöpfungskette. Wir beschäftigen uns mit den Trendthemen Digitalisierung, E\\-Mobilität und Autonome Systeme hauptsächlich für die Branchen Automotive, Luftfahrt, Defence und Maschinenbau und ermöglichen hier konsequent die Entstehung passgenauer Lösungen. Unser Ziel: den technologischen Fortschritt beschleunigen und einen relevanten Beitrag zu einer nachhaltigen Zukunft leisten. Daran arbeiten wir jeden Tag – mit rund 12\\.000 Mitarbeiterinnen und Mitarbeitern an über 50 Standorten weltweit.
+   
+
+  
+
+**Was Sie Erwartet**
+* Mitarbeit in der Entwicklung von Softwarelösungen im Bereich Sonartechnologie
+* Bewertung, Planung und Umsetzung von Softwareentwicklungsaktivitäten auf Basis bestehender Softwarearchitekturen
+* Reduzierung von Systemkomplexität durch Strukturierung, Dekomposition und Erstellung von Softwaredesigns
+* Entwicklung und Integration von Softwareartefakten in bestehende Architekturen
+* Bewertung der Softwarearchitektur hinsichtlich Qualität, Kosten und Termineinhaltung
+* Enge Abstimmung im Entwicklungsteam zu Aufgaben, Herausforderungen und Lösungsansätzen
+* Unterstützung bei der Planung und Umsetzung von Arbeitspaketen im agilen Umfeld
+
+
+**Was Sie Mitbringen**
+* Abgeschlossenes Hochschulstudium im MINT\\-Bereich oder Ausbildung als Fachinformatiker mit Weiterbildung und langjähriger Berufserfahrung oder vergleichbare Qualifikation
+* Mehrjährige Erfahrung in der Softwareentwicklung, idealerweise mit C\\+\\+Erfahrung im Bereich Signalverarbeitung wünschenswert
+* Erfahrung mit agilen Entwicklungsmethoden
+* Strukturierte, selbstständige und lösungsorientierte Arbeitsweise
+* Gute analytische Fähigkeiten und technisches Verständnis
+* Teamfähigkeit und Kommunikationsstärke
+* Motivation, sich in komplexe Softwaresysteme einzuarbeiten
+* fließende Deutsch\\- und gute Englischkenntnisse
+
+
+ Sie sind gespannt auf Ihre
+ **neue Herausforderung** 
+ und möchten Ihre Talente in einem
+ **innovativen Umfeld** 
+ beweisen? Dann laden Sie in nur wenigen Minuten Ihren
+ **Lebenslauf** 
+ hoch. Für ein
+ **spannendes Projekt** 
+ bei einem bekannten Kunden aus dem Bereich
+ **Defence** 
+ suchen wir Sie!
+   
+
+  
+
+**Wir freuen uns auf Ihre Bewerbung und stehen für Fragen, sowie weitere Informationen gerne zur Verfügung**
+ Bertrandt legt großen Wert auf Gleichbehandlung und Chancengleichheit. Unsere Recruiting\\-Entscheidungen basieren auf den Erfahrungen und Fähigkeiten der Bewerber\\*innen. Schwerbehinderte Menschen bzw. gleichgestellte Menschen im Sinne des SGB IX sind herzlich willkommen und werden bei gleicher Eignung bevorzugt eingestellt.
+   
+
+  
+
+**Sie sind interessiert?**
+ Wir freuen uns über Ihre Bewerbung!","Engineering Services","https://de.linkedin.com/company/bertrandt-ag","https://media.licdn.com/dms/image/v2/D4E0BAQG1Z0KcaSFrDw/company-logo_100_100/company-logo_100_100/0/1737470322853/bertrandt_ag_logo?e=2147483647&v=beta&t=bs5ouywKfg_Qlju7PXjHv8W27BUMebaIvIzKmFbIjgw","","","","","","","","","","",""
+"li-4384456386","linkedin","https://www.linkedin.com/jobs/view/4384456386","","Softwareentwickler (m/w/d)","Mubea","Schwerin, Mecklenburg-West Pomerania, Germany","2026-05-20","fulltime","","","","","",False,"associate","Information Technology","","","**Werde Teil von Mubea Aviation – wo Innovation abhebt!**
+ Mit Sitz in Schwerin gehört Mubea Aviation zu den führenden Luftfahrtunternehmen in Mecklenburg\\-Vorpommern – und ist weltweit im Einsatz. Für namhafte internationale Kunden wie
+ **Airbus** 
+ entwickeln und fertigen wir Hightech\\-Lösungen auf höchstem Niveau – immer am Puls modernster Technologie und Forschung.
+   
+
+  
+
+ Unser Antrieb? Die Leidenschaft, das Know\\-how und die Teamstärke unserer Mitarbeitenden. Gemeinsam gestalten wir die Zukunft der Luftfahrt – effizient, präzise und visionär.
+   
+
+  
+
+ Du willst mit uns durchstarten?
+ **Luftfahrt ist deine DNA?** 
+ \\- Dann komm an Bord von Mubea Aviation und werde Teil eines Standorts mit über 20 Jahren Erfahrung in der Luftfahrt – Innovation trifft auf Beständigkeit!
+   
+
+  
+
+ Zum 01\\.09\\.2026 möchten wir die Abteilung Informationstechnologie am Standort Schwerin verstärken.
+   
+
+  
+
+ Ihre Aufgaben
+   
+
+  
+
+* Erstellen von besonderen Auswertungen aus dem ERP\\-System
+* Realisieren fachbereichsspezifischer Anwendungsprogramme zur Bewältigung von Problemstellungen
+* Modellierung von Datenbanktabellen im Zusammenhang mit Softwareentwicklungen
+* Behebung von Störungen und Datenproblemen im ERP\\-System
+* Durchführung von Anpassungen im ERP\\-System entsprechend den Anforderungen für die Betriebsumgebung auf Grundlage von Pflichtenheften und Leistungsbeschreibungen
+* Teil\\- und Weiterentwicklungen auf Wunsch der Fachbereiche, nach Autorisation durch den Vorgesetzten im ERP\\-System durchführen
+* der Datenmodelle in der Datenbank und in den Anwendungen
+* Implementierung von Schnittstellen und Softwaremodulen im ERP\\-System
+* Vorbereitung und Durchführung der Softwareabnahme durch den Nutzer
+* Vorbereitung und Durchführung von Integrationstests, Dokumentation
+* Führung einer Entwicklungsdokumentation
+* Erstellung der Anwenderdokumentation
+
+
+ Ihr Profil
+   
+
+  
+
+* 2\\-jährige abgeschlossene Fachschulausbildung oder eine Berufsausbildung und eine langjährige Berufserfahrung sowie eine zusätzliche spez. Weiterbilung
+* Ausgeprägte Kenntnisse in den gängigen objektorientierten Programmiersprachen
+* sehr gute Kenntnisse in der Anwendung relationaler Datenbanksysteme
+* Hohes Maß an Eigeninitiative und Engagement
+
+
+ Unser Angebot
+   
+
+  
+
+ Unsere Mitarbeiter sind unser größtes Kapital – engagiert, kompetent und ideenreich. Gemeinsam wachsen wir weiter. Freue Dich auf spannende Aufgaben, moderne Arbeitsbedingungen und starke Benefits: 38 h / Woche, 30 Tage Urlaub, Urlaubs\\- und Weihnachtsgeld. Nutze unsere vielfältigen Einstiegs\\- und Entwicklungsmöglichkeiten der Mubea Academy.
+   
+
+  
+
+**Bereit für Deinen nächsten Karriereschritt?**
+ Dann heb mit uns ab. Wir freuen wir uns auf Deine aussagekräftige Bewerbung inklusive Gehaltsvorstellung und frühestmöglichem Eintrittstermin.
+   
+
+  
+
+**Beruflich fliegen, persönlich landen – bei Mubea Aviation!**","Motor Vehicle Manufacturing","https://de.linkedin.com/company/mubea","https://media.licdn.com/dms/image/v2/D4D0BAQEuy8gJFgxCsw/company-logo_100_100/company-logo_100_100/0/1720701344008/mubea_logo?e=2147483647&v=beta&t=5ANdLIwR204CFADn10y2qTmPqBd4GNuStG7NjpfWsMU","","","","","","","","","","",""
+"li-4362577663","linkedin","https://www.linkedin.com/jobs/view/4362577663","","Fullstack Software Engineer (f/m/d)","Contentful","Berlin, Berlin, Germany","2026-05-20","fulltime","","","","","",False,"entry level","Engineering and Information Technology","","-esk@contentful.com","**About The Opportunity**
+**Join Contentful as a Fullstack Software Engineer (f/m/d) and Innovate with Automations, Workflows, and Collaboration Tools.**
+ Become a part of the innovative team at Contentful, where we empower thousands of customers to manage content at scale. We're seeking talented Full Stack Software Engineers who are passionate about building scalable, high\\-performance applications using modern technologies. If you're excited about pushing the boundaries of what's possible in the domain of Automations, Workflows, and team collaboration within the Contentful ecosystem — and have experience with TypeScript, React, and Node.js — we'd love to have you on our team.
+   
+
+  
+
+**What to expect?**
+* Collaborate and Innovate: Work closely with product managers, designers, and other engineers to build best\\-in\\-class automation, workflow, and collaboration features for our customers.
+* Full Stack Development: Design, develop, and maintain scalable frontend and backend features using TypeScript, React, and Node.js.
+* Collaboration Tools Integration: Implement and integrate collaboration technologies to enhance team productivity and improve user experiences across the platform.
+* Holistic Thinking: Consider components and systems while considering a holistic user experience.
+* Rapid Problem\\-Solving: Quickly fix bugs and solve problems to enhance customer satisfaction.
+* Data\\-Driven Development: Utilize analytics to inform product decisions and improve features.
+* Continuous Improvement: Participate in code reviews and contribute to improving our development processes.
+* Stay Current: Keep up\\-to\\-date with the latest industry trends especially in the domain of automations, workflows, and collaboration tools.
+
+
+**What you need to be successful?**
+* Proven Experience: Demonstrable experience as a Full Stack Software Engineer in a product development environment.
+* Technical Proficiency: Strong skills in TypeScript, React, and Node.js. Interested in clean code practices and familiarity with enterprise architectural design patterns.
+* Containerization and Orchestration: Experience with Docker and Kubernetes.
+* Cloud Services Familiarity: Knowledge of cloud platforms like AWS, Azure, or GCP.
+* Problem\\-Solving Skills: Natural problem\\-solver who brings forward ideas leading to practical solutions and product growth.
+* Collaborative Mindset: Excellent communication skills and the ability to work effectively in a team environment.
+* Adaptability: Ability to organize and prioritize competing workloads in a fast\\-paced environment.
+
+
+**Preferred**
+* DevOps Practices: Understanding of CI/CD pipelines and DevOps methodologies.
+* Past Project Experience: Previous experience working with automation engines and/or building collaboration features and team workflow tools highly appreciated but not required.
+
+
+**What’s in it for you?**
+* Join an ambitious tech company reshaping the way people build digital experiences
+* Full\\-time employees receive Stock Options for the opportunity to share in the success of our company
+* Fertility and family building benefits, including a lifetime reimbursable wallet to support your growing family.
+* We value Work\\-Life balance and You Time! A generous amount of paid time off, including vacation days, sick days, education days, compassion days for loss, and volunteer days
+* Use your personal annual education budget to improve your skills and grow in your career
+* Enjoy a full range of virtual and in\\-person events, including workshops, guest speakers, and fun team activities, supporting learning and networking exchange beyond the usual work duties
+* An annual wellbeing stipend to care for your physical, financial, or emotional health
+* A monthly communication phone/internet stipend and phone hardware upgrade reimbursement.
+* New hire office equipment stipend for hybrid or distributed employees. Get the gear you need to work at your best.
+
+
+**Who are we?**
+ Contentful is a leading
+ **digital experience platform** 
+ that helps modern businesses meet the growing demand for engaging, personalized content at scale. By blending composability with native
+ **AI** 
+ capabilities, Contentful enables dynamic personalization, automated content delivery, and real\\-time experimentation, powering next\\-generation digital experiences across brands, regions, and channels for more than 4,200 organizations worldwide. More than
+ **700 people** 
+ from more than
+ **70 nations** 
+ contribute their energy and creativity to Contentful, working from hubs in Berlin, Denver, San Francisco, London, New York, and distributed worldwide.
+   
+
+  
+
+**Everyone is welcome here!**
+**“Everyone is welcome here”** 
+ is a celebrated component of our culture. At Contentful, we strive to create an inclusive environment that empowers our employees. We believe that our products and services benefit from our diverse backgrounds and experiences, and we are proud to be an equal opportunity employer. All qualified applications will receive consideration for employment without regard to race, color, national origin, religion, sexual orientation, gender, gender identity, age, physical \\[dis]ability, or length of time spent unemployed. We invite you to apply and join us!
+   
+
+  
+
+ If you need reasonable accommodations at any point during the application or interview process, please let your recruiting coordinator know.
+   
+
+  
+
+*Please be aware of scammers who may fraudulently allege to be from Contentful. These types of fraud can be carried out through copycat websites, fake email addresses claiming to be from our company, or social media. We do not ask for your personal information, such as bank account numbers, identification numbers, etc, through social media or chat\\-based apps, nor do we request or send money for the purchase of business equipment. If you suspect fraud, please report it to your local authorities, as well as reach out to us at security\\-esk@contentful.com* 
+*with any information you may have.*
+ By clicking “Apply for this job,” I acknowledge that I have read the “Contentful’s Candidate Privacy Notice” and hereby consent to the collection, processing, use, and storage of my personal information as described therein.","Software Development","https://de.linkedin.com/company/contentful","https://media.licdn.com/dms/image/v2/D4E0BAQEPUZ9g9X344w/company-logo_100_100/company-logo_100_100/0/1696434692398/contentful_logo?e=2147483647&v=beta&t=Iup4-Wx6jNzWE555zMeh3D8bzpSApw8cvpzyPWnS9no","","","","","","","","","","",""
+"li-4417059295","linkedin","https://www.linkedin.com/jobs/view/4417059295","","Software Engineer (m/w/d)","Brunel","Bremen, Germany","2026-05-20","fulltime","","","","","",False,"associate","Engineering","","","Erfahrene C\\+\\+ Software Entwickler:innen gesucht. Erfahrung im Bereich Signalverarbeitung und mit agilen Arbeitsweisen ist von Vorteil.
+ 
+
+
+
+**Aufgaben \\& Tätigkeiten**
+
+
+
+* Bewertung, Veranlassung und Implementierung aller notwendigen Aktivitäten innerhalb der Softwareentwicklung auf Basis einer Softwarearchitektur
+* Reduzierung der Komplexität durch weitere Dekompositionen, Erstellung von Umsetzungskonzepten und Softwaredesigns sowie Verbindung von Einzelartefakten der Softwareentwicklung auf Basis einer Softwarearchitektur
+* Bewertung der Gesamtarchitektur der Software und der jeweiligen Architekturelemente hinsichtlich Einhaltung der Vorgaben in Zeit, Qualität und Kosten
+* Abstimmung im Entwicklungsteam über die eigenen Aufgaben, Problemstellungen und Hindernisse bei der Aufgabenbearbeitung
+* Unterstützung im Team bei der Planung und Umsetzung des Workpackage
+
+
+
+**Qualifikation \\& Kenntnisse:**
+
+
+
+* Hochschulstudium im MINT Bereich oder Berufsausbildung zum:r Fachinformatiker:in, mit Fachschulausbildung, spezieller Weiterbildung und langjähriger Berufserfahrung oder vergleichbare Qualifikation
+* Mehrjährige Berufserfahrung
+* Teamfähigkeit
+* Agile Arbeitsweisen im SW\\-Entwicklungsumfeld","Software Development","https://nl.linkedin.com/company/brunel","https://media.licdn.com/dms/image/v2/C4E0BAQHLdgv4dmCReA/company-logo_100_100/company-logo_100_100/0/1657521307314/brunel_logo?e=2147483647&v=beta&t=REva0-HyMDsbl2RgxajzgjylXQ4OR4OL28DzrSRGbC0","","","","","","","","","","",""
+"li-4382733111","linkedin","https://www.linkedin.com/jobs/view/4382733111","","Software Development Engineer (m/w/d)","Sandvik","Kaufbeuren, Bavaria, Germany","2026-05-20","fulltime","","","","","",False,"associate","Engineering and Information Technology","","","Deine Rolle bei uns
+   
+
+  
+
+ Im agilen Team baust du performante Backends und schärfst Datenmodelle sowie Schnittstellen für höchste Stabilität.
+   
+
+  
+
+ Deine Aufgaben
+   
+
+  
+
+* Backend\\-Entwicklung in Go / Node.js:
++ Entwicklung und Pflege von Backend‑Komponenten für webbasierte Applikationen mit REST‑API
++ Sicherstellung von Performance und Skalierbarkeit der Backend‑Services
+
+* Schnittstellen\\-Entwicklung:
++ Implementierung maschinennaher Schnittstellen zur Datenaufnahme
++ Validierung und Optimierung der Datenflüsse zwischen Maschinen und Software
+
+* Datenbankmodellierung:
++ Erstellung und Weiterentwicklung von ER‑Datenbankmodellen (PostgreSQL, SQLite)
++ Optimierung für Zeitreihen‑Daten und hohe Datenintegrität
++ Skalierung auf verteilte Systeme (z. B. Azure)
+
+* Agile Zusammenarbeit:
++ Enge Kooperation im Software‑Team (Scrum)
++ Gelegentlicher Austausch mit Kund:innen zur Klärung technischer Anforderungen
+
+* Einordnung im Team:
++ Enge Zusammenarbeit mit Softwareentwickler:innen im Scrum‑Team
++ Ggf. Zusammenarbeit mit Kund:innen
+
+* Mittel‑ bis langfristige Zielsetzung:
++ Entwicklung eines stabilen, skalierbaren Backends für große Datenmengen
++ Aufbau und Pflege effizienter Datenbankmodelle und einer Umgebung für langlebige Softwareprodukte
++ Technische Weiterentwicklung von Schnittstellen
+
+
+ Dein Profil
+   
+
+  
+
+**Erforderliche Qualifikationen**
+* Abgeschlossenes Studium in Software‑Engineering/‑Development oder einem vergleichbaren Studiengang
+* Mehrjährige Berufserfahrung als Softwareentwickler:in
+* Fundierte Kenntnisse in der Backend‑Entwicklung
+* Fundierte Kenntnisse in Web‑Technologien für verteilte Systeme
+* Erfahrung in maschinennaher Entwicklung (Schnittstellen‑Entwicklung)
+* Kenntnisse in ER‑Datenbankmodellen (PostgreSQL, SQLite)
+* Sehr gute Sprachkenntnisse Deutsch und Englisch
+
+
+**Wünschenswerte Zusatzqualifikationen (Good‑to‑Have)**
+* Grundkenntnisse in Elektrotechnik
+* Verständnis der zerspanenden Industrie
+* Erfahrung mit Git, Jira, Jenkins sowie Container‑Virtualisierung mit Docker
+* Kenntnisse des Fiber‑Frameworks in Golang
+* Erfahrung in der Arbeit in einem Scrum‑Team
+
+
+ Wir bieten
+   
+
+  
+
+* Team \\& Kultur Ein motiviertes, interdisziplinäres Team in agilen Strukturen mit flachen Hierarchien und echter Du‑Kultur.
+* Modernste Arbeitsumgebung Gemeinsamer Gebäude\\-Campus mit dem IDF der Hochschule Kempten – mit Blick auf die Allgäuer Alpen.
+* Technologien \\& Tools Arbeiten mit neuesten Technologien und zeitgemäßen Toolchains – dort, wo sie echten Mehrwert bringen.
+* Work‑Life‑Balance 38,5‑Stunden‑Woche und bis zu zwei Tage pro Woche im Homeoffice arbeiten.
+* Scaleup‑Spirit \\& Globales Netzwerk Unternehmerische Scaleup‑Atmosphäre kombiniert mit international vernetzter Zusammenarbeit innerhalb der Sandvik‑Coromant\\-Gruppe.
+* Vergütung \\& Vorsorge Moderne, leistungsgerechte Vergütung plus betriebliche Altersvorsorge.
+* Sicherheit Betriebliche Unfallversicherung – auch im privaten Bereich gültig.
+* Mobilität JobRad auch zur privaten Nutzung.
+* Zusatzleistungen Zugang zu Corporate Benefits, kostenlosen Getränken \\& Obst.","Mining","https://se.linkedin.com/company/sandvik","https://media.licdn.com/dms/image/v2/D4D0BAQHvCVWuuEJNug/company-logo_100_100/company-logo_100_100/0/1695272799052/sandvik_logo?e=2147483647&v=beta&t=bpW3ieJJT9iYy40IjNJB68Gk5pwWcJ0rym0KQff2S58","","","","","","","","","","",""
+"li-4413330039","linkedin","https://www.linkedin.com/jobs/view/4413330039","","Junior Software Developer","DNV","Dresden, Saxony, Germany","2026-05-19","fulltime","","","","","",False,"not applicable","Engineering and Information Technology","","","**About Us**
+ We are the independent expert in assurance and risk management. Driven by our purpose, to safeguard life, property, and the environment, we empower our customers and their stakeholders with facts and reliable insights so that critical decisions can be made with confidence.
+   
+
+  
+
+ As a trusted voice for many of the world’s most successful organizations, we use our knowledge to advance safety and performance, set industry benchmarks, and inspire and invent solutions to tackle global transformations.
+   
+
+  
+
+**About Energy Systems**
+ We help customers navigate the complex transition to a decarbonized and more sustainable energy future. We do this by assuring that energy systems work safely and effectively, using solutions that are increasingly digital. We also help industries and governments to navigate the many complex, interrelated transitions taking place globally and regionally, in the energy industry.
+   
+
+  
+
+**About The Role**
+ From 2030, we expect significantly less electricity feed\\-in from large\\-scale generators (coal) but increasing renewable energy generation. The decentralized structure and the higher fluctuation of RE generation and loads pose new challenges for grid restoration after a large\\-scale blackout. We are developing a control system component that supports grid restoration under these conditions through software\\-based awareness and situational recommendations for action.
+   
+
+  
+
+ We are looking for a Software Developer to become part of our Energy Systems team in Dresden.
+   
+
+  
+
+**Join Us And**
+* Automate operations in the high voltage grid,
+* Make electrical energy supply more secure,
+* Engage in shaping the energy transition.
+
+
+**You Can Expect To**
+* Participate in the development of a power grid control center application for network restoration,
+* Implement real\\-time algorithms using a modern technology stack in a Linux environment,
+* Develop and integrate APIs and data models based on CIM (Common Information Model) / CGMES,
+* Collaborate closely with power grid and control system experts,
+* Deliver stable, reliable, secure solutions for control systems,
+* Pioneer the architecture of high\\-performance power grid control center applications together with software engineering experts.
+
+
+ What we offer
+   
+
+  
+
+ We’re offering a challenging, varied, and responsible job in a dynamic team and environment.
+   
+
+  
+
+ Integrate in our global team of around 200 professionals with various levels of experience, cultural and educational background. Your home base will be Dresden. Work with direct team members or other global DNV colleagues.
+   
+
+  
+
+ We have flexible (Hybrid) work conditions, and we support you to enhance your home office. We value personal growth and development by means of facilitating support learning on the job, coaching and (internal/external) training opportunities.
+   
+
+  
+
+* Fair compensation with attractive accident and pension insurance benefits,
+* Participation in company profits,
+* Use of company benefits, such as bike leasing from Jobrad, public transport cost subsidy, location\\-dependent lunch allowance.
+
+
+**About You**
+ We welcome candidates with different educational backgrounds, such as a bachelor’s degree in computer science, Power system or related technical fields, or practical experience on a similar level. We encourage applicants who have:
+   
+
+  
+
+* Experience in designing and implementing software systems using statically typed, high\\-level programming languages like C\\+\\+, C\\#, Java or RUST.
+* Ability to work effectively with others, share ideas, and contribute to a common goal,
+* Interest in modern languages and programming paradigms (e.g. functional and reactive programming),
+* Experience with modern software development workflows using Version Control Systems (Git), CI/CD and Test\\-Driven Development,
+* Experience with agile collaboration processes, e.g. Scrum, Kanban
+* Motivation to work with highly qualified experts in electrical engineering,
+* Strong analytical skills, able to identify and solve complex technical issues,
+* Strong motivation to work carefully and with high quality standards in a critical infrastructure context,
+* Ability to imagine several possible solutions to a problem, discuss them with fellow developers and find a rational decision,
+* German basic level required
+* fluency in English required
+
+
+*Security and compliance with statutory requirements in the countries in which we operate is essential for DNV. Background checks will be conducted on all final candidates as part of the offer process, in accordance with applicable country\\-specific laws and practices.*","Public Safety","https://no.linkedin.com/company/dnv","https://media.licdn.com/dms/image/v2/C4D0BAQFTwZwPOZp-Dg/company-logo_100_100/company-logo_100_100/0/1630521750380/dnvgl_logo?e=2147483647&v=beta&t=TeM-ISMj8KlAGnexwqqH8YHCX7M2b-opqg1ff-trDvk","","","","","","","","","","",""
+"li-4416642995","linkedin","https://www.linkedin.com/jobs/view/4416642995","","Java Software Developer","Invest in Finland","Oy, Bavaria, Germany","2026-05-19","fulltime","","","","","",True,"entry level","Engineering and Information Technology","","omair.javed@mipro.fi","Java Software Developer
+   
+
+  
+
+* Apply
+
+
+ Tiivistelmää luodaan…
+   
+
+  
+
+ For over 45 years, Mipro has been developing solutions to ensure the safety of water and energy production as well as rail transport. We already employ around 200 professionals from a wide range of fields of expertise.
+   
+
+  
+
+ We are looking for a
+   
+
+  
+
+**Java Software Developer**
+ We are looking for a motivated and eager\\-to\\-learn Java Software Developer to join our team for a fixed\\-term position of 4 months and grow as a software development professional in an interesting and meaningful technology environment.
+   
+
+  
+
+ In this role, you will work as part of an experienced software development team and contribute to solutions used in critical systems. You do not need to have extensive work experience, but we value basic Java skills, an understanding of software development practices, and a strong willingness to learn.
+   
+
+  
+
+ The position offers the possibility to work remotely.
+   
+
+  
+
+**We Hope You Have**
+* knowledge of Java and some practical working experience with it
+* at least around two years of studies in software development, computer science, information technology, or a related field
+* an understanding of basic software development practices
+* familiarity with tools such as Git
+* the ability to learn quickly and take initiative
+* a willingness to learn new systems and business domains
+* good collaboration and problem\\-solving skills
+
+
+**We Offer You**
+* a fixed\\-term employment opportunity for 4 months
+* the possibility to work remotely
+* the opportunity to develop as a software developer with support from experienced professionals
+* onboarding into our systems and working environment
+* interesting tasks involving important technology solutions
+* a supportive team where learning and professional development are encouraged
+
+
+ This role is well suited for someone in the later stages of their studies or at the beginning of their career, who already has solid basic skills and a strong motivation to develop further.
+   
+
+  
+
+**Why Mipro?**
+ We want to invest in our employees and encourage them to grow and develop in their careers while maintaining and strengthening their professional skills. Through Mipro’s own training academy, knowledge sharing within the company and the regular organization of necessary training ensure that our personnel have up\\-to\\-date expertise and the qualifications required in the industry. In your role, you will receive strong support from your supervisor, your own team, and our business units.
+   
+
+  
+
+ Application period ends on May 31, 2026\\. Please submit your application in English and apply exclusively online.
+   
+
+  
+
+ You are welcome to contact us by phone or email: Product Manager Omair Javed omair.javed@mipro.fi, \\+358504869177
+   
+
+  
+
+ MIPRO \\- NELJÄ VUOSIKYMMENTÄ TURVALLISUUDEN EDELLÄKÄVIJÄNÄ
+   
+
+  
+
+ Mipro on raideliikenteen ja teollisuuden järjestelmiin erikoistunut asiantuntijayritys. Vuodesta 1980 lähtien olemme olleet mukana kehittämässä turvallisempaa ja toimivampaa raideliikennettä, vesi\\- ja energiahuoltoa sekä teollisuutta.
+   
+
+  
+
+ Mipro on vahvasti kasvava yritys, jonka pääkonttori on Mikkelissä; lisäksi yrityksellä on toimipisteet Espoossa, Oulussa sekä Tallinnassa. Työllistämme tällä hetkellä yli 200 eri alan ammattilaista. Toimimme kansainvälisillä markkinoilla ja asiakkaitamme ovat muun muassa Väylävirasto, HKL, Eesti Raudtee As sekä lukuisat vesi\\- ja energiahuollon yhtiöt.
+   
+
+  
+
+* Apply","International Trade and Development","https://fi.linkedin.com/company/invest-in-finland","https://media.licdn.com/dms/image/v2/C4D0BAQH1bzI0zXBn0g/company-logo_100_100-alternative/company-logo_100_100-alternative/0/1630511263107/invest_in_finland_logo?e=2147483647&v=beta&t=rVtJIb9nhd0286IAsqCeFClr50OIE9bRUJSvwUvh2kw","","","","","","","","","","",""
+"li-4405265388","linkedin","https://www.linkedin.com/jobs/view/4405265388","","Junior Software Engineer","THRYVE","","2026-05-19","fulltime","","","","","",True,"not applicable","Information Technology, Engineering, and Consulting","","kyla@thryvetalent.com","**Language Requirement: Fluency in German is essential** 
+
+
+
+
+**Employment Type: Full\\-time** 
+
+
+
+
+**Salary: Up to 70,000 EUR** 
+
+
+
+
+  
+
+
+
+
+
+ As a TypeScript Developer (fullstack), you'll be at the forefront of creating custom software solutions tailored to meet unique customer needs. Your primary focus will be on contributing to the development of enterprise applications specializing in data analysis and reporting. You'll collaborate closely on the design and improvement of our TypeScript\\-based frontend, working with Angular and integrating seamlessly with our Java backend. We're looking for someone who thrives on problem\\-solving, welcomes challenges, and is dedicated to continuous learning and growth.
+ 
+
+
+
+  
+
+
+
+
+
+**Key Responsibilities:** 
+
+
+
+* Craft custom software solutions to fulfil specific customer requirements, ensuring top\\-notch quality in all deliverables.
+* Play a key role in enhancing and maintaining our enterprise application geared towards data analysis and reporting.
+* Work collaboratively on the design and development of our TypeScript\\-based frontend, utilizing Angular and seamlessly connecting with our Java backend systems.
+* Take an active part in shaping the entire development lifecycle, from understanding requirements to implementing, testing, and documenting solutions.
+* Utilize your expertise to identify and resolve technical issues efficiently, ensuring smooth project progress.
+* Stay updated on the latest technologies and trends to improve development practices continuously.
+
+
+
+  
+
+
+
+
+
+**Qualifications and Skills:** 
+
+
+
+* Hold a degree in (business) informatics or a related field, providing a strong foundation in software development principles.
+* Demonstrated experience in TypeScript development, with a solid grasp of the Angular framework.
+* Familiarity with Java and JavaScript programming languages; additional proficiency in these areas is a plus.
+* Ability to design and implement user interfaces for the web, using JavaScript libraries to enhance functionality.
+* Experience with testing frameworks like Selenium or Playwright is beneficial, with a willingness to expand your knowledge in this area.
+* Basic understanding of SQL, JSON, Git, and Maven to facilitate collaboration within development teams.
+* Fluent in German, with excellent communication skills for effective interaction with German\\-speaking stakeholders.
+* Comfortable with remote work setups, showing self\\-motivation and accountability in a distributed team environment.
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+ If you're a proactive developer who loves TypeScript and enjoys tackling challenges head\\-on, we encourage you to apply and join our dynamic team shaping innovative software solutions.
+ 
+
+
+
+  
+
+
+
+
+
+ Drop me a message kyla@thryvetalent.com","Software Development, IT System Custom Software Development, and Technology, Information and Media","https://de.linkedin.com/company/thryvetalent","https://media.licdn.com/dms/image/v2/D4E0BAQEOe1fDE8nTnw/company-logo_100_100/B4EZwjIt4mHsAY-/0/1770116013988/thryvetalent_logo?e=2147483647&v=beta&t=i9XeF4ABXIKvOvb2b_y6qeFg8yH3harKtBjZcj_KYxU","","","","","","","","","","",""
+"li-4413333050","linkedin","https://www.linkedin.com/jobs/view/4413333050","","Software Developer C++","VIER","Hannover, Lower Saxony, Germany","2026-05-19","fulltime","","","","","",False,"associate","Information Technology","","","**DAS ERWARTET DICH...**
+**Bei VIER entwickeln wir die nächste Generation von Conversational AI und generativer KI, die Kundenservice radikal neu denkt….**
+* Du konzipierst, entwickelst und optimierst Softwarelösungen, zudem unterstützt bei der Einführung und Betrieb neuer Softwarelösungen
+* Du analysierst fachliche und technische Anforderungen und setzt diese in tragfähige Systemlösungen um
+* Du implementierst Anwendungen, Module und Schnittstellen
+* Du wartest, pflegst und optimierst bestehende Softwarekomponenten
+* Du führst Fehleranalysen durch und behebst Störungen, erstellst und pflegst technische Dokumentationen
+* Du führst Code\\-Reviews und Qualitätssicherungsmaßnahmen durch
+* Du wirkst an Architekturentscheidungen und technischen Konzepten mit
+* Du planst und führst Tests durch (Unit\\-, Integrations\\- und Systemtests)
+* Du arbeitest mit internen Fachbereichen sowie externen Partnern im Rahmen von Projekten zusammen und wirkst an der kontinuierlichen Verbesserung von Entwicklungsprozessen mit
+
+
+**FOLGENDES BRINGST DU MIT...**
+* Du hast eine erfolgreich abgeschlossene Ausbildung als Fachinformatiker/in für Anwendungsentwicklung, ein BA\\-Studium im IT\\-Bereich oder alternativ mindestens 3 Jahre Berufserfahrung in der Softwareentwicklung
+* Scrum und Kanban sind für dich keine Fremdwörter, sondern Teil deines Arbeitsalltags
+* Du kennst dich mit Unit\\-Tests aus
+* Du hast einen hohen Qualitätsanspruch an sauberen und wartbaren Code
+* Du beherrschst einige der folgenden Programmiersprachen: PHP, C\\+\\+, Golang, JavaScript, Python
+* Du glaubst an die Vorteile von Generative AI Coding und setzt diese sinnvoll ein
+
+
+**Erforderliche Sprachkenntnisse:**
+* Deutsch: Muttersprache oder muttersprachliches Niveau
+* Englisch: fließend
+
+
+**Nice to have:**
+* Erfahrung mit Cloud\\-Technologien und Containerisierung (z. B. Docker, Kubernetes)
+* Kenntnisse in CI/CD\\-Prozessen
+* Erfahrung mit relationalen und NoSQL\\-Datenbanken
+* Verständnis moderner Softwarearchitekturen und Design Patterns
+
+
+**DAS TUN WIR, UM DICH GLÜCKLICH ZU MACHEN...**
+* Wir sind ein Unternehmen mit flachen Hierarchien und viel Freiraum für eigene Entscheidungen und einen eigenen Verantwortungsbereich.
+* Wir bieten eine ansprechende und abwechslungsreiche Tätigkeit, bei der Du ohne bürokratische Hemmnisse Dinge bewegen kannst.
+* Wir fördern Weiterentwicklung/Weiterbildung, die an Deine Bedürfnisse angepasst ist.
+* Flexible Arbeitszeiten sowie Vertrauensarbeitszeit ermöglichen es, Deinen Arbeitsalltag unkompliziert zu gestalten.
+* Wertschätzender Umgang und respektvolle Kommunikation im Einklang mit unseren Guiding Principles.
+* Regelmäßige und konstruktive Feedbackgespräche, die Deine gezielte Entwicklung fördern.
+* Wir bieten Dir auch in schwierigen Lebenssituationen (beruflich oder privat) Unterstützung durch unseren Dienstleister INSITE.
+* Förderung einer vielfältigen, inklusiven Unternehmenskultur, in der alle Mitarbeitenden gleiche Chancen haben.
+* Zusätzlich bieten wir eine Reihe an weiteren Vorteilen an, die Deinen Arbeitsalltag bereichern (z.B. Mobilitätszuschuss, Sportangebote, Events, etc.). Weitere Details findest Du auf unserer Karriereseite.
+
+
+**Du hast Lust, uns zu unterstützen? Dann bewirb Dich bei uns! Wir freuen uns auf Deine Bewerbung!**
+* gender neutral: Bei uns spielt es keine Rolle, ob Du weiblich, männlich, divers… bist, wo Du herkommst, welche Hautfarbe Du hast oder woran Du glaubst. Bei uns stehen gegenseitiger Respekt und Wertschätzung sowie Spaß und Motivation an der Arbeit im Fokus. Entfalte Deine Persönlichkeit, bei uns stehst Du als Mensch im Mittelpunkt.
+
+
+**Über uns**
+ VIER denkt Kundendialog und Kommunikation neu. Mit unseren Angeboten „enrich“, „engage“ und „evolve“ machen wir kontaktbasierte Geschäftsvorgänge effizienter. Wir verbessern die Customer Experience und die User Experience. Wir kombinieren künstliche mit menschlicher Intelligenz, Expertise mit Intuition, jahrelange Erfahrung mit Innovation und Forschung. Ob im Service, Vertrieb oder bei der Sachbearbeitung: Unsere intelligenten Lösungen analysieren, assistieren und automatisieren kontaktbasierte Geschäftsvorgänge in allen Branchen. Sie heben Mitarbeiter:innen auf ein neues Kompetenzniveau. Auf der VIER Technologie\\-Plattform orchestrieren unsere Partner und wir Kommunikation, Dialog\\- und Aufgabenverarbeitung. Sie ist die einzige Plattform aus Europa für komplette Ende\\-zu\\-Ende\\-Lösungen – sichere Daten, deutsche Cloud und lokaler Service inklusive!","Software Development","https://de.linkedin.com/company/vier-ai","https://media.licdn.com/dms/image/v2/C4D0BAQFzwyZjyT9aNA/company-logo_100_100/company-logo_100_100/0/1642688678753/vier_ai_logo?e=2147483647&v=beta&t=w1Gxeun4jrty42p5FyzH8m7qb7oVD-KpCShLakpgzGM","","","","","","","","","","",""
+"li-4405149637","linkedin","https://www.linkedin.com/jobs/view/4405149637","","Software Engineer, Full-Stack (Experimentation)","Superhuman","Berlin, Berlin, Germany","2026-05-19","temporary","","","","","",True,"mid-senior level","Engineering and Information Technology","","","*Superhuman offers a dynamic hybrid working model for this role. This flexible approach gives team members the best of both worlds: plenty of focus time along with in\\-person collaboration that helps foster trust, innovation, and a strong team culture.*
+**About Superhuman**
+ Grammarly is now part of Superhuman, the AI productivity platform on a mission to unlock the superhuman potential in everyone. The Superhuman suite of apps and agents brings AI wherever people work, integrating with over 1 million applications and websites. The company’s products include Grammarly’s writing assistance, Coda’s collaborative workspaces, Mail’s inbox management, and Go, the proactive AI assistant that understands context and delivers help automatically. Founded in 2009, Superhuman empowers over 40 million people, 50,000 organizations, and 3,000 educational institutions worldwide to eliminate busywork and focus on what matters. Learn more at superhuman.com.
+   
+
+  
+
+ The Opportunity
+   
+
+  
+
+ To achieve our ambitious goals, we’re looking for Full\\-Stack Software Engineers to join our engineering teams. As a Full\\-Stack Engineer at Superhuman, you will play a critical role in building core parts of the Superhuman product offering, infrastructure, and features to help 40 million users write more clearly and effectively every day. You’ll have the opportunity to work across both Front\\-End and Back\\-End, contributing to highly visible, impactful projects.
+   
+
+  
+
+ Superhuman engineers and researchers have the freedom to innovate and uncover breakthroughs—and, in turn, influence our product roadmap. The complexity of our technical challenges is growing rapidly as we scale our interfaces, algorithms, and infrastructure. You can hear more from our team on our technical blog.
+   
+
+  
+
+ Superhuman is growing rapidly. There are opportunities to join a team, learn from experienced peers, and build product offerings and teams from the ground up. Within our growing engineering organization, there is plenty of room for ownership and direct impact on users.
+   
+
+  
+
+**As a Full\\-Stack Engineer, You Will**
+* Start building and pushing code in your first week and ship impactful features in your first few months.
+* Build and support production services with high call rates on the Back\\-End and develop rich user interfaces on the Front\\-End.
+* Target high availability for consumer and enterprise customers.
+* Collaborate widely with internal teams such as Core, Growth, Enterprise, Trust, and Data to deliver delightful product offerings to our customers.
+* Contribute to an engineering culture that prioritizes impact above all else.
+* Evaluate the systems and technology currently in place, and propose systems and architecture that can scale for the future.
+* Have the opportunity to mentor new hires.
+
+
+**Qualifications**
+* Brings at least three years of experience in Full\\-Stack development.
+* Displays excellent software engineering fundamentals, including knowledge of algorithms and data structures.
+* Has analytical thinking to tackle Growth problems for 40M\\+ active Grammarly users
+* Cares about the end\\-user experience and strives to prioritize impact over everything.
+* Has experience building, deploying, and debugging production systems at scale.
+* Demonstrates perseverance when faced with tough technical issues.
+* Has a demonstrated ability to work independently with minimal guidance, proactively manages tasks and priorities across multiple projects, analyzes and executes work efficiently, collaborates effectively with cross\\-functional teams, and thrives in fast\\-paced, results\\-driven environments
+
+
+ We invite you to share your knowledge, experience, and goals with us to help us find the best team match for you. Tell us your superpower!
+   
+
+  
+
+**Support for you, professionally and personally**
+* Professional growth: We believe that autonomy and trust are key to empowering our team members to do their best, most innovative work in a way that aligns with their interests, talents, and well\\-being. We also support professional development and advancement with training, coaching, and regular feedback.
+* A connected team: Superhuman builds a product that helps people connect, and we apply this mindset to our own team. Our remote\\-first hybrid model enables a highly collaborative culture supported by our values. We work to foster belonging among team members in a variety of ways. This includes our employee resource groups, Superhuman Circles, which promote connection among those with shared identities including BIPOC and LGBTQIA\\+ team members, women, and parents. We also celebrate our colleagues and accomplishments with global, local, and team\\-specific programs.
+* Comprehensive benefits for candidates based in Germany: Superhuman offers all team members competitive pay along with a benefits package encompassing life care (including mental health care and risk benefits) and ample and defined time off. We also offer support to set up a home office, wellness and pet care stipends, learning and development opportunities, and more.
+* Relocation Support: Superhuman provides comprehensive relocation support to make your move to Berlin seamless. Our package includes visa assistance, destination services to help you and your family settle in comfortably, and a relocation bonus to cover additional expenses, such as temporary housing.
+
+
+**We encourage you to apply**
+ At Superhuman, we value our differences, and we encourage all to apply. Superhuman is an equal\\-opportunity company. We do not discriminate on the basis of race or ethnic origin, religion or belief, gender, disability, sexual identity, or age.
+   
+
+  
+
+ For more details about the personal data Superhuman collects during the recruitment process, for what purposes, and how you can address your rights, please see the Superhuman Data Privacy Notice for Candidates here.","Software Development","https://www.linkedin.com/company/superhumanhq","https://media.licdn.com/dms/image/v2/D560BAQEVz3qEEDoqTQ/company-logo_100_100/B56ZowBYqwJYAQ-/0/1761742261417/superhumanhq_logo?e=2147483647&v=beta&t=DXTbLKDaJGr7Ard2oQJLuk0ESH3HBNentxJsjos2Dw0","","","","","","","","","","",""
+"li-4417748171","linkedin","https://www.linkedin.com/jobs/view/4417748171","","Software Engineer, Python","Engelhart","Berlin, Berlin, Germany","","fulltime","","","","","",False,"mid-senior level","Engineering","","","**About Us**
+ Engelhart was founded in 2013 by BTG Pactual Group as a commodities trading company. Our business model is “asset light” and highly diversified – giving us the ability to adapt effectively and nimbly to changing market conditions. We have assembled successful multidisciplinary teams, leveraging advanced fundamental analysis with deep quantitative and weather research capabilities. Our activities are underpinned by strong risk management practices and by powerful technology and operational excellence. We have exceptional teams with diverse global backgrounds and decades of experience, and are driven by a highly collaborative culture, across products and competencies.
+   
+
+  
+
+ In 2024, Engelhart acquired Trailstone, a global energy trading and technology company. The acquisition provides us with new expertise, analytics and proprietary technology which is being used to provide risk management and optimisation services to help maximise the value of our clients’ renewable power. The acquisition also expanded Engelhart’s capabilities into physical natural gas across North America, a critical fuel to support the energy transition.
+   
+
+  
+
+ Our talented and experienced individuals work together according to its four company values:
+ **Performance, Agility, Collaboration, Entrepreneurship** 
+ .
+   
+
+  
+
+**About the Role**
+ We are looking for an experienced back\\-end \\[Python] software engineer to join our growing Berlin office. This role will join the Trading \\& Commercial Development Team, developing best in class back\\-end services and microservices for our renewables trading platform, with Python.
+   
+
+  
+
+ The team is building a world\\-class product to help us scale and bring renewables to many more power markets in the world, while trading many more smaller electricity assets. This project is expanding at pace, following Trailstone’s merger with Engelhart Commodities Trading Partners. As a result, this role will be joining an international team with tangible impact on our platform's success from day one.
+   
+
+  
+
+ This will be a full\\-time role, owning the following
+ **responsibilities** 
+ :
+   
+
+  
+
+* Designing, developing and maintaining containerised services for auction\\-based renewables trading.
+* Working in a cross\\-functional team with engineers, business analysts, traders, data engineers and data scientists.
+* Staying up to date with the latest trends in technology and continuously improving our code base, systems and processes.
+* Mentoring junior members of the team by emphasising code quality and conducting pull requests and code reviews.
+
+
+**About You**
+ This person will be a seasoned Python developer, experienced working with time\\-sensitive hybrid\\-cloud systems in order to deliver immediate impact to our growing renewables trading platform. This person will be working closely with commercial stakeholders on a regular basis, so tangible experience collaborating with non\\-technical staff is highly desirable.
+   
+
+  
+
+**Skills**
+ We believe the following
+ **skills \\& experiences** 
+ will best set someone up for success in this role, therefore will be prioritising the following essential criteria:
+   
+
+  
+
+* Significant relevant Python experience.
+* Strong knowledge of object\\-oriented, functional and asynchronous programming and design patterns.
+* Substantial SQL experience and understanding of relational database fundamentals.
+* A passion for delivering clean code and working with a test\\-driven mindset.
+* An appreciation of working in a hybrid\\-cloud and container\\-driven architecture (partly on\\-premise and partly AWS).
+
+
+ In addition to the above, the following experience is highly desirable but not essential for application:
+   
+
+  
+
+* Domain knowledge in the energy or financial sector.
+* Experience developing services in C\\#
+
+
+**Our Tech Stack**
+ Our tech stack includes Python (FastAPI, Pandas), AWS (ECS, Aurora), Redis, Docker, Atlassian (Jira, Bitbucket), SQL Server, C\\# and more.
+   
+
+  
+
+*We believe in inclusivity and are therefore dedicated to ensuring all employees – across gender identity, race, ethnicity, sexual orientation, religion, life experience, background and more – feel welcome and included in the company. We promote diversity because we believe it is essential to our ability to think holistically.*","Construction, Software Development, and IT Services and IT Consulting","https://uk.linkedin.com/company/engelhart-commodities-trading-partners","https://media.licdn.com/dms/image/v2/D4E0BAQFqkRvlRMSFVA/company-logo_100_100/company-logo_100_100/0/1732809732861/engelhart_commodities_trading_partners_logo?e=2147483647&v=beta&t=ketOEexE3YQTsGfUBBoODsOysKFVVpfapeVaihcaaek","","","","","","","","","","",""
+"li-4414006162","linkedin","https://www.linkedin.com/jobs/view/4414006162","","Software Developer (Working Student)","acemate.ai","Berlin, Berlin, Germany","","parttime","","","","","",False,"entry level","Information Technology","","","acemate is building an AI learning \\& teaching platform for higher and further education institutions. We have strong traction, secured funding and are entering an exciting growth phase. We're looking for a passionate
+ **Full\\-Stack Developer (Working Student)** 
+ to drive our product forward and help us scale.
+ 
+
+
+  
+
+
+**About acemate** 
+
+
+
+  
+
+
+ Founded in 2024, acemate has quickly become the leading AI learning platform for higher and further education, trusted by top\\-tier institutions across four countries, including
+ **University of Cologne** 
+ ,
+ **WHU** 
+ and the
+ **German Chambers of Commerce and Industry (IHKs)** 
+ .
+ 
+
+
+  
+
+  
+* **Our Mission:** 
+ Democratizing access to personalized learning. We don’t believe that AI will replace educators. Instead, we empower them to design and deliver personalized learning experiences at scale.
+  
+* **Our Growth:** 
+ We've raised pre\\-seed funding and are growing rapidly. While we focus on higher and further education today, we're already expanding into new regions and markets.
+  
+* **Our Culture:** 
+ We’re a young, driven team passionate about tackling the toughest challenges in education. We embrace builder culture and minimize scheduled meetings for ad\\-hoc discussions and maximized focus on coding and creating.
+  
+
+
+  
+
+
+**Meet the Team** 
+
+
+
+  
+
+  
+* **Antong** 
+**(CEO):** 
+ BCG, BMW \\& Antler background, leads business strategy, DJ by night
+  
+* **Jan** 
+**(CTO):** 
+ NLP research, experience from SAP \\& N26, morning bike commuter
+  
+* **Paul** 
+**(CPO):** 
+ Product expert with startup and education research background, devoted dog dad
+  
+* **Emile** 
+**(Fullstack):** 
+ Ex\\-founder with product \\& AI background, ETH graduate, avid runner
+  
+* **Anas** 
+**(Fullstack):** 
+ TypeScript specialist, functional programming enthusiast, chief photography officer
+  
+* **Rohit** 
+**(Fullstack):** 
+ Specialist in modern large\\-scale web architecture, escape room explorer
+  
+* **Ammar** 
+**(Fullstack):** 
+ Ex‑founder with webdev and blockchain experience, a learning violinist
+  
+* **Hanna** 
+**(Marketing):** 
+ Social media \\& creative design, Scandinavian sports enthusiast turned Berlin city girl
+  
+
+
+  
+
+ Tasks
+   
+
+
+**What You'll Be Working On** 
+
+
+
+  
+
+
+ You'll be tackling both core infrastructure and product engineering, with your day\\-to\\-day tailored to match your specific strengths and career objectives. As an early team member, you'll have a loud voice in directing our system architecture, product roadmap, and high\\-level strategy.
+ 
+
+
+  
+
+
+**Building the Product:** 
+
+
+
+  
+
+  
+* Work closely with Emile and Paul to build out new features and improve our current systems
+  
+* Talk directly to users to get their feedback, then translate what you learn into real upgrades for the platform
+  
+
+
+  
+
+
+**Engineering Leadership:** 
+
+
+
+  
+
+  
+* Ensure our base architecture stays resilient and scales smoothly alongside our growing user count
+  
+* Continuously update and refine our AI toolchains to ensure we're taking advantage of the latest advances in artificial intelligence
+  
+* Spend a lot of your time on backend engineering, shipping primarily on Cloudflare and Google Cloud using modern tech
+  
+
+
+  
+
+
+**Examples of things you might build:** 
+
+
+
+  
+
+  
+* A
+ **Duolingo\\-inspired daily quiz system** 
+ created to boost how much students engage with their course materials
+  
+* **Complex AI pipelines** 
+ that extract text and visual data from different document types to construct deep knowledge graphs
+  
+* A
+ **custom authorization engine** 
+ built to handle the growing complexities across varying institutional environments
+  
+
+
+  
+
+
+**Tech Stack:** 
+
+
+
+  
+
+  
+* **Frontend:** 
+ TypeScript, Next.js, Tailwind CSS
+  
+* **Database:** 
+ Supabase (PostgreSQL)
+  
+* **Infrastructure:** 
+ Cloudflare (Workers, Pages, Workflows, R2, KV), Google Cloud (Gemini, Cloud Run)
+  
+* **Tools:** 
+ Sentry, Langfuse, PostHog, Stripe
+  
+
+
+  
+
+
+ It's completely fine if you aren't familiar with every single tool in our stack yet. We know you can learn fast and pick up new tools and frameworks as the company scales.
+ 
+
+
+  
+
+ Requirements
+   
+
+
+**What We're Looking For** 
+
+
+
+  
+
+  
+* **Ownership mindset:** 
+ You think like a founder and treat the product like it’s yours
+  
+* **Commitment to excellence:** 
+ You’re driven to go above and beyond when it matters
+  
+* **Curiosity and adaptability:** 
+ Eager to learn new technologies and stay open to innovation
+  
+* **Balanced AI approach:** 
+ You knew how to code before Cursor and AI tools, but understand how to leverage them effectively
+  
+* **Availability:** 
+ You’re enrolled at a university and available for at least the next 12 months
+  
+
+
+  
+
+ Benefits
+   
+
+
+**Benefits** 
+
+
+
+  
+
+  
+* Working in a small but driven team built around performance and learning
+  
+* Flexible environment with high degree of autonomy
+  
+* Frequent team events and acemate parties! 🥳","Higher Education","https://de.linkedin.com/company/acemateai","https://media.licdn.com/dms/image/v2/D4D0BAQGSQQpBkMatVg/company-logo_100_100/company-logo_100_100/0/1716394265209/acemateai_logo?e=2147483647&v=beta&t=L2G-HTgD-F5N16hagPVojdxGMYs5LAVi3XRVAnxzghc","","","","","","","","","","",""
+"li-4416585533","linkedin","https://www.linkedin.com/jobs/view/4416585533","","Software Engineer – Full-Stack (Employee Experience) (m/f/d) – Gigafactory Berlin-Brandenburg","Tesla","Grünheide, Brandenburg, Germany","","fulltime","","","","","",False,"mid-senior level","Engineering and Information Technology","","","**What To Expect**
+ Tesla is accelerating the world's transition to sustainable energy. We continuously develop revolutionary strategies and products within shortest time and successfully launch them on a large scale. This is only possible through extraordinary speed, innovation, and efficiency.
+   
+
+  
+
+ Gigafactory Berlin forms the perfect basis for rolling out Tesla's incredible success story in Europe. The most important pillar for this is our employees. Their passion, motivation and engagement ensure that we consistently achieve our goals.
+   
+
+  
+
+ Tesla is looking for an outstanding Software Engineer \\- Full Stack that will be part of a startup team focused on delivering highly scalable and modular products and services; to address the most difficult problems of our growing network of Gigafactories. The candidate will work together with various stakeholders and project managers from different business units to successfully deliver product features according to roadmaps and be subsequently co\\-responsible for the implementation.
+   
+
+  
+
+**What You'll Do**
+- Collaborate with product managers and factory stakeholders to design and implement full\\-stack features across backend services and frontend applications
+
+- Build and maintain RESTful APIs that serve both web and mobile clients, handling complex business logic around training workflows, assessments, and compliance tracking
+
+- Own database schema design and migrations, ensuring data integrity for systems that track thousands of employees across multiple skill levels
+
+- Collaborate with factory operations teams to understand real\\-world workflows and translate them into scalable software solutions
+
+- Build background job processing for data synchronization with external systems such as HR and training platforms
+
+- Improve system reliability through monitoring, error handling, and observability practices
+
+- Contribute to architectural decisions, and help establish engineering standards for the team
+
+- Continuously engage with end users to gather feedback and advocate for good usability across all products
+
+**What You'll Bring**
+- Demonstrated expertise in software development fundamentals such as software design, algorithms, data structures, modularity, and code maintainability
+
+- Degree in Computer Science or relevant field; equivalent experience also acceptable
+
+- Extensive hands\\-on experience in software development utilizing Node.js, preferably for I/O intensive applications
+
+- Experience building and consuming RESTful APIs, with an understanding of API design best practices
+
+- Proficiency with relational databases (e.g., PostgreSQL, MySQL) — including schema design, query optimization, and migrations
+
+- Exposure to analytical or columnar databases such as ClickHouse, BigQuery, or similar for high\\-volume data workloads is a plus
+
+- Experience with modern frontend development using a component\\-based framework (React, Vue, Angular, or similar)
+
+- Familiarity with ORM patterns and database migration workflows
+
+- Understanding of caching strategies and background job processing patterns (message queues, task scheduling)
+
+- Familiarity with containerized deployment using Docker and CI/CD pipelines, understanding of authentication and authorization patterns (OAuth2, SSO)
+
+- Experience integrating agentic AI or LLM\\-based workflows into production applications (e.g., tool\\-use patterns, retrieval\\-augmented generation, autonomous agents) is a plus
+
+- Comfortable working in a fast\\-paced environment where requirements evolve based on factory operations needs
+
+ Candidates are expected to uphold and actively promote sustainability principles in their daily work, operating in line with Tesla Global Environmental, Health, Safety \\& Security (EHS\\&S) Policy and EMAS requirements, fostering a culture of continuous environmental improvement.
+   
+
+  
+
+ What we offer:
+   
+
+  
+
+ You will be working in our state\\-of\\-the\\-art Gigafactory, where you’ll solve the world's most interesting problems with the best and brightest people who share a passion to change the world. Tesla’s compensation package includes a competitive salary and Tesla shares, and bonuses. Typical benefits that are offered are a pension program, 30 vacation days, flexible work arrangements, employee insurance, relocation, and commuting support.
+   
+
+  
+
+ , Tesla","Motor Vehicle Manufacturing, Renewable Energy Semiconductor Manufacturing, and Utilities","https://www.linkedin.com/company/tesla-motors","https://media.licdn.com/dms/image/v2/C4D0BAQHUcu98SZ2TVw/company-logo_100_100/company-logo_100_100/0/1630576446368/tesla_motors_logo?e=2147483647&v=beta&t=XoR-tn8x_HdLXtmMsln9xhsZ3fOnB3vJyQUwi3lBI0s","","","","","","","","","","",""
+"li-4408515309","linkedin","https://www.linkedin.com/jobs/view/4408515309","","Full Stack Developer","DataAnnotation","","","fulltime","","","","","",True,"entry level","Engineering and Information Technology","","","Join the DataAnnotation team and contribute to developing cutting\\-edge AI systems, while enjoying the flexibility of remote work and setting your own schedule.
+   
+
+  
+
+ We are looking for proficient programmers to help advance AI development. As a member of DataAnnotation’s coding team, you’ll be part of a growing community of over 100,000 professionals, including front\\-end, back\\-end, full\\-stack, machine learning, and other engineers, who are driving real\\-world impact in AI development.
+   
+
+  
+
+ Our platform offers an engaging blend of flexibility and challenge: you’ll work closely with state\\-of\\-the\\-art AI models to take on programming tasks that include creating and solving challenging coding problems, building beautiful apps with rich functionality, and synthesizing insights through data analysis and visualization. Your work directly contributes to refining intelligent systems that learn, adapt, and evolve. Some team members fit this work alongside a full\\-time role, while others treat it as their primary focus, choosing projects and schedules that align with their availability and goals.
+   
+
+  
+
+ To get started, once you sign up for an account, you'll take a short assessment (this serves as our version of an interview). If you pass that assessment, you’ll receive an email confirmation, and paid work will become available to you through our platform.
+   
+
+  
+
+**Benefits**
+* Fully remote: work from anywhere in the US, Canada, the United Kingdom, Ireland, Australia, New Zealand, the Netherlands, Germany, Denmark, Norway, Sweden, Poland, Romania, Ukraine, Argentina, Brazil, India, and the Philippines.
+* Flexible schedule: choose which projects you take on and when you work.
+* Competitive pay: projects are paid hourly, starting at $50\\-$100\\+/hr. Opportunities for higher\\-paying projects are available with strong performance.
+* Impact: help shape the future of AI technologies.
+
+
+**Responsibilities**
+* Design and solve diverse coding problems used to train AI systems with an emphasis on Android development.
+* Write clear, high\\-quality code snippets and detailed explanations.
+* Evaluate AI\\-generated code for accuracy, performance, and clarity.
+* Provide feedback that directly shapes the next generation of AI models.
+
+
+**Qualifications**
+* Fluency in English (native or bilingual level).
+* Preferred experience in Kotlin. Proficiency in at least one of the following programming languages or frameworks: JavaScript, TypeScript, Python, C, C\\#, C\\+\\+, React, Go, Java, or Swift.
+* Excellent writing and grammar skills.
+* A bachelor’s degree (completed or in progress).
+* Previous experience as a Software Developer, Coder, Software Engineer, or Programmer is preferred.
+
+
+ Note: Payment is made via PayPal. We will never ask for any money from you. PayPal will handle any currency conversions from USD. This job is only available to those in the United States, Canada, the United Kingdom, Ireland, Australia, New Zealand, the Netherlands, Germany, Denmark, Norway, Sweden, Poland, Romania, Ukraine, Argentina, Brazil, India, and the Philippines. Those located outside of these countries will not see work or assessments available on our site at this time.
+   
+
+  
+
+ \\#SWE","Software Development","https://www.linkedin.com/company/dataannotationtech","https://media.licdn.com/dms/image/v2/D560BAQF5Szmp2n9lHg/company-logo_100_100/B56Z1Jp7eZKkAQ-/0/1775057222082/dataannotationtech_logo?e=2147483647&v=beta&t=BcrhRwhP3cdIT4R_iT3YOIzbGkDT9Y-H31CzClfTU0Q","","","","","","","","","","",""
+"li-4414079944","linkedin","https://www.linkedin.com/jobs/view/4414079944","","Software Developer Full Stack (m/f/d)","PRIOjet GmbH","Hamburg, Hamburg, Germany","","fulltime","","","","","",True,"mid-senior level","Information Technology","","","**Hi! We’re happy that you’re here.** 
+
+
+
+  
+
+
+ PRIOjet Logistics, the SaaS\\-platform for arranging and processing extremely time\\-critical logistics orders, is the trusted partner all over the world for companies, logistics agencies, service providers, and on\\-board couriers AND possibly your next great place to work.
+ 
+
+
+  
+
+
+ What if spare parts, important production components, documents for immediate and safe delivery or medicines must be transported around the world directly, no matter what? In time\\-critical logistics, a courier jumps on the next plane for the delivery. PRIOjet Logistics brings all parties on one platform and offers them all the tools they need to excel. What has previously been a tangled combination of phone calls, SMS, chats, emails and faxes, is now conducted via a mobile and scalable SaaS solution.
+ 
+
+
+  
+
+ Aufgaben
+   
+
+
+**The Challenge** 
+
+
+
+  
+
+
+ Our cross\\-discipline team builds and run a leading\\-edge platform for the international very sensitive emergency logistics sector. Hence, for our success, high\\-quality software development is a very important aspect.
+ 
+
+
+  
+
+
+ We are looking for a great Software Developer with some years of experience as Full Stack Developer working on Backend, Web and Mobile, and anything it takes to delight users and solves problems, to join our growing team in Hamburg or part\\-remotely. This position offers the opportunity to possibly receive company shares (VSOP).
+ 
+
+
+  
+
+
+**Your key responsibilities** 
+
+
+
+  
+
+  
+* Build across the full stack, from backend APIs to mobile and web frontend user interfaces to deliver end\\-to\\-end solutions based on user requirements and objectives by working on our NestJS (Node) backend written in Typescript in connection with out React Native (expo . io, also Typescript) frontend apps.
+  
+* Plan, architect and implement new features in our backend.
+  
+* Be a part of decisions about architecture and features of the apps.
+  
+* Influence the development roadmap with the development team and be able to prioritize.
+  
+* Implement, iterate and release features in a cross\\-functional team.
+  
+* Be self\\-driven and come up with new ideas on how to improve our product.
+  
+* Connect the dots on your own and be able to fill in the gaps as necessary.
+  
+* Pay attention to detail when needed and break complex tasks into smaller chunks without losing sight of the bigger picture.
+  
+* Don't accept quick and inaccurate solutions but find a good balance in software development (usability, maintainability, extensibility, usability, acccuracy, reliability, etc.).
+  
+* Extend and maintain our GraphQL API.
+  
+* Integrating third\\-party services and APIs into our system.
+  
+* Work with our product owners to deliver high\\-quality UI and UX.
+  
+* Build reusable, scalable, and reliable software solutions.
+  
+* Build the technical documentation and contribute to the internal knowledge and codebases.
+  
+
+
+  
+
+
+**But that´s not all.** 
+ There is also a part which is up to you: What are you passionate about? What do you want to learn, and where else would you like to contribute?
+ 
+
+
+  
+
+ Qualifikation
+   
+
+
+**What we’re looking for:** 
+
+
+
+  
+
+  
+* 3\\+ years of relevant experience as a Full Stack Software Engineer in building scalable backends (e.g. Python, NodeJS, Ruby, Go) as well as frontend apps using React/ReactJS/ React Native or similar frameworks.
+  
+* Experience in functional, object\\-oriented and other programming paradigms as well as the appropriate use and application of software patterns in the code.
+  
+* B.Sc or M.Sc in Computer Science, Information Systems or similar technical discipline.
+  
+* Additional experience in HTML, CSS, Javascript, Typescript, Expo. io, Mobile apps, CI/CD, DevOps, Docker, functional approach in React using Hooks.
+  
+* Experience as a software architect (database, APIs, service architectures) with a profound database knowledge (e.g. Postgres, MySQL, NoSQL), Linux/Unix skills, Cloud Services (Azure, AWS or/and Google Cloud), Git Workflows, and Dev/Ops is required.
+  
+* Knowledge of security best practices and understanding the most common security vulnerabilities.
+  
+* Experience with Agile Software Development Techniques and Tools.
+  
+* Experience in debugging, testing, and problem\\-solving skills.
+  
+* Professional written and verbal fluency in English, same in German will be a plus but not a must have.
+  
+
+
+  
+
+
+**Who you are:** 
+
+
+
+  
+
+  
+* You have a hands\\-on attitude as a builder and maker – not a theorist.
+  
+* You are self\\-motivated. You take initiative, are naturally curious, and can learn new things quickly while continuing to deliver value on the job.
+  
+* You are a shipper. You respect deadlines, accomplish your work autonomously, and have experience setting a positive example for self\\-management to your team members.
+  
+* You are people\\-centric. You can thrive in a collaborative environment involving different stakeholders and subject matter experts, and enjoy helping others grow.
+  
+* You are open to new ideas, demand and act upon feedback, are always constructive and are radically honest about the state of things.
+  
+
+
+  
+
+
+**It would be great if you also have:** 
+
+
+
+  
+
+  
+* Experience to work in a small and high motivated team of developers.
+  
+* Experience working with international and/or distributed teams.
+  
+* Knowledge in Data Science and/or Business.
+  
+* Professional written and verbal fluency in German.
+  
+
+
+  
+
+ Benefits
+   
+
+  
+* A chance to work in a great start\\-up on an exciting problem space that becomes more and more important in an ever more connected world and supply chain.
+  
+* A diverse international team backed by international investors.
+  
+* Flexible schedule \\& remote\\-friendly workplace culture.
+  
+* Team activities.
+  
+* In addition to the salary, we have the option of a VSOP program.
+  
+* Optionally, we offer cash allowance for lunch or private internet connection.
+  
+* And sure, free warm and cold drinks and some fruits in our office in Hamburg and Frankfurt ;)
+  
+
+
+  
+
+
+ PRIOjet's mission enables a wide scope for personal growth and development for experienced, creative and motivated talents who work independently and reliably towards the common goal.
+ 
+
+
+  
+
+
+**If this looks like a great match for you to be a part of a growing Start\\-up, please get in touch with us as soon as possible.** 
+
+
+
+  
+
+
+ Quick tip: Please make sure to send us your CV and to tell us briefly and informally why you are the perfect match for PRIOjet.
+ 
+
+
+  
+
+
+ Looking forward to getting to know you. Talk soon!","IT Services and IT Consulting","https://de.linkedin.com/company/priojet","https://media.licdn.com/dms/image/v2/C4E0BAQFV226jtQXldQ/company-logo_100_100/company-logo_100_100/0/1630593386626/priojet_logo?e=2147483647&v=beta&t=6FON2WkA80NJcXQQUhnAM831G6rzvS5lX5yuQK-CsTw","","","","","","","","","","",""
+"li-4414091824","linkedin","https://www.linkedin.com/jobs/view/4414091824","","Developer (m/w/d)","hiko systems GmbH","Darmstadt, Hesse, Germany","","fulltime","","","","","",False,"associate","Information Technology","","","**Das erwartet dich bei uns**
+**Keine** 
+ klassische Stellenanzeige mit Poolbillard\\-Foto und „Obstkorb inklusive"".
+   
+
+  
+
+ Wir bauen bei hiko systems einen
+ **neuen Geschäftsbereich** 
+ auf:
+ **Business Solutions** 
+ — mit vollem
+ **Fokus** 
+ auf
+ **KI** 
+ . Wir wachsen gerade, und wir brauchen jemanden, der mitzieht und die
+ **Richtung vorgib** 
+**t** 
+ — nicht nur mitläuft.
+   
+
+  
+
+* Du arbeitest an echten Projekten für echte Kunden. Keine Sandbox, keine internen Tools, die niemand benutzt.
+* Du bekommst einen Senior an Deine Seite, der Architekturentscheidungen trifft und Dir erklärt, warum.
+* Du setzt um und fragst, wenn Du nicht weiterkommst. So wirst Du mit jedem Projekt besser. Nicht in Theorie\\-Workshops. Sondern weil Du direkt umsetzt.
+* In zwei Jahren kannst du Dinge, für die andere fünf brauchen.
+
+
+**Das solltest du mitbringen**
+* Du entwickelst seit ein paar Jahren Backend\\-Systeme. APIs, Automatisierung, Integrationen — Du weißt, wie ein Code aussieht, der hält.
+* Du hast noch nicht alles gesehen, aber Du weißt, wie man sich reinfuchst.
+* KI\\-Erfahrung ist kein Muss. Neugier und Interesse schon.
+* Must\\-have: Eigeninitiative. Wer bei uns darauf wartet bis jemand sagt was als nächstes kommt, wartet vergebens.
+
+
+**Das findest du bei uns**
+* Einen Senior, von dem Du wirklich was lernst.
+* Verantwortung, die Du sonst erst mit grauen Haaren bekommst.
+* Ein Thema, das gerade entschieden wird. Du bist früh dabei.
+* Gehalt, das mitwächst — und zwar schnell, wenn Du lieferst.
+
+
+ Was Du bei uns NICHT findest:
+   
+
+  
+
+* Fertige Prozesse und klare Zuständigkeiten. Die bauen wir gerade.
+* Jemanden, der Deinen Tag strukturiert.
+* Das dickste Einstiegsgehalt der Stadt.
+
+
+**Über uns**
+**Gestalte die Zukunft der IT mit**
+ Unsere Mitarbeiter\\*innen sind der Schlüssel zu unserem Erfolg.
+   
+
+  
+
+ Unser engagiertes Team von über 35 IT\\-Spezialisten vereint Leidenschaft für neueste Technologien mit einem klaren Fokus auf Qualität und Zukunftsorientierung. Unsere Mitarbeiter\\*innen sind nicht nur Experten in ihrem Fach, sondern auch leidenschaftliche Problemlöser, die stets die neuesten Technologien für unsere Kund\\*innen bereithalten.
+   
+
+  
+
+ Werde Teil unseres Teams und erlebe, wie wir gemeinsam die IT\\-Welt von morgen mitgestalten.","Software Development","https://de.linkedin.com/company/hiko-systems-gmbh","https://media.licdn.com/dms/image/v2/D4E0BAQEjaoX87w6ZWw/company-logo_100_100/company-logo_100_100/0/1728978282699/hiko_systems_gmbh_logo?e=2147483647&v=beta&t=k62AnKtedf2KCX6vuw9akorkLRm_c7GTikHh9cq5Rtk","","","","","","","","","","",""
+"li-4417736201","linkedin","https://www.linkedin.com/jobs/view/4417736201","","Software Engineer - Fullstack (m/w/d)","STACKIT","Bad Friedrichshall, Baden-Württemberg, Germany","","fulltime","","","","","",False,"entry level","Engineering and Information Technology","","","Schwarz Digits schafft das technologische Fundament für digitale Entscheidungsfreiheit in Europa. Als IT\\- und Digitalsparte der Schwarz Gruppe entwickeln und verantworten wir einerseits die IT\\-Infrastrukturen für die Handelssparten Lidl und Kaufland sowie die Schwarz Produktion und PreZero. Gleichzeitig agieren wir als unabhängiger Anbieter am externen Markt, um Unternehmen in ganz Europa bei ihrer digitalen Transformation zu unterstützen. Unsere Kernleistungen bündeln wir in den Bereichen Cloud, Cyber Security, Data \\& AI, Communication und Workspace. Trage auch du zur digitalen Entscheidungsfreiheit in Europa bei.
+   
+
+  
+
+ Bei uns arbeitest du an der Schnittstelle zwischen Agilität und Sicherheit: Du profitierst von den schnellen Entscheidungswegen, genießt echte Gestaltungsspielräume in deinen Projekten und baust dabei auf das stabile Fundament der Schwarz Gruppe.
+   
+
+  
+
+ Deine Aufgaben
+   
+
+  
+
+* Du arbeitest in selbstorganisierten und kleinen Teams, welche in kurzen Zyklen large\\-scale Systeme entwickeln und ausliefern.
+* Du bist an allen Phasen des Software\\-Engineerings beteiligt; von Konzeption und Design über Implementierung, Testing und Auslieferung, bis hin zum Produktionsbetrieb und der ständigen Verbesserung des Produkts.
+* Du implementierst containerbasierte Softwarelösungen mit Go und Vue.js und übernimmst dabei die Verantwortung im Sinne von YBIYRI.
+* Du hast Spaß daran, neue Technologien zu erlernen und gemeinsam unsere Systeme kontinuierlich voranzubringen!
+
+
+ Dein Profil
+   
+
+  
+
+* Du hast ein erfolgreich abgeschlossenes Studium der Informatik, Physik oder Mathematik oder eine vergleichbare Ausbildung.
+* Du begeisterst dich für das Lösen komplexer Probleme und möchtest in einem Team arbeiten, das diesen Ehrgeiz teilt.
+* Du lernst schnell und verbesserst deine Produkte kontinuierlich auf Basis von Metriken und A/B/n\\-Tests.
+* Du hast bereits einschlägige Erfahrungen in der Full\\-Stack\\-Entwicklung.
+* Du verfügst über Kenntnisse in Go und TypeScript und begeisterst dich für Testautomatisierung, Continuous Delivery und die Arbeit in verteilten Systemen in der Cloud.
+* Du arbeitest gerne in internationalen Teams und verfügst über gute Kommunikations\\- und Englischkenntnisse.","IT Services and IT Consulting","https://de.linkedin.com/company/stackit-cloud-colocation","https://media.licdn.com/dms/image/v2/D4E0BAQHrmF25wBh0ew/company-logo_100_100/B4EZnODmjCGUAQ-/0/1760098675906/stackit_cloud_colocation_logo?e=2147483647&v=beta&t=2KxqENv1mewVcec3M--YlfnPnq8xEqj_uy4c5HIu2KA","","","","","","","","","","",""
+"li-4418015381","linkedin","https://www.linkedin.com/jobs/view/4418015381","","Folio Softwareentwickler:in","Thüringer Universitäts- und Landesbibliothek Jena","Jena, Thuringia, Germany","","fulltime","","","","","",False,"entry level","Engineering and Information Technology","","","Unser Angebot:
+ 
+
+
+
+ Vergütung nach den Bestimmungen des Tarifvertrages für den öffentlichen Dienst der Länder (TV\\-L) entsprechend den persönlichen Voraussetzungen nach Entgeltgruppe 13 inklusive einer tariflichen Jahressonderzahlung
+ 
+
+
+
+ Abwechslungsreiche Tätigkeitsfelder mit eigenverantwortlichen Arbeiten bei einem der größten Arbeitgeber Thüringens mit verantwortungsvollem Gestaltungsspielraum
+ 
+
+
+
+ Ein familienfreundliches Arbeitsumfeld mit vielfältigen Angeboten für Familien: Hochschul\\-Familienbüro (JUniFamilie) und flexible Kinderbetreuung (JUniKinder)
+ 
+
+
+
+ Universitäre Gesundheitsförderung und ein breites Hochschulsportangebot
+ 
+
+
+
+ Betriebliche Nebenleistungen wie z. B. Vermögenswirksame Leistungen (VL) und betriebliche Altersvorsorge (VBL)
+ 
+
+
+
+ 30 Tage Erholungsurlaub im Kalenderjahr zuzüglich zwei arbeitsfreier Tage am 24\\. und 31\\.12\\.
+ 
+
+
+
+ Die ausgeschriebene Stelle ist (zunächst) befristet, bis zum 31\\.12\\.2030\\.
+ 
+
+
+
+  
+
+
+
+
+
+ Die Tätigkeit ist grundsätzlich auch für eine Beschäftigung in Teilzeit geeignet. Inwieweit einem Teilzeitwunsch, insbesondere hinsichtlich Lage und Umfang der Teilzeit, stattgegeben werden kann, wird anhand der dienstlichen Bedürfnisse geprüft.
+ 
+
+
+
+  
+
+
+
+
+
+ Schwerbehinderte Menschen werden bei gleicher Eignung, Befähigung und fachlicher Qualifikation bevorzugt berücksichtigt.
+ 
+
+
+
+  
+
+
+
+
+
+ Sie zögern, da Sie ein(ig)e unserer Anforderungen nicht erfüllen? Bewerben Sie sich trotzdem und geben Sie uns die Chance für ein Kennenlernen. Je nach Bewerberlage könnten wir Sie auch bei fehlendem Abschluss ggf. im Rahmen der tariflichen Möglichkeiten für diese Aufgaben zunächst in die nächstniedrige Entgeltgruppe eingruppieren.","Higher Education","https://de.linkedin.com/company/th%C3%BCringer-universit%C3%A4ts-und-landesbibliothek-jena","https://media.licdn.com/dms/image/v2/D4E0BAQGEvDcW5VdefA/company-logo_100_100/company-logo_100_100/0/1734503748995/thringer_universitts_und_landesbibliothek_jena_logo?e=2147483647&v=beta&t=ROQpKaVEYTHcWHzBeHPPT85m_czDwidtlA8tl5hzKf4","","","","","","","","","","",""

@@ -2,7 +2,7 @@
 
 ## Scope
 Phase 1 covers the core pipeline only:
-- JobSpy-backed LinkedIn, Indeed, and Glassdoor collection plus scrape.do-backed Stepstone collection
+- JobSpy-backed LinkedIn, Indeed, and Google collection plus scrape.do-backed Stepstone collection
 - Keyword pre-filtering
 - NLP extraction (Gemini batch processing)
 - PostgreSQL persistence (signals + companies)
@@ -35,7 +35,7 @@ Excluded from Phase 1: career pages, news RSS, scheduling, CSV export, enrichmen
   - `RawJobPosting`
   - `ExtractedSignal`
   - `CompanyLead`
-- Add `glassdoor` to `models.schema.SignalSource` and ensure `RawJobPosting.source` accepts it.
+- Add `google` to `models.schema.SignalSource` and ensure `RawJobPosting.source` accepts it.
 - Implement `config.py` for:
   - software keywords and aliases
   - pain/expansion signal phrases
@@ -54,7 +54,7 @@ Excluded from Phase 1: career pages, news RSS, scheduling, CSV export, enrichmen
 4. Implement job board collectors
 - `scrapers/jobspy_adapter.py`
   - call JobSpy directly from the pipeline
-  - query LinkedIn, Indeed, and Glassdoor
+  - query LinkedIn, Indeed, and Google
   - normalize JobSpy rows into `RawJobPosting`
   - map `site -> source`, `company -> company_name`, `description -> snippet`, `date_posted -> posted_date`
   - inject `query` from the active search term because JobSpy rows do not carry it explicitly
@@ -84,7 +84,7 @@ Excluded from Phase 1: career pages, news RSS, scheduling, CSV export, enrichmen
   - `save_signal()` with source URL dedup
   - `upsert_company()` with score update, software/source union, lead grade mapping
   - `get_leads()` for summary listing
-- Ensure `glassdoor` survives through persistence, lead aggregation, and summary reporting.
+- Ensure `google` survives through persistence, lead aggregation, and summary reporting.
 
 7. Implement pipeline orchestrator
 - `pipeline.py`
@@ -93,9 +93,9 @@ Excluded from Phase 1: career pages, news RSS, scheduling, CSV export, enrichmen
     - `--dry-run`
     - `--max-queries`
     - `--leads`
-  - `--source` should support `linkedin`, `indeed`, `glassdoor`, `stepstone`, and `all`
+  - `--source` should support `linkedin`, `indeed`, `google`, `stepstone`, and `all`
   - replace per-board LinkedIn/Indeed collection with a JobSpy collection path
-  - keep per-source stats split by `linkedin`, `indeed`, `glassdoor`, and `stepstone`
+  - keep per-source stats split by `linkedin`, `indeed`, `google`, and `stepstone`
   - convert `get_source_scrapers()` into a source collector registry:
     - JobSpy-backed collectors emit normalized `RawJobPosting`
     - Stepstone remains separate
@@ -111,7 +111,7 @@ Excluded from Phase 1: career pages, news RSS, scheduling, CSV export, enrichmen
 - Add smoke test path (dry run, max queries = 1 or 2).
 - Test JobSpy normalization and site filtering.
 - Verify LinkedIn description fetch behavior.
-- Verify Glassdoor row shape compatibility.
+- Verify Google row shape compatibility.
 - Verify Stepstone still works unchanged.
 - Verify DB constraints, dedup behavior, and score outcomes.
 - Confirm final Definition of Done from requirements.
@@ -125,13 +125,13 @@ Excluded from Phase 1: career pages, news RSS, scheduling, CSV export, enrichmen
 6. End-of-run summary is printed.
 
 ## Acceptance Criteria (Phase 1 DoD)
-- Pipeline runs end-to-end from CLI with real LinkedIn, Indeed, Glassdoor, and Stepstone input.
-- Glassdoor is a first-class Phase 1 source in collection, extraction, persistence, and summary output.
+- Pipeline runs end-to-end from CLI with real LinkedIn, Indeed, Google, and Stepstone input.
+- Google is a first-class Phase 1 source in collection, extraction, persistence, and summary output.
 - Signals are extracted with software + company + source URL.
 - `signals` table stores one row per valid unique source URL.
 - `companies` table aggregates score and lead grade (`hot`, `warm`, `cold`).
 - Console summary prints by source and lead band.
-- `--source glassdoor` and `--source all` work as expected.
+- `--source google` and `--source all` work as expected.
 - `--dry-run` works without DB writes.
 - scrape.do budgeting no longer counts LinkedIn or Indeed against request caps.
 
@@ -154,4 +154,4 @@ Excluded from Phase 1: career pages, news RSS, scheduling, CSV export, enrichmen
   - DB layer + scoring + upsert
 - Week 3:
   - end-to-end integration, dry-run/live-run stabilization
-  - JobSpy normalization checks, Glassdoor validation, documentation verification
+  - JobSpy normalization checks, Google validation, documentation verification

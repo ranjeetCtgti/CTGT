@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import os
+import re
+from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from difflib import SequenceMatcher
 from typing import Any
+from uuid import uuid4
 
 from loguru import logger
 from sqlalchemy import JSON, Boolean, DateTime, Float, Index, Integer, String, Text, case, create_engine, func, inspect, select, text
@@ -14,7 +17,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
 
 from config import LEAD_THRESHOLDS, MULTI_SOURCE_BONUS, VOLUME_BONUS_SECOND_SIGNAL, VOLUME_BONUS_THIRD_PLUS_SIGNAL
-from models.schema import CompanyLead, ExtractedSignal, LeadScore
+from enrichment.domain_resolution import canonicalize_domain
+from models.schema import CompanyLead, ExtractedSignal, LeadContact, LeadScore
 
 
 class DatabaseError(Exception):
@@ -67,8 +71,11 @@ class CompanyRecord(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     company_name: Mapped[str] = mapped_column(Text, nullable=False)
     company_domain: Mapped[str | None] = mapped_column(Text, nullable=True, unique=True)
+    linkedin_url: Mapped[str | None] = mapped_column(Text, nullable=True)
     location: Mapped[str | None] = mapped_column(Text, nullable=True)
     industry: Mapped[str | None] = mapped_column(Text, nullable=True)
+    sector: Mapped[str | None] = mapped_column(Text, nullable=True)
+    headquarters_location: Mapped[str | None] = mapped_column(Text, nullable=True)
     employee_count: Mapped[str | None] = mapped_column(Text, nullable=True)
     revenue_range: Mapped[str | None] = mapped_column(Text, nullable=True)
     software: Mapped[list[str]] = mapped_column(_json_type(), nullable=False, default=list)
@@ -78,6 +85,10 @@ class CompanyRecord(Base):
     total_score: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     lead_score: Mapped[str] = mapped_column(String(16), nullable=False, default="cold")
     contacts: Mapped[list[dict[str, Any]]] = mapped_column(_json_type(), nullable=False, default=list)
+    enrichment_source: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    enrichment_confidence: Mapped[float | None] = mapped_column(Float, nullable=True)
+    enriched_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    last_enrichment_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     first_seen: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
@@ -94,6 +105,101 @@ class CompanyRecord(Base):
         Index("idx_companies_lead_score", lead_score),
         Index("idx_companies_name", func.lower(company_name)),
     )
+
+
+class ScrapeLogRecord(Base):
+    __tablename__ = "scrape_log"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    run_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True, default=lambda: uuid4().hex)
+    source: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
+    query: Mapped[str | None] = mapped_column(Text, nullable=True)
+    target_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    status: Mapped[str] = mapped_column(String(32), nullable=False, default="success")
+    credits_used: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    cards_found: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    signals_found: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    pages_scraped: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    error_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    phase: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    dry_run: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    scraped_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        index=True,
+    )
+
+
+class LeadContactRecord(Base):
+    __tablename__ = "leads_contacts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    company_id: Mapped[int] = mapped_column(Integer, nullable=False, index=True)
+    company_name: Mapped[str] = mapped_column(Text, nullable=False)
+    company_domain: Mapped[str | None] = mapped_column(Text, nullable=True)
+    full_name: Mapped[str] = mapped_column(Text, nullable=False)
+    first_name: Mapped[str | None] = mapped_column(Text, nullable=True)
+    last_name: Mapped[str | None] = mapped_column(Text, nullable=True)
+    title: Mapped[str | None] = mapped_column(Text, nullable=True)
+    email: Mapped[str | None] = mapped_column(Text, nullable=True)
+    linkedin_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    phone: Mapped[str | None] = mapped_column(Text, nullable=True)
+    source_provider: Mapped[str] = mapped_column(String(64), nullable=False)
+    source_stage: Mapped[str] = mapped_column(String(64), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+    __table_args__ = (
+        Index("idx_leads_contacts_company", company_id),
+        Index("idx_leads_contacts_email", email),
+    )
+
+
+class EnrichmentLogRecord(Base):
+    __tablename__ = "enrichment_log"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    company_id: Mapped[int | None] = mapped_column(Integer, nullable=True, index=True)
+    company_name: Mapped[str] = mapped_column(Text, nullable=False)
+    company_domain: Mapped[str | None] = mapped_column(Text, nullable=True)
+    stage: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    provider: Mapped[str] = mapped_column(String(64), nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False)
+    message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    payload: Mapped[dict[str, Any] | None] = mapped_column(_json_type(), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        index=True,
+    )
+
+
+@dataclass(slots=True)
+class ScrapeLogEntry:
+    source: str
+    status: str
+    credits_used: int = 0
+    cards_found: int = 0
+    signals_found: int = 0
+    pages_scraped: int = 0
+    error_count: int = 0
+    phase: str | None = None
+    dry_run: bool = False
+    query: str | None = None
+    target_url: str | None = None
+
+
+@dataclass(slots=True)
+class SourceHealthAlert:
+    source: str
+    alert_type: str
+    consecutive_runs: int
+    message: str
 
 
 @dataclass(slots=True)
@@ -137,6 +243,17 @@ class SourceDashboardStats:
     cold_count: int = 0
 
 
+@dataclass(slots=True)
+class EnrichmentLogEntry:
+    company_name: str
+    company_domain: str | None
+    stage: str
+    provider: str
+    status: str
+    message: str | None = None
+    payload: dict[str, Any] | None = None
+
+
 class Database:
     def __init__(self, database_url: str | None = None, echo: bool = False) -> None:
         self.database_url = _normalize_database_url(database_url or os.getenv("DATABASE_URL"))
@@ -155,12 +272,49 @@ class Database:
 
     def _ensure_compat_columns(self) -> None:
         inspector = inspect(self.engine)
-        signal_columns = {column["name"] for column in inspector.get_columns("signals")}
-        if "reason" not in signal_columns:
+        table_names = set(inspector.get_table_names())
+        if "signals" in table_names:
+            signal_columns = {column["name"] for column in inspector.get_columns("signals")}
+            if "reason" not in signal_columns:
+                with self.engine.begin() as connection:
+                    connection.execute(text("ALTER TABLE signals ADD COLUMN reason TEXT"))
+        if "companies" in table_names:
+            company_columns = {column["name"] for column in inspector.get_columns("companies")}
+            compat_columns = {
+                "linkedin_url": "ALTER TABLE companies ADD COLUMN linkedin_url TEXT",
+                "sector": "ALTER TABLE companies ADD COLUMN sector TEXT",
+                "headquarters_location": "ALTER TABLE companies ADD COLUMN headquarters_location TEXT",
+                "employee_count": "ALTER TABLE companies ADD COLUMN employee_count TEXT",
+                "revenue_range": "ALTER TABLE companies ADD COLUMN revenue_range TEXT",
+                "enrichment_source": "ALTER TABLE companies ADD COLUMN enrichment_source VARCHAR(64)",
+                "enrichment_confidence": "ALTER TABLE companies ADD COLUMN enrichment_confidence FLOAT",
+                "enriched_at": "ALTER TABLE companies ADD COLUMN enriched_at TIMESTAMPTZ",
+                "last_enrichment_at": "ALTER TABLE companies ADD COLUMN last_enrichment_at TIMESTAMPTZ",
+            }
             with self.engine.begin() as connection:
-                connection.execute(text("ALTER TABLE signals ADD COLUMN reason TEXT"))
+                for column_name, ddl in compat_columns.items():
+                    if column_name not in company_columns:
+                        connection.execute(text(ddl))
+        if "scrape_log" in table_names:
+            scrape_columns = {column["name"] for column in inspector.get_columns("scrape_log")}
+            compat_columns = {
+                "run_id": "ALTER TABLE scrape_log ADD COLUMN run_id VARCHAR(64)",
+                "pages_scraped": "ALTER TABLE scrape_log ADD COLUMN pages_scraped INTEGER DEFAULT 0",
+                "error_count": "ALTER TABLE scrape_log ADD COLUMN error_count INTEGER DEFAULT 0",
+                "phase": "ALTER TABLE scrape_log ADD COLUMN phase VARCHAR(32)",
+                "dry_run": "ALTER TABLE scrape_log ADD COLUMN dry_run BOOLEAN DEFAULT FALSE",
+            }
+            with self.engine.begin() as connection:
+                for column_name, ddl in compat_columns.items():
+                    if column_name not in scrape_columns:
+                        connection.execute(text(ddl))
+        if "leads_contacts" not in table_names:
+            LeadContactRecord.__table__.create(self.engine, checkfirst=True)
+        if "enrichment_log" not in table_names:
+            EnrichmentLogRecord.__table__.create(self.engine, checkfirst=True)
 
     def save_signal(self, signal: ExtractedSignal) -> SaveSignalResult:
+        signal_domain = canonicalize_domain(signal.company_domain)
         with self.session() as session:
             existing = session.scalar(
                 select(SignalRecord.id).where(SignalRecord.source_url == str(signal.source_url)).limit(1)
@@ -170,7 +324,7 @@ class Database:
 
             record = SignalRecord(
                 company_name=signal.company_name,
-                company_domain=signal.company_domain,
+                company_domain=signal_domain,
                 location=signal.location,
                 industry=signal.industry,
                 software=list(signal.software),
@@ -201,17 +355,23 @@ class Database:
             return SaveSignalResult(created=True, record_id=record.id)
 
     def upsert_company(self, signal: ExtractedSignal) -> CompanyLead:
+        signal_domain = canonicalize_domain(signal.company_domain)
         with self.session() as session:
-            company = self._find_company_record(session, signal)
+            company = self._find_company_record(session, signal.company_name, signal_domain)
             now = datetime.now(timezone.utc)
             signal_score = _compute_signal_score(signal)
 
             if company is None:
                 company = CompanyRecord(
                     company_name=signal.company_name,
-                    company_domain=signal.company_domain,
+                    company_domain=signal_domain,
+                    linkedin_url=None,
                     location=signal.location,
                     industry=signal.industry,
+                    sector=None,
+                    headquarters_location=None,
+                    employee_count=None,
+                    revenue_range=None,
                     software=_merge_unique([], signal.software),
                     signal_sources=[signal.signal_source],
                     signal_count=1,
@@ -219,6 +379,10 @@ class Database:
                     total_score=signal_score,
                     lead_score=_lead_grade(signal_score),
                     contacts=[],
+                    enrichment_source=signal.domain_resolution_source,
+                    enrichment_confidence=signal.domain_resolution_confidence,
+                    enriched_at=now if signal_domain and signal.domain_resolution_source else None,
+                    last_enrichment_at=None,
                     first_seen=signal.detected_at,
                     last_updated=now,
                 )
@@ -235,9 +399,13 @@ class Database:
             company.software = _merge_unique(company.software, signal.software)
             company.signal_sources = _merge_unique(company.signal_sources, [signal.signal_source])
             company.migration_risk = company.migration_risk or signal.migration
-            company.company_domain = company.company_domain or signal.company_domain
+            company.company_domain = company.company_domain or signal_domain
             company.location = signal.location or company.location
             company.industry = signal.industry or company.industry
+            if signal_domain and signal.domain_resolution_source:
+                company.enrichment_source = signal.domain_resolution_source
+                company.enrichment_confidence = signal.domain_resolution_confidence
+                company.enriched_at = now
 
             company.total_score += signal_score
             if company.signal_count == 2:
@@ -341,15 +509,201 @@ class Database:
             )
             return {_normalize_company_name(str(row)) for row in rows if str(row).strip()}
 
-    def _find_company_record(self, session: Session, signal: ExtractedSignal) -> CompanyRecord | None:
-        if signal.company_domain:
+    def save_company_enrichment(
+        self,
+        company_name: str,
+        company_domain: str | None,
+        *,
+        linkedin_url: str | None = None,
+        sector: str | None = None,
+        employee_count: str | None = None,
+        revenue_range: str | None = None,
+        headquarters_location: str | None = None,
+        contacts: list[LeadContact] | None = None,
+        enrichment_source: str | None = None,
+        mark_enriched_at: datetime | None = None,
+    ) -> CompanyLead | None:
+        normalized_domain = canonicalize_domain(company_domain)
+        with self.session() as session:
+            company = self._find_company_record(session, company_name, normalized_domain)
+            if company is None:
+                return None
+
+            if normalized_domain and not company.company_domain:
+                company.company_domain = normalized_domain
+
+            if linkedin_url:
+                company.linkedin_url = linkedin_url
+            if sector:
+                company.sector = sector
+            if employee_count:
+                company.employee_count = employee_count
+            if revenue_range:
+                company.revenue_range = revenue_range
+            if headquarters_location:
+                company.headquarters_location = headquarters_location
+            if enrichment_source:
+                company.enrichment_source = enrichment_source
+
+            if mark_enriched_at is not None:
+                company.last_enrichment_at = _ensure_utc(mark_enriched_at)
+
+            normalized_contacts = _normalize_contacts(contacts or [])
+            if normalized_contacts:
+                company.contacts = [contact.model_dump() for contact in normalized_contacts]
+                session.query(LeadContactRecord).filter(LeadContactRecord.company_id == company.id).delete()
+                session.add_all(
+                    LeadContactRecord(
+                        company_id=company.id,
+                        company_name=company.company_name,
+                        company_domain=company.company_domain,
+                        full_name=contact.full_name,
+                        first_name=contact.first_name,
+                        last_name=contact.last_name,
+                        title=contact.title,
+                        email=contact.email,
+                        linkedin_url=contact.linkedin_url,
+                        phone=contact.phone,
+                        source_provider=contact.source_provider,
+                        source_stage=contact.source_stage,
+                    )
+                    for contact in normalized_contacts
+                )
+
+            session.commit()
+            session.refresh(company)
+            return _to_company_lead(company)
+
+    def save_enrichment_log(self, entry: EnrichmentLogEntry) -> None:
+        normalized_domain = canonicalize_domain(entry.company_domain)
+        with self.session() as session:
+            company = self._find_company_record(session, entry.company_name, normalized_domain)
+            record = EnrichmentLogRecord(
+                company_id=company.id if company is not None else None,
+                company_name=entry.company_name,
+                company_domain=normalized_domain,
+                stage=entry.stage,
+                provider=entry.provider,
+                status=entry.status,
+                message=entry.message,
+                payload=entry.payload,
+            )
+            session.add(record)
+            session.commit()
+
+    def save_scrape_logs(self, run_id: str, entries: list[ScrapeLogEntry]) -> None:
+        if not entries:
+            return
+        with self.session() as session:
+            records = [
+                ScrapeLogRecord(
+                    run_id=run_id,
+                    source=entry.source,
+                    query=entry.query,
+                    target_url=entry.target_url,
+                    status=entry.status,
+                    credits_used=entry.credits_used,
+                    cards_found=entry.cards_found,
+                    signals_found=entry.signals_found,
+                    pages_scraped=entry.pages_scraped,
+                    error_count=entry.error_count,
+                    phase=entry.phase,
+                    dry_run=entry.dry_run,
+                )
+                for entry in entries
+            ]
+            session.add_all(records)
+            session.commit()
+
+    def get_recent_source_health_alerts(
+        self,
+        sources: list[str],
+        consecutive_runs: int = 3,
+        within_days: int = 14,
+    ) -> list[SourceHealthAlert]:
+        if not sources:
+            return []
+
+        cutoff = datetime.now(timezone.utc) - timedelta(days=within_days)
+        with self.session() as session:
+            rows = session.scalars(
+                select(ScrapeLogRecord)
+                .where(
+                    ScrapeLogRecord.source.in_(sources),
+                    ScrapeLogRecord.dry_run.is_(False),
+                    ScrapeLogRecord.scraped_at >= cutoff,
+                )
+                .order_by(ScrapeLogRecord.scraped_at.desc(), ScrapeLogRecord.id.desc())
+            ).all()
+
+        grouped: dict[str, list[ScrapeLogRecord]] = defaultdict(list)
+        for row in rows:
+            grouped[row.source].append(row)
+
+        alerts: list[SourceHealthAlert] = []
+        for source in sources:
+            recent = grouped.get(source, [])[:consecutive_runs]
+            if len(recent) < consecutive_runs:
+                continue
+            if all(item.status == "failed" or item.error_count > 0 for item in recent):
+                alerts.append(
+                    SourceHealthAlert(
+                        source=source,
+                        alert_type="repeated_failures",
+                        consecutive_runs=consecutive_runs,
+                        message=f"{source} failed in {consecutive_runs} consecutive persisted runs",
+                    )
+                )
+                continue
+            if all(item.pages_scraped > 0 and item.cards_found == 0 for item in recent):
+                alerts.append(
+                    SourceHealthAlert(
+                        source=source,
+                        alert_type="repeated_zero_cards",
+                        consecutive_runs=consecutive_runs,
+                        message=f"{source} returned zero cards in {consecutive_runs} consecutive persisted runs",
+                    )
+                )
+        return alerts
+
+    def find_company_by_domain(self, company_domain: str) -> CompanyLead | None:
+        normalized_domain = canonicalize_domain(company_domain)
+        if not normalized_domain:
+            return None
+        with self.session() as session:
             company = session.scalar(
-                select(CompanyRecord).where(CompanyRecord.company_domain == signal.company_domain).limit(1)
+                select(CompanyRecord).where(CompanyRecord.company_domain == normalized_domain).limit(1)
+            )
+            if company is None:
+                return None
+            return _to_company_lead(company)
+
+    def find_company_by_identity(
+        self,
+        company_name: str,
+        company_domain: str | None = None,
+    ) -> CompanyLead | None:
+        normalized_domain = canonicalize_domain(company_domain)
+        with self.session() as session:
+            company = self._find_company_record(session, company_name, normalized_domain)
+            if company is None:
+                return None
+            return _to_company_lead(company)
+
+    def _find_company_record(
+        self,
+        session: Session,
+        company_name: str,
+        company_domain: str | None,
+    ) -> CompanyRecord | None:
+        if company_domain:
+            company = session.scalar(
+                select(CompanyRecord).where(CompanyRecord.company_domain == company_domain).limit(1)
             )
             if company is not None:
                 return company
 
-        normalized_name = _normalize_company_name(signal.company_name)
+        normalized_name = _normalize_company_name(company_name)
         exact = session.scalar(
             select(CompanyRecord).where(func.lower(CompanyRecord.company_name) == normalized_name).limit(1)
         )
@@ -358,7 +712,7 @@ class Database:
 
         candidates = session.scalars(select(CompanyRecord)).all()
         for candidate in candidates:
-            if _names_similar(candidate.company_name, signal.company_name):
+            if _names_similar(candidate.company_name, company_name):
                 return candidate
         return None
 
@@ -450,8 +804,42 @@ def _merge_unique(current: list[Any] | None, incoming: list[Any] | None) -> list
     return merged
 
 
+def _normalize_contacts(contacts: list[LeadContact]) -> list[LeadContact]:
+    normalized: list[LeadContact] = []
+    seen: set[str] = set()
+    for contact in contacts:
+        key = "|".join(
+            [
+                (contact.email or "").strip().lower(),
+                (contact.linkedin_url or "").strip().lower(),
+                contact.full_name.strip().lower(),
+                (contact.title or "").strip().lower(),
+            ]
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        normalized.append(contact)
+    return normalized
+
+
 def _normalize_company_name(value: str) -> str:
-    return " ".join(value.strip().lower().split())
+    cleaned = value.strip().lower()
+    cleaned = re.sub(r"^[^\w]+", "", cleaned)
+    cleaned = (
+        cleaned.replace("ä", "ae")
+        .replace("ö", "oe")
+        .replace("ü", "ue")
+        .replace("ß", "ss")
+    )
+    tokens = re.findall(r"[a-z0-9]+", cleaned)
+    if not tokens:
+        return ""
+    legal_suffixes = {"gmbh", "inc", "ltd", "llc", "ag", "corp", "corporation", "limited", "co", "kg", "se", "plc", "sa", "bv", "srl", "pty"}
+    normalized_tokens = [token for token in tokens if token not in legal_suffixes]
+    if not normalized_tokens:
+        normalized_tokens = tokens
+    return " ".join(normalized_tokens)
 
 
 def _names_similar(left: str, right: str) -> bool:
@@ -471,16 +859,25 @@ def _names_similar(left: str, right: str) -> bool:
 def _to_company_lead(record: CompanyRecord) -> CompanyLead:
     return CompanyLead(
         company_name=record.company_name,
-        company_domain=record.company_domain,
+        company_domain=canonicalize_domain(record.company_domain),
+        linkedin_url=record.linkedin_url,
         location=record.location,
         industry=record.industry,
+        sector=record.sector,
+        headquarters_location=record.headquarters_location,
+        employee_count=record.employee_count,
+        revenue_range=record.revenue_range,
         software=list(record.software or []),
         signal_sources=list(record.signal_sources or []),
         signal_count=record.signal_count,
         migration_risk=record.migration_risk,
         total_score=record.total_score,
         lead_score=record.lead_score,
-        contacts=list(record.contacts or []),
+        contacts=[LeadContact.model_validate(item) for item in list(record.contacts or [])],
+        enrichment_source=record.enrichment_source,
+        enrichment_confidence=record.enrichment_confidence,
+        enriched_at=_ensure_utc(record.enriched_at) if record.enriched_at is not None else None,
+        last_enrichment_at=_ensure_utc(record.last_enrichment_at) if record.last_enrichment_at is not None else None,
         first_seen=_ensure_utc(record.first_seen),
         last_updated=_ensure_utc(record.last_updated),
     )

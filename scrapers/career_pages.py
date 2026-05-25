@@ -13,6 +13,7 @@ from bs4 import BeautifulSoup
 from loguru import logger
 
 from config import (
+    CAREER_PAGE_MAX_PAGES_PER_TARGET,
     CAREER_PAGE_MAX_TEXT_CHARS,
     CAREER_PAGE_TARGETS_CSV,
     CAREER_PAGE_USER_AGENTS,
@@ -53,38 +54,29 @@ def scrape_career_pages(_: object | None = None, max_queries: int | None = None)
         targets = targets[:max_queries]
 
     timeout_seconds = int(os.getenv("REQUEST_TIMEOUT_SECONDS", DEFAULT_REQUEST_TIMEOUT_SECONDS))
+    max_pages_per_target = int(
+        os.getenv("CAREER_PAGE_MAX_PAGES_PER_TARGET", CAREER_PAGE_MAX_PAGES_PER_TARGET)
+    )
     postings: list[RawSignalDocument] = []
     pages_scraped = 0
+    seen_urls: set[str] = set()
 
     with httpx.Client(timeout=timeout_seconds, follow_redirects=True) as client:
         robots_cache: dict[str, RobotFileParser | None] = {}
         for target in targets:
-            if not _allowed_by_robots(client, target.careers_url, robots_cache):
-                logger.info("career_page skipped by robots company={} url={}", target.company_name, target.careers_url)
-                continue
-
-            headers = {"User-Agent": random.choice(CAREER_PAGE_USER_AGENTS)}
-            try:
-                response = client.get(target.careers_url, headers=headers)
-                response.raise_for_status()
-            except Exception as exc:
-                logger.warning(
-                    "career_page fetch failed company={} url={} error={}",
-                    target.company_name,
-                    target.careers_url,
-                    exc,
-                )
-                continue
-
-            pages_scraped += 1
-            document = parse_career_page(
-                html=response.text,
-                target=target,
-                final_url=str(response.url),
+            target_pages_scraped, target_postings = _crawl_target(
+                client,
+                target,
+                robots_cache,
+                max_pages=max_pages_per_target,
             )
-            if document is None:
-                continue
-            postings.append(document)
+            pages_scraped += target_pages_scraped
+            for document in target_postings:
+                key = str(document.source_url)
+                if key in seen_urls:
+                    continue
+                seen_urls.add(key)
+                postings.append(document)
 
     return CollectorResult(postings=postings, pages_scraped=pages_scraped)
 
@@ -132,11 +124,17 @@ def parse_career_page(html: str, target: CareerPageTarget, final_url: str) -> Ra
         logger.warning("career_page parser found no text company={} url={}", target.company_name, final_url)
         return None
 
+    parsed_url = urlparse(final_url)
+    path_hint = parsed_url.path.rstrip("/").split("/")[-1].replace("-", " ").replace("_", " ").strip()
+    title = page_title or f"{target.company_name} careers"
+    if path_hint and path_hint.lower() not in {"careers", "career"}:
+        title = f"{title} - {path_hint.title()}"
+
     return RawSignalDocument(
         source="career_page",
         signal_type="career_page",
         query=f"{target.company_name} career page",
-        title=page_title or f"{target.company_name} careers",
+        title=title,
         company_name=target.company_name,
         location=target.country,
         snippet=full_text[:500],
@@ -158,6 +156,89 @@ def _extract_page_text(soup: BeautifulSoup) -> str:
             parts.append(text)
 
     return " | ".join(parts)[:CAREER_PAGE_MAX_TEXT_CHARS]
+
+
+def _crawl_target(
+    client: httpx.Client,
+    target: CareerPageTarget,
+    robots_cache: dict[str, RobotFileParser | None],
+    max_pages: int,
+) -> tuple[int, list[RawSignalDocument]]:
+    pages_scraped = 0
+    postings: list[RawSignalDocument] = []
+    headers = {"User-Agent": random.choice(CAREER_PAGE_USER_AGENTS)}
+    queue: list[str] = [target.careers_url]
+    seen_urls: set[str] = set()
+
+    while queue and pages_scraped < max_pages:
+        url = queue.pop(0)
+        normalized_url = _normalize_url(url)
+        if normalized_url in seen_urls:
+            continue
+        seen_urls.add(normalized_url)
+
+        if not _allowed_by_robots(client, url, robots_cache):
+            logger.info("career_page skipped by robots company={} url={}", target.company_name, url)
+            continue
+
+        try:
+            response = client.get(url, headers=headers)
+            response.raise_for_status()
+        except Exception as exc:
+            logger.warning(
+                "career_page fetch failed company={} url={} error={}",
+                target.company_name,
+                url,
+                exc,
+            )
+            continue
+
+        pages_scraped += 1
+        final_url = str(response.url)
+        normalized_final_url = _normalize_url(final_url)
+        seen_urls.add(normalized_final_url)
+        soup = BeautifulSoup(response.text, "lxml")
+
+        document = parse_career_page(
+            html=response.text,
+            target=target,
+            final_url=final_url,
+        )
+        if document is not None:
+            postings.append(document)
+
+        for next_url in _extract_candidate_links(soup, final_url, target):
+            normalized_next_url = _normalize_url(next_url)
+            if normalized_next_url in seen_urls:
+                continue
+            if next_url in queue:
+                continue
+            queue.append(next_url)
+
+    return pages_scraped, postings
+
+
+def _extract_candidate_links(soup: BeautifulSoup, base_url: str, target: CareerPageTarget) -> list[str]:
+    candidates: list[str] = []
+    seen: set[str] = set()
+
+    for link in soup.select("a[href]"):
+        href = _clean(link.get("href"))
+        if not href:
+            continue
+        absolute = urljoin(base_url, href)
+        if not _url_matches_target_domain(absolute, target.domain):
+            continue
+        if not _looks_like_pagination_link(absolute, base_url, link.get_text(" ", strip=True)):
+            continue
+
+        normalized = _normalize_url(absolute)
+        if normalized in seen:
+            continue
+        seen.add(normalized)
+        candidates.append(absolute)
+
+    return candidates
 
 
 def _allowed_by_robots(
@@ -186,6 +267,41 @@ def _allowed_by_robots(
     if parser is None:
         return True
     return parser.can_fetch("*", url)
+
+
+def _looks_like_pagination_link(url: str, base_url: str, anchor_text: str) -> bool:
+    parsed = urlparse(url)
+    base_parsed = urlparse(base_url)
+    anchor = anchor_text.strip().lower()
+    query = parsed.query.lower()
+    path = parsed.path.lower()
+
+    if "/page/" in path:
+        return True
+    if parsed.path.rstrip("/") != base_parsed.path.rstrip("/") and not query:
+        return False
+
+    if anchor in {"next", "next page", "older", "more", ">>", ">", "2", "3", "4", "5"}:
+        return True
+    if "page=" in query or "paged=" in query or "start=" in query or "offset=" in query:
+        return True
+    return False
+
+
+def _url_matches_target_domain(url: str, target_domain: str) -> bool:
+    hostname = (urlparse(url).hostname or "").lower()
+    domain = target_domain.lower().removeprefix("www.")
+    host = hostname.removeprefix("www.")
+    return host == domain or host.endswith(f".{domain}")
+
+
+def _normalize_url(url: str) -> str:
+    parsed = urlparse(url)
+    path = parsed.path.rstrip("/") or "/"
+    normalized = f"{parsed.scheme}://{parsed.netloc}{path}"
+    if parsed.query:
+        normalized = f"{normalized}?{parsed.query}"
+    return normalized
 
 
 def _clean(value: str | None) -> str | None:

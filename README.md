@@ -1,6 +1,7 @@
 # CTGT Lead Engine - Phase 1
 
 Phase 1 uses JobSpy for LinkedIn, Indeed, and Google, keeps Stepstone on scrape.do, adds direct career-page crawling and Google News RSS ingestion, and then runs keyword prefiltering, configurable LLM extraction, PostgreSQL persistence, and CLI summaries.
+Lead enrichment is a separate post-pipeline pass. Scraping and NLP persistence finish first; company/contact enrichment runs afterward against the persisted leads table.
 
 ## Setup
 
@@ -20,6 +21,7 @@ pip install -r requirements.txt
 - `LLM_REQUESTS_PER_MINUTE=25` to keep layer 2 model traffic in the current 25-30 RPM limit
 - `DATABASE_URL`
 - optionally expand `data/career_page_targets.csv` with your target companies
+- optionally tune `CAREER_PAGE_MAX_PAGES_PER_TARGET` for broader Phase 2 career-page coverage
 
 Default sample configuration uses Gemini with `gemma-4-31b-it`. Groq remains available by setting `LLM_PROVIDER=groq`.
 Hugging Face provider support is currently disabled.
@@ -36,6 +38,7 @@ Single-source smoke test:
 
 ```powershell
 python pipeline.py --source linkedin --smoke-test
+python lead_enrichment_pass.py
 ```
 
 Career page smoke test:
@@ -54,6 +57,12 @@ Google smoke test:
 
 ```powershell
 python pipeline.py --source google --smoke-test
+```
+
+Phase 1 validation pass:
+
+```powershell
+python pipeline.py --validate-phase1
 ```
 
 Dry run with explicit query cap:
@@ -93,6 +102,12 @@ python dashboard.py
 - Defaults `--max-queries` to `3` if not provided
 - Returns non-zero if any selected source errors, if no pages are scraped, or if no job cards are parsed
 
+## Phase 1 Validation
+
+- `--validate-phase1` runs static readiness checks for the intended Phase 1 source set: `linkedin`, `indeed`, `google`, and `stepstone`
+- it then runs a Phase 1-only smoke validation pass in `--dry-run` mode
+- it returns non-zero if source registration/config is incomplete, required environment variables are missing, or the smoke validation fails
+
 ## Request Budget Mode
 
 - Default mode is `testing` (`PIPELINE_PHASE` unset or not `production`)
@@ -101,6 +116,12 @@ python dashboard.py
 - LinkedIn, Indeed, and Google are collected via JobSpy and do not consume scrape.do credits in the default path
 - Career pages and news RSS are collected via direct `httpx` requests and do not consume scrape.do credits
 - Set `PIPELINE_PHASE=production` to remove the testing caps and use the normal query-derived request budget
+
+## Operational Logging
+
+- persisted runs now write one `scrape_log` row per selected source with source status, pages scraped, cards found, signals found, and scrape.do credits used
+- the pipeline also checks recent persisted history and prints health alerts when a source has repeated failed runs or repeated zero-card runs
+- `--dry-run` still avoids DB writes, so operational logs are only written on persisted runs
 
 ## Current Constraints
 

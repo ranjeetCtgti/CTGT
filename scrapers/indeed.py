@@ -11,9 +11,11 @@ from scrapers.scrapedo_client import ScrapeDoClient, ScrapeRequest
 
 
 INDEED_HOST_BY_LOCATION = {
-    "India": "https://in.indeed.com",
+    "Australia": "https://au.indeed.com",
+    "France": "https://fr.indeed.com",
     "Germany": "https://de.indeed.com",
     "Canada": "https://ca.indeed.com",
+    "United Kingdom": "https://uk.indeed.com",
     "United States": "https://www.indeed.com",
 }
 

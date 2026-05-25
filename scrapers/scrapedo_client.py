@@ -69,6 +69,7 @@ class ScrapeDoClient:
         self.max_requests_by_source = max_requests_by_source or {}
         self._http = httpx.Client(timeout=self.timeout_seconds + HTTP_TIMEOUT_HEADROOM_SECONDS)
         self.credits_used_total = 0
+        self.credits_used_by_source: dict[str, int] = {}
         self.request_count = 0
         self.request_count_by_source: dict[str, int] = {}
 
@@ -190,6 +191,7 @@ class ScrapeDoClient:
         billable_failure = not ok and status in (400, 404, 410)
         credits_used = estimated_credits if (ok or billable_failure) else 0
         self.credits_used_total += credits_used
+        self.credits_used_by_source[req.source] = self.credits_used_by_source.get(req.source, 0) + credits_used
 
         if ok:
             logger.info("scrape.do success source={} status={} chars={} credits={}",
@@ -210,4 +212,6 @@ class ScrapeDoClient:
         return {
             "request_count": self.request_count,
             "credits_used_total": self.credits_used_total,
+            "request_count_by_source": dict(self.request_count_by_source),
+            "credits_used_by_source": dict(self.credits_used_by_source),
         }

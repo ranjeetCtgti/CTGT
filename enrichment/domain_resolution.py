@@ -2,22 +2,27 @@ from __future__ import annotations
 
 import os
 import re
+import time
 from dataclasses import dataclass
 from difflib import SequenceMatcher
 from typing import Any, Protocol
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 import httpx
+from bs4 import BeautifulSoup
+from loguru import logger
 
-
-GOOGLE_KG_SEARCH_URL = "https://kgsearch.googleapis.com/v1/entities:search"
+SERPER_GOOGLE_SEARCH_API_URL = "https://google.serper.dev/search"
 CLEARBIT_AUTOCOMPLETE_URL = "https://autocomplete.clearbit.com/v1/companies/suggest"
+GOOGLE_SEARCH_USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+)
 GENERIC_REFERENCE_DOMAINS = {
     "google.com",
     "wikipedia.org",
     "wikidata.org",
     "schema.org",
-    "kgsearch.googleapis.com",
     "g.co",
 }
 THIRD_PARTY_PROFILE_DOMAINS = {
@@ -68,7 +73,6 @@ REGION_NOISE_PATTERNS = (
     r"\basia pacific\b",
     r"\bapac\b",
 )
-COMMON_GUESS_TLDS = (".com", ".de", ".com.au", ".co.uk", ".io")
 
 
 @dataclass(slots=True)
@@ -93,6 +97,22 @@ class DomainResolver(Protocol):
         source_url: str | None = None,
         signal_source: str | None = None,
     ) -> DomainResolutionResult: ...
+
+
+def resolve_company_domain(
+    company_name: str,
+    *,
+    location: str | None = None,
+    source_url: str | None = None,
+    signal_source: str | None = None,
+) -> DomainResolutionResult:
+    with build_domain_resolver() as resolver:
+        return resolver.resolve(
+            company_name,
+            location=location,
+            source_url=source_url,
+            signal_source=signal_source,
+        )
 
 
 class BaseDomainResolver:
@@ -122,10 +142,21 @@ class NoOpDomainResolver(BaseDomainResolver):
         )
 
 
-class GoogleKnowledgeGraphDomainResolver(BaseDomainResolver):
-    def __init__(self, api_key: str, timeout_seconds: int) -> None:
-        self.api_key = api_key
-        self._http = httpx.Client(timeout=timeout_seconds)
+class SerperDomainResolver(BaseDomainResolver):
+    def __init__(self, timeout_seconds: int) -> None:
+        self.serper_api_key = (os.getenv("SERPER_API_KEY") or "").strip()
+        if not self.serper_api_key:
+            raise ValueError("SERPER_API_KEY is missing")
+        self._http = httpx.Client(
+            timeout=timeout_seconds,
+            headers={
+                "User-Agent": GOOGLE_SEARCH_USER_AGENT,
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Cache-Control": "no-cache",
+            },
+            follow_redirects=True,
+        )
 
     def close(self) -> None:
         self._http.close()
@@ -157,56 +188,160 @@ class GoogleKnowledgeGraphDomainResolver(BaseDomainResolver):
                 raw_url=f"https://{explicit_domain}",
             )
 
-        query_name = _clean_company_name_for_lookup(company_name)
-        if not query_name:
-            query_name = company_name.strip()
-        query = query_name
-        if location:
-            query = f"{query} {location.strip()}"
-
-        response = self._http.get(
-            GOOGLE_KG_SEARCH_URL,
-            params={
-                "query": query,
-                "types": "Organization",
-                "languages": "en",
-                "limit": 10,
-                "key": self.api_key,
-            },
+        candidates: dict[str, dict[str, Any]] = {}
+        query_name = _clean_company_name_for_lookup(company_name) or company_name.strip()
+        search_queries = _serper_search_queries(company_name=company_name, query_name=query_name, location=location)
+        logger.info(
+            "domain resolver start company={} query_name={} location={} provider=serper",
+            company_name,
+            query_name,
+            location or "-",
         )
-        response.raise_for_status()
-        payload = response.json()
-        kg_result = _select_best_result(company_name, payload)
-        if kg_result.company_domain and _domain_resolution_passes_threshold(kg_result.confidence):
-            return kg_result
+        for index, query in enumerate(search_queries):
+            if index > 0:
+                time.sleep(_serper_request_delay_seconds())
+            try:
+                html = self._fetch_serper_search_html(query, location=location)
+            except Exception as exc:
+                logger.warning(
+                    "domain resolver serper_request_failed company={} query={} error={}",
+                    company_name,
+                    query,
+                    exc,
+                )
+                continue
+
+            for result in _extract_serper_result_candidates(html):
+                domain = canonicalize_domain(result.get("url"))
+                if not domain or _is_generic_reference_domain(domain) or _is_third_party_profile_domain(domain):
+                    continue
+                candidate = candidates.setdefault(
+                    domain,
+                    {
+                        "query_hits": 0,
+                        "best_url": result.get("url"),
+                        "best_title": result.get("title"),
+                        "best_snippet": result.get("snippet"),
+                    },
+                )
+                candidate["query_hits"] += 1
+                if _candidate_result_score(company_name, domain, result) > _candidate_result_score(
+                    company_name,
+                    domain,
+                    {
+                        "title": candidate.get("best_title"),
+                        "snippet": candidate.get("best_snippet"),
+                        "url": candidate.get("best_url"),
+                    },
+                ):
+                    candidate["best_url"] = result.get("url")
+                    candidate["best_title"] = result.get("title")
+                    candidate["best_snippet"] = result.get("snippet")
+
+        best_result = DomainResolutionResult(
+            company_name=company_name,
+            source="serper",
+            reason="no validated first-party domain found from Serper Google search results",
+        )
+        for domain, candidate in sorted(
+            candidates.items(),
+            key=lambda item: (
+                item[1]["query_hits"],
+                _candidate_result_score(company_name, item[0], item[1]),
+            ),
+            reverse=True,
+        ):
+            page_validation = _validate_candidate_domain(
+                self._http,
+                company_name=company_name,
+                domain=domain,
+                preferred_url=candidate.get("best_url"),
+            )
+            if page_validation is None:
+                continue
+            confidence = round(
+                min(
+                    0.99,
+                    0.45
+                    + (0.2 * min(candidate["query_hits"], len(search_queries)) / max(len(search_queries), 1))
+                    + (0.35 * page_validation["name_score"]),
+                ),
+                4,
+            )
+            if confidence <= best_result.confidence:
+                continue
+            best_result = DomainResolutionResult(
+                company_name=company_name,
+                company_domain=domain,
+                confidence=confidence,
+                source="serper",
+                reason=(
+                    f"validated first-party domain `{domain}` from Serper Google search "
+                    f"using page title/text match score {page_validation['name_score']:.2f}"
+                ),
+                raw_url=page_validation["validated_url"],
+            )
+
+        if best_result.company_domain:
+            logger.info(
+                "domain resolver serper_hit company={} domain={} confidence={} url={}",
+                company_name,
+                best_result.company_domain,
+                best_result.confidence,
+                best_result.raw_url or "-",
+            )
+            return best_result
+
+        logger.info(
+            "domain resolver serper_miss company={} reason={} fallback=clearbit",
+            company_name,
+            best_result.reason or "-",
+        )
         clearbit_result = _resolve_via_clearbit_autocomplete(
             self._http,
             company_name=company_name,
             query_name=query_name,
         )
         if clearbit_result is not None:
+            logger.info(
+                "domain resolver clearbit_fallback company={} domain={} confidence={}",
+                company_name,
+                clearbit_result.company_domain or "-",
+                clearbit_result.confidence,
+            )
             return clearbit_result
-        fallback = _resolve_by_verified_domain_guess(
-            self._http,
-            company_name=company_name,
-            location=location,
+        logger.info("domain resolver unresolved company={} provider=serper_clearbit", company_name)
+        return best_result
+
+    def _fetch_serper_search_html(self, query: str, *, location: str | None) -> str:
+        response = self._http.post(
+            SERPER_GOOGLE_SEARCH_API_URL,
+            headers={
+                "X-API-KEY": self.serper_api_key,
+                "Content-Type": "application/json",
+            },
+            json={
+                "q": query,
+                "gl": _serper_gl_from_location(location),
+                "hl": "en",
+                "type": "search",
+                "engine": "google",
+            },
         )
-        if fallback is not None:
-            return fallback
-        return kg_result
+        response.raise_for_status()
+        payload = response.json()
+        organic_results = payload.get("organic") or []
+        return _serper_results_to_html_stub(organic_results)
 
 
 def build_domain_resolver() -> DomainResolver:
     if not _env_flag("ENRICHMENT_ENABLED", default=False):
         return NoOpDomainResolver()
 
-    provider = (os.getenv("ENRICHMENT_PROVIDER") or "google_kg").strip().lower()
+    provider = (os.getenv("ENRICHMENT_PROVIDER") or "serper").strip().lower()
     timeout_seconds = int(os.getenv("ENRICHMENT_TIMEOUT_SECONDS", "15"))
-    if provider == "google_kg":
-        api_key = (os.getenv("GOOGLE_KG_API_KEY") or "").strip()
-        if not api_key:
-            raise ValueError("GOOGLE_KG_API_KEY is missing")
-        return GoogleKnowledgeGraphDomainResolver(api_key=api_key, timeout_seconds=timeout_seconds)
+    if provider == "serper":
+        return SerperDomainResolver(timeout_seconds=timeout_seconds)
     if provider == "noop":
         return NoOpDomainResolver()
     raise ValueError(f"Unsupported ENRICHMENT_PROVIDER: {provider}")
@@ -286,88 +421,6 @@ def _resolve_from_source_context(
         )
 
     return None
-
-
-def _select_best_result(
-    company_name: str,
-    payload: dict[str, Any],
-    *,
-    match_name: str | None = None,
-) -> DomainResolutionResult:
-    best_domain: str | None = None
-    best_url: str | None = None
-    best_confidence = 0.0
-    best_reason = "no viable organization url in Google Knowledge Graph response"
-    name_for_match = match_name or company_name
-
-    for item in payload.get("itemListElement", []) or []:
-        if not isinstance(item, dict):
-            continue
-        result = item.get("result") or {}
-        if not isinstance(result, dict):
-            continue
-
-        candidate_name = _clean_string(result.get("name")) or company_name
-        name_score = _name_similarity(name_for_match, candidate_name)
-        result_score = _coerce_float(item.get("resultScore"))
-        score_component = min(result_score / 1000.0, 1.0) if result_score > 0 else 0.0
-
-        for raw_url in _extract_candidate_urls(result):
-            domain = canonicalize_domain(raw_url)
-            if not domain or _is_generic_reference_domain(domain) or _is_third_party_profile_domain(domain):
-                continue
-
-            confidence = round((0.75 * name_score) + (0.25 * score_component), 4)
-            if domain == _domain_hint_from_company_name(name_for_match):
-                confidence = min(1.0, confidence + 0.1)
-            if confidence <= best_confidence:
-                continue
-
-            best_domain = domain
-            best_url = raw_url
-            best_confidence = confidence
-            best_reason = f"matched KG organization `{candidate_name}` via {raw_url}"
-
-    return DomainResolutionResult(
-        company_name=company_name,
-        company_domain=best_domain,
-        confidence=best_confidence,
-        source="google_kg",
-        reason=best_reason,
-        raw_url=best_url,
-    )
-
-
-def _extract_candidate_urls(result: dict[str, Any]) -> list[str]:
-    urls: list[str] = []
-    direct_url = _clean_string(result.get("url"))
-    if direct_url:
-        urls.append(direct_url)
-
-    detailed_description = result.get("detailedDescription")
-    if isinstance(detailed_description, dict):
-        description_url = _clean_string(detailed_description.get("url"))
-        if description_url:
-            urls.append(description_url)
-
-    identifiers = result.get("identifier")
-    if isinstance(identifiers, list):
-        urls.extend(
-            identifier.strip()
-            for identifier in identifiers
-            if isinstance(identifier, str) and identifier.strip().startswith("http")
-        )
-    elif isinstance(identifiers, str) and identifiers.strip().startswith("http"):
-        urls.append(identifiers.strip())
-
-    deduped: list[str] = []
-    seen: set[str] = set()
-    for url in urls:
-        if url in seen:
-            continue
-        seen.add(url)
-        deduped.append(url)
-    return deduped
 
 
 def _is_generic_reference_domain(domain: str) -> bool:
@@ -523,100 +576,174 @@ def _resolve_via_clearbit_autocomplete(
     )
 
 
-def _resolve_by_verified_domain_guess(
-    client: httpx.Client,
-    *,
-    company_name: str,
-    location: str | None,
-) -> DomainResolutionResult | None:
-    guess_stems = _candidate_domain_stems(company_name)
-    if not guess_stems:
-        return None
+def _serper_search_queries(*, company_name: str, query_name: str, location: str | None) -> list[str]:
+    queries = [f'"{query_name}" official site']
+    if location:
+        queries.append(f'"{query_name}" official site {location.strip()}')
+    else:
+        queries.append(f'"{query_name}" company')
+    queries.append(f'"{query_name}" about')
 
-    tlds = _candidate_tlds(location)
-    for stem in guess_stems:
-        for tld in tlds:
-            domain = f"{stem}{tld}"
-            if not _verify_domain(client, domain):
-                continue
-            return DomainResolutionResult(
-                company_name=company_name,
-                company_domain=domain,
-                confidence=0.76,
-                source="heuristic_verified_domain",
-                reason=f"verified heuristic domain guess `{domain}` after KG miss/low-confidence result",
-                raw_url=f"https://{domain}",
-            )
+    deduped: list[str] = []
+    seen: set[str] = set()
+    for query in queries:
+        normalized = " ".join(query.split()).strip()
+        if not normalized or normalized in seen:
+            continue
+        seen.add(normalized)
+        deduped.append(normalized)
+    return deduped[:3]
+
+
+def _serper_request_delay_seconds() -> float:
+    return 1.0
+
+
+def _serper_gl_from_location(location: str | None) -> str:
+    location_norm = _normalize_company_name(location or "")
+    if "australia" in location_norm:
+        return "au"
+    if any(token in location_norm for token in {"germany", "deutschland"}):
+        return "de"
+    if any(token in location_norm for token in {"united kingdom", "uk", "england", "scotland"}):
+        return "uk"
+    if "india" in location_norm:
+        return "in"
+    if "canada" in location_norm:
+        return "ca"
+    return "us"
+
+
+def _serper_results_to_html_stub(organic_results: list[Any]) -> str:
+    links: list[str] = []
+    for item in organic_results:
+        if not isinstance(item, dict):
+            continue
+        link = _clean_string(item.get("link") or item.get("url"))
+        title = _clean_string(item.get("title")) or ""
+        snippet = _clean_string(item.get("snippet") or item.get("description")) or ""
+        if not link:
+            continue
+        links.append(
+            f'<a href="{link}"><span>{title}</span></a><div>{snippet}</div>'
+        )
+    return "<html><body>" + "".join(links) + "</body></html>"
+
+
+def _extract_serper_result_candidates(html: str) -> list[dict[str, str]]:
+    soup = BeautifulSoup(html, "lxml")
+    candidates: list[dict[str, str]] = []
+    seen_urls: set[str] = set()
+
+    for anchor in soup.select("a[href]"):
+        href = (anchor.get("href") or "").strip()
+        resolved_url = _serper_result_target_url(href)
+        if not resolved_url or resolved_url in seen_urls:
+            continue
+        title = " ".join(anchor.get_text(" ", strip=True).split())
+        snippet = ""
+        parent = anchor.find_parent(["div", "article"])
+        if parent is not None:
+            snippet = " ".join(parent.get_text(" ", strip=True).split())
+        seen_urls.add(resolved_url)
+        candidates.append(
+            {
+                "url": resolved_url,
+                "title": title,
+                "snippet": snippet,
+            }
+        )
+    return candidates
+
+
+def _serper_result_target_url(href: str) -> str | None:
+    if not href:
+        return None
+    if href.startswith("/url?"):
+        parsed = urlparse(href)
+        q = parse_qs(parsed.query).get("q", [])
+        if q:
+            return q[0]
+        return None
+    if href.startswith("http://") or href.startswith("https://"):
+        return href
     return None
 
 
-def _candidate_domain_stems(company_name: str) -> list[str]:
-    cleaned = _clean_company_name_for_lookup(company_name)
-    if not cleaned:
-        return []
+def _candidate_result_score(company_name: str, domain: str, result: dict[str, Any]) -> float:
+    title = _clean_string(result.get("title")) or ""
+    snippet = _clean_string(result.get("snippet")) or ""
+    title_score = _name_similarity(company_name, title)
+    snippet_score = _name_similarity(company_name, snippet)
+    domain_score = _domain_name_similarity(company_name, domain)
+    return round((0.5 * domain_score) + (0.3 * title_score) + (0.2 * snippet_score), 4)
 
-    tokens = [
-        re.sub(r"[^a-z0-9]", "", token.lower())
-        for token in cleaned.split()
-    ]
-    tokens = [token for token in tokens if token]
-    if not tokens:
-        return []
 
-    stems: list[str] = []
+def _validate_candidate_domain(
+    client: httpx.Client,
+    *,
+    company_name: str,
+    domain: str,
+    preferred_url: str | None,
+) -> dict[str, Any] | None:
+    candidate_urls = []
+    preferred_domain = canonicalize_domain(preferred_url)
+    if preferred_url and preferred_domain == domain:
+        candidate_urls.append(preferred_url)
+    candidate_urls.extend(
+        [
+            f"https://{domain}",
+            f"https://{domain}/about",
+            f"https://{domain}/company",
+            f"https://{domain}/careers",
+            f"https://{domain}/contact",
+        ]
+    )
+
     seen: set[str] = set()
-    for candidate in ("".join(tokens), tokens[0]):
-        if len(candidate) < 3 or candidate in seen:
+    best_match: dict[str, Any] | None = None
+    for url in candidate_urls:
+        if url in seen:
             continue
-        seen.add(candidate)
-        stems.append(candidate)
-    return stems
+        seen.add(url)
+        try:
+            response = client.get(url)
+        except Exception:
+            continue
+        if response.status_code >= 400 or not response.text:
+            continue
+        soup = BeautifulSoup(response.text, "lxml")
+        title = " ".join(soup.title.get_text(" ", strip=True).split()) if soup.title else ""
+        body_text = " ".join(soup.get_text(" ", strip=True).split())
+        if not body_text and not title:
+            continue
+        sampled_text = body_text[:4000]
+        title_score = _name_similarity(company_name, title)
+        text_score = _name_similarity(company_name, sampled_text)
+        domain_score = _domain_name_similarity(company_name, domain)
+        name_score = max(title_score, text_score, domain_score)
+        if name_score < 0.78:
+            continue
+        current = {
+            "validated_url": str(response.url),
+            "name_score": round(name_score, 4),
+        }
+        if best_match is None or current["name_score"] > best_match["name_score"]:
+            best_match = current
+    return best_match
 
 
-def _candidate_tlds(location: str | None) -> list[str]:
-    location_norm = _normalize_company_name(location or "")
-    ordered_tlds: list[str] = []
-    if "australia" in location_norm:
-        ordered_tlds.append(".com.au")
-    if any(token in location_norm for token in {"germany", "deutschland"}):
-        ordered_tlds.append(".de")
-    if any(token in location_norm for token in {"united kingdom", "uk", "england", "scotland"}):
-        ordered_tlds.append(".co.uk")
-    for tld in COMMON_GUESS_TLDS:
-        if tld not in ordered_tlds:
-            ordered_tlds.append(tld)
-    return ordered_tlds
-
-
-def _verify_domain(client: httpx.Client, domain: str) -> bool:
-    for method in ("HEAD", "GET"):
-        for scheme in ("https", "http"):
-            try:
-                response = client.request(method, f"{scheme}://{domain}", follow_redirects=True)
-            except Exception:
-                continue
-            if response.status_code < 400:
-                return True
-    return False
-
-
-def _domain_resolution_passes_threshold(confidence: float) -> bool:
-    threshold = float(os.getenv("ENRICHMENT_MIN_DOMAIN_CONFIDENCE", "0.75"))
-    return confidence >= threshold
-
-
+def _domain_name_similarity(company_name: str, domain: str) -> float:
+    root = domain.split(".", 1)[0]
+    normalized_root = " ".join(re.findall(r"[a-z0-9]+", root.lower()))
+    if not normalized_root:
+        return 0.0
+    return _name_similarity(company_name, normalized_root)
 def _clean_string(value: Any) -> str | None:
     if not isinstance(value, str):
         return None
     cleaned = " ".join(value.split()).strip()
     return cleaned or None
-
-
-def _coerce_float(value: Any) -> float:
-    try:
-        return float(value)
-    except (TypeError, ValueError):
-        return 0.0
 
 
 def _env_flag(name: str, default: bool) -> bool:

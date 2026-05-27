@@ -15,7 +15,23 @@ try:
     from dotenv import load_dotenv
 except ImportError:
     def load_dotenv() -> bool:
-        return False
+        env_path = os.path.join(os.getcwd(), ".env")
+        if not os.path.exists(env_path):
+            return False
+        loaded = False
+        with open(env_path, "r", encoding="utf-8") as handle:
+            for raw_line in handle:
+                line = raw_line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, value = line.split("=", 1)
+                key = key.strip()
+                value = value.strip()
+                if not key or key in os.environ:
+                    continue
+                os.environ[key] = value
+                loaded = True
+        return loaded
 
 try:
     from loguru import logger
@@ -45,9 +61,9 @@ TESTING_MAX_REQUESTS_BY_SOURCE = {
 DEFAULT_PIPELINE_PHASE = "testing"
 PLACEHOLDER_ENV_VALUES = {
     "your_scrapedo_api_key",
+    "your_serper_api_key",
     "your_gemini_api_key",
     "your_groq_api_key",
-    "your_google_kg_api_key",
     "postgresql+psycopg2://username:password@localhost:5432/ctgt_leads",
 }
 DEFAULT_SMOKE_TEST_QUERIES = 3
@@ -414,6 +430,10 @@ def process_signals(
         stats = summary.ensure_source(signal.signal_source)
         stats.signals += 1
 
+        if _is_consulting_company_name(signal.company_name):
+            logger.info("signal excluded consulting company={} source={}", signal.company_name, signal.signal_source)
+            continue
+
         if database is None:
             upsert_local_company(summary.persisted_companies, signal)
             continue
@@ -489,6 +509,7 @@ def resolve_signal_domains(
             existing_domain = canonicalize_domain(existing_lead.company_domain) if existing_lead else None
             if not existing_domain:
                 continue
+            logger.info("domain resolution reused_existing company={} domain={}", exemplar.company_name, existing_domain)
             for signal in unresolved_signals:
                 _apply_domain_resolution(signal, existing_domain, "existing_company", 1.0)
             summary.domain_resolution.reused_existing += 1
@@ -505,6 +526,7 @@ def resolve_signal_domains(
             )
             existing_domain = canonicalize_domain(existing_lead.company_domain) if existing_lead else None
             if existing_domain:
+                logger.info("domain resolution reused_existing company={} domain={}", exemplar.company_name, existing_domain)
                 for signal in unresolved_signals:
                     _apply_domain_resolution(signal, existing_domain, "existing_company", 1.0)
                 summary.domain_resolution.reused_existing += 1
@@ -833,6 +855,13 @@ def _resolve_domain_for_company_group(
 
     for signal in unresolved_signals:
         _apply_domain_resolution(signal, resolved_domain, result.source, result.confidence)
+    logger.info(
+        "domain resolution applied company={} domain={} source={} confidence={}",
+        exemplar.company_name,
+        resolved_domain,
+        result.source,
+        result.confidence,
+    )
     if is_retry:
         summary.domain_resolution.retry_resolved += 1
     else:
@@ -862,6 +891,19 @@ def _normalize_company_name(value: str) -> str:
     if not normalized_tokens:
         normalized_tokens = tokens
     return " ".join(normalized_tokens)
+
+
+def _is_consulting_company_name(company_name: str) -> bool:
+    normalized_name = _normalize_company_name(company_name)
+    consulting_terms = (
+        "consulting",
+        "consultancy",
+        "system integrator",
+        "systems integrator",
+        "managed services",
+        "professional services",
+    )
+    return any(term in normalized_name for term in consulting_terms)
 
 
 def _company_names_similar(left: str, right: str) -> bool:
@@ -933,11 +975,11 @@ def validate_runtime_config_for_sources(
             required_env.append("DATABASE_URL")
 
     if _enrichment_enabled() and not args.leads:
-        provider = (os.getenv("ENRICHMENT_PROVIDER") or "google_kg").strip().lower()
-        if provider not in {"google_kg", "noop"}:
-            raise ValueError("ENRICHMENT_PROVIDER must be either 'google_kg' or 'noop'")
-        if provider == "google_kg":
-            required_env.append("GOOGLE_KG_API_KEY")
+        provider = (os.getenv("ENRICHMENT_PROVIDER") or "serper").strip().lower()
+        if provider not in {"serper", "noop"}:
+            raise ValueError("ENRICHMENT_PROVIDER must be one of 'serper' or 'noop'")
+        if provider == "serper":
+            required_env.append("SERPER_API_KEY")
 
     missing_or_placeholder = [
         name for name in required_env if _is_missing_or_placeholder(os.getenv(name))

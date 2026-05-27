@@ -8,7 +8,23 @@ try:
     from dotenv import load_dotenv
 except ImportError:
     def load_dotenv() -> bool:
-        return False
+        env_path = os.path.join(os.getcwd(), ".env")
+        if not os.path.exists(env_path):
+            return False
+        loaded = False
+        with open(env_path, "r", encoding="utf-8") as handle:
+            for raw_line in handle:
+                line = raw_line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, value = line.split("=", 1)
+                key = key.strip()
+                value = value.strip()
+                if not key or key in os.environ:
+                    continue
+                os.environ[key] = value
+                loaded = True
+        return loaded
 
 try:
     from loguru import logger
@@ -25,7 +41,7 @@ from enrichment import lead_enrichment_enabled, run_lead_enrichment_pass
 
 
 PLACEHOLDER_ENV_VALUES = {
-    "your_google_kg_api_key",
+    "your_serper_api_key",
     "postgresql+psycopg2://username:password@localhost:5432/ctgt_leads",
 }
 
@@ -34,10 +50,26 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="CTGT lead enrichment pass")
     parser.add_argument("--limit", type=int, default=None, help="Limit how many leads are loaded from the database.")
     parser.add_argument(
+        "--companies",
+        type=str,
+        default=None,
+        help="Comma-separated list of company names to enrich.",
+    )
+    parser.add_argument(
         "--freshness-days",
         type=int,
         default=None,
         help="Override the default freshness window before a lead is re-enriched.",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Re-enrich matching leads even if they are still within the freshness window.",
+    )
+    parser.add_argument(
+        "--force-domain-refresh",
+        action="store_true",
+        help="Re-resolve company domains before enrichment, even when a stored domain already exists.",
     )
     return parser.parse_args()
 
@@ -63,6 +95,9 @@ def main() -> int:
         database,
         freshness_days=args.freshness_days,
         limit=args.limit,
+        company_names=_parse_company_names(args.companies),
+        force=args.force,
+        force_domain_refresh=args.force_domain_refresh,
     )
 
     print("Lead enrichment pass complete.")
@@ -94,8 +129,10 @@ def validate_runtime_config(args: argparse.Namespace) -> None:
     if _is_missing_or_placeholder(os.getenv("HUNTER_API_KEY")):
         logger.warning("Hunter is not configured; Stage 4b fallback will be skipped")
 
-    if os.getenv("ENRICHMENT_ENABLED", "").strip().lower() in {"1", "true", "yes", "on"}:
-        required_if_enabled.append("GOOGLE_KG_API_KEY")
+    enrichment_enabled = os.getenv("ENRICHMENT_ENABLED", "").strip().lower() in {"1", "true", "yes", "on"}
+    enrichment_provider = (os.getenv("ENRICHMENT_PROVIDER") or "serper").strip().lower()
+    if enrichment_enabled and enrichment_provider == "serper":
+        required_if_enabled.append("SERPER_API_KEY")
 
     missing = [name for name in required_if_enabled if _is_missing_or_placeholder(os.getenv(name))]
     if missing:
@@ -118,6 +155,14 @@ def _is_missing_or_placeholder(value: str | None) -> bool:
         return True
     cleaned = value.strip()
     return not cleaned or cleaned in PLACEHOLDER_ENV_VALUES
+
+
+def _parse_company_names(value: str | None) -> list[str] | None:
+    if value is None:
+        return None
+    names = [item.strip() for item in value.split(",")]
+    parsed = [name for name in names if name]
+    return parsed or None
 
 
 if __name__ == "__main__":

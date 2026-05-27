@@ -36,6 +36,27 @@ from models.schema import ExtractedSignal, RawJobPosting, SignalSource, SignalTy
 
 DEFAULT_LLM_REQUESTS_PER_MINUTE = 25
 PLACEHOLDER_COMPANY_NAMES = {"unknown", "n/a", "none", "null"}
+CONSULTING_NAME_TERMS = (
+    "consulting",
+    "consultancy",
+    "system integrator",
+    "systems integrator",
+    "managed services",
+    "professional services",
+)
+CONSULTING_SOURCE_TERMS = (
+    "it services and it consulting",
+    "business consulting and services",
+    "engineering services company",
+    "digital transformation consulting",
+    "professional services company",
+    "managed services provider",
+    "global consulting firm",
+    "consulting services",
+    "technology consulting",
+    "staffing and recruiting",
+    "outsourcing services",
+)
 
 
 class GeminiClientError(Exception):
@@ -314,6 +335,8 @@ class BaseExtractor:
             or company_name.lower() in PLACEHOLDER_COMPANY_NAMES
         ):
             return None, "excluded_or_missing_company"
+        if _is_consulting_company(company_name, candidate.source_text):
+            return None, "consulting_company"
 
         software = _normalize_software(raw_item.get("software_detected", []))
         if not software:
@@ -817,6 +840,19 @@ def _normalize_industry(value: Any) -> str:
     if cleaned in INDUSTRY_CHOICES:
         return cleaned
     return "Unknown"
+
+
+def _is_consulting_company(company_name: str, source_text: str) -> bool:
+    normalized_name = " ".join(company_name.strip().lower().split())
+    if any(term in normalized_name for term in CONSULTING_NAME_TERMS):
+        return True
+
+    normalized_text = " ".join(source_text.strip().lower().split())
+    if not normalized_text:
+        return False
+
+    # Require a text signal that points to services/consulting rather than a single generic word.
+    return any(term in normalized_text for term in CONSULTING_SOURCE_TERMS)
 
 
 def _normalize_optional_string(value: Any) -> str | None:

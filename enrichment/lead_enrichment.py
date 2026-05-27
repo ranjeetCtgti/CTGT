@@ -1,15 +1,17 @@
 from __future__ import annotations
 
 import os
+import re
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
+from difflib import SequenceMatcher
 from typing import Any
 from urllib.parse import urlparse
 
 import httpx
 from loguru import logger
 
-from enrichment.domain_resolution import build_domain_resolver, canonicalize_domain
+from enrichment.domain_resolution import canonicalize_domain, resolve_company_domain
 from models.schema import CompanyLead, LeadContact
 
 
@@ -18,8 +20,97 @@ APOLLO_ORGANIZATION_ENRICH_URL = "https://api.apollo.io/api/v1/organizations/enr
 APOLLO_PEOPLE_SEARCH_URL = "https://api.apollo.io/api/v1/mixed_people/api_search"
 APOLLO_BULK_PEOPLE_MATCH_URL = "https://api.apollo.io/api/v1/people/bulk_match"
 HUNTER_DOMAIN_SEARCH_URL = "https://api.hunter.io/v2/domain-search"
-APOLLO_TARGET_TITLES = ["PLM Manager", "IT Manager", "Engineering Head", "CTO"]
 GOOGLE_LINKEDIN_HOST = "linkedin.com"
+APOLLO_MAX_CONTACTS = 5
+APOLLO_BASE_TARGET_TITLES = [
+    "PLM Manager",
+    "PLM Lead",
+    "PLM Product Owner",
+    "PLM Architect",
+    "Director, PLM",
+    "Head of PLM",
+    "Engineering Systems Manager",
+    "Engineering Applications Manager",
+    "Engineering IT Manager",
+    "CAD Manager",
+    "Director of Engineering Systems",
+    "Director of Engineering Applications",
+    "Head of Engineering Systems",
+    "Head of Engineering Applications",
+    "Digital Engineering Manager",
+]
+APOLLO_SOFTWARE_TARGET_TITLES = {
+    "Teamcenter": [
+        "Teamcenter Administrator",
+        "Teamcenter Lead",
+        "Teamcenter Manager",
+        "Teamcenter Architect",
+        "Teamcenter Product Owner",
+    ],
+    "NX": [
+        "NX Administrator",
+        "NX Manager",
+        "NX Architect",
+        "CAD Systems Manager",
+    ],
+    "Solid Edge": [
+        "Solid Edge Administrator",
+        "Solid Edge Manager",
+        "CAD Applications Manager",
+    ],
+    "Polarion": [
+        "Polarion Administrator",
+        "Polarion Manager",
+        "ALM Manager",
+        "ALM Product Owner",
+    ],
+    "Mendix": [
+        "Mendix Product Owner",
+        "Mendix Platform Owner",
+        "Mendix Manager",
+    ],
+}
+APOLLO_RELEVANT_TITLE_HINTS = (
+    "plm",
+    "product lifecycle",
+    "teamcenter",
+    "polarion",
+    "mendix",
+    "engineering systems",
+    "engineering applications",
+    "engineering it",
+    "digital engineering",
+    "digital thread",
+    "cad manager",
+    "cad systems",
+    "cad applications",
+    "nx ",
+    "solid edge",
+    "alm",
+)
+APOLLO_TITLE_EXCLUSIONS = (
+    "software engineer",
+    "software developer",
+    "full stack",
+    "frontend",
+    "front end",
+    "backend",
+    "back end",
+    "data engineer",
+    "devops",
+    "site reliability",
+    "qa ",
+    "quality assurance",
+    "talent",
+    "recruit",
+    "human resources",
+    "people partner",
+    "sales",
+    "account executive",
+    "marketing",
+    "customer success",
+    "support engineer",
+)
 
 
 @dataclass(slots=True)
@@ -120,22 +211,35 @@ class ApolloClient:
                 or payload.get("domain")
                 or domain
             ),
+            linkedin_url=_coalesce_strings(
+                organization,
+                ["linkedin_url", "linkedin", "linkedin_profile_url", "linkedin_company_url"],
+            )
+            or _coalesce_strings(
+                payload,
+                ["linkedin_url", "linkedin", "linkedin_profile_url", "linkedin_company_url"],
+            ),
             sector=_coalesce_strings(organization, ["industry", "sector", "industry_tag"]),
             employee_count=_format_employee_count(organization),
             revenue_range=_format_revenue_range(organization),
             headquarters_location=_format_headquarters_location(organization),
         )
 
-    def find_contacts(self, domain: str, limit: int = 5) -> list[LeadContact]:
-        params: list[tuple[str, str | int]] = [("per_page", limit)]
+    def find_contacts(self, domain: str, software: list[str] | None = None, limit: int = APOLLO_MAX_CONTACTS) -> list[LeadContact]:
+        target_titles = _apollo_target_titles(software)
+        candidate_page_size = max(limit * 4, 20)
+        params: list[tuple[str, str | int | bool]] = [("per_page", candidate_page_size), ("include_similar_titles", "false")]
         params.append(("q_organization_domains_list[]", domain))
-        for title in APOLLO_TARGET_TITLES:
+        for title in target_titles:
             params.append(("person_titles[]", title))
 
         response = self._http.post(APOLLO_PEOPLE_SEARCH_URL, params=params, json={})
         response.raise_for_status()
         payload = response.json()
-        people = [item for item in payload.get("people", []) if isinstance(item, dict)]
+        people = [
+            item for item in payload.get("people", [])
+            if isinstance(item, dict) and _is_relevant_apollo_person(item, target_titles)
+        ][:limit]
         if not people:
             return []
 
@@ -237,17 +341,29 @@ def should_enrich_lead(lead: CompanyLead, freshness_days: int) -> bool:
 
 
 def enrich_company_lead(lead: CompanyLead) -> CompanyEnrichmentOutcome:
+    return enrich_company_lead_with_options(lead, force_domain_refresh=False)
+
+
+def enrich_company_lead_with_options(
+    lead: CompanyLead,
+    *,
+    force_domain_refresh: bool = False,
+) -> CompanyEnrichmentOutcome:
     timeout_seconds = int(os.getenv("LEAD_ENRICHMENT_TIMEOUT_SECONDS", os.getenv("ENRICHMENT_TIMEOUT_SECONDS", "10")))
     outcome = CompanyEnrichmentOutcome(
         company_name=lead.company_name,
-        company_domain=canonicalize_domain(lead.company_domain),
+        company_domain=None if force_domain_refresh else canonicalize_domain(lead.company_domain),
     )
 
     domain = outcome.company_domain
+    apollo_client = _build_apollo_client(timeout_seconds=timeout_seconds)
+
     if not domain:
         try:
-            with build_domain_resolver() as resolver:
-                resolved = resolver.resolve(lead.company_name, location=lead.location)
+            resolved = resolve_company_domain(
+                lead.company_name,
+                location=lead.location,
+            )
             domain = canonicalize_domain(resolved.company_domain)
             if domain:
                 outcome.profile.domain = domain
@@ -264,72 +380,31 @@ def enrich_company_lead(lead: CompanyLead) -> CompanyEnrichmentOutcome:
                 outcome.stages.append(
                     EnrichmentStageResult(
                         stage="domain_resolution",
-                        provider="google_kg",
+                        provider=resolved.source,
                         status="miss",
                         message=resolved.reason,
                     )
                 )
         except Exception as exc:
+            logger.warning("domain resolution failed company={} provider=serper error={}", lead.company_name, exc)
             outcome.stages.append(
                 EnrichmentStageResult(
                     stage="domain_resolution",
-                    provider="google_kg",
+                    provider=(os.getenv("ENRICHMENT_PROVIDER") or "serper").strip().lower(),
                     status="error",
                     message=str(exc),
                 )
             )
 
     if not domain:
+        logger.info("lead enrichment stopped_no_domain company={}", lead.company_name)
+        if apollo_client is not None:
+            apollo_client.close()
         return outcome
 
     outcome.company_domain = domain
     outcome.profile.domain = domain
 
-    google_client = _build_google_search_client(timeout_seconds=timeout_seconds)
-    if google_client is None:
-        outcome.stages.append(
-            EnrichmentStageResult(
-                stage="linkedin_lookup",
-                provider="google_search",
-                status="skipped",
-                message="Google search provider not configured",
-            )
-        )
-    else:
-        try:
-            linkedin_url = google_client.resolve(lead.company_name)
-            if linkedin_url:
-                outcome.profile.linkedin_url = linkedin_url
-                outcome.stages.append(
-                    EnrichmentStageResult(
-                        stage="linkedin_lookup",
-                        provider="google_search",
-                        status="success",
-                        payload={"linkedin_url": linkedin_url},
-                    )
-                )
-            else:
-                outcome.stages.append(
-                    EnrichmentStageResult(
-                        stage="linkedin_lookup",
-                        provider="google_search",
-                        status="miss",
-                        message="No LinkedIn company URL found",
-                    )
-                )
-        except Exception as exc:
-            outcome.stages.append(
-                EnrichmentStageResult(
-                    stage="linkedin_lookup",
-                    provider="google_search",
-                    status="error",
-                    message=str(exc),
-                )
-            )
-        finally:
-            google_client.close()
-
-    apollo_client = _build_apollo_client(timeout_seconds=timeout_seconds)
     if apollo_client is None:
         outcome.stages.append(
             EnrichmentStageResult(
@@ -341,8 +416,10 @@ def enrich_company_lead(lead: CompanyLead) -> CompanyEnrichmentOutcome:
         )
     else:
         try:
+            logger.info("apollo domain_enrich_start company={} domain={}", lead.company_name, domain)
             profile = apollo_client.enrich_company(domain)
             outcome.profile.canonical_name = profile.canonical_name or lead.company_name
+            outcome.profile.linkedin_url = profile.linkedin_url or outcome.profile.linkedin_url
             outcome.profile.sector = profile.sector
             outcome.profile.employee_count = profile.employee_count
             outcome.profile.revenue_range = profile.revenue_range
@@ -353,6 +430,7 @@ def enrich_company_lead(lead: CompanyLead) -> CompanyEnrichmentOutcome:
                     provider="apollo",
                     status="success",
                     payload={
+                        "linkedin_url": profile.linkedin_url,
                         "sector": profile.sector,
                         "employee_count": profile.employee_count,
                         "revenue_range": profile.revenue_range,
@@ -361,6 +439,7 @@ def enrich_company_lead(lead: CompanyLead) -> CompanyEnrichmentOutcome:
                 )
             )
         except Exception as exc:
+            logger.warning("apollo domain_enrich_failed company={} domain={} error={}", lead.company_name, domain, exc)
             outcome.stages.append(
                 EnrichmentStageResult(
                     stage="company_profile",
@@ -371,17 +450,22 @@ def enrich_company_lead(lead: CompanyLead) -> CompanyEnrichmentOutcome:
             )
 
         try:
-            contacts = apollo_client.find_contacts(domain)
+            logger.info("apollo contact_lookup_start company={} domain={} target_titles={}", lead.company_name, domain, _apollo_target_titles(lead.software))
+            contacts = apollo_client.find_contacts(domain, software=lead.software)
             outcome.contacts = contacts
             outcome.stages.append(
                 EnrichmentStageResult(
                     stage="contacts_primary",
                     provider="apollo",
                     status="success" if contacts else "miss",
-                    payload={"contacts_found": len(contacts)},
+                    payload={
+                        "contacts_found": len(contacts),
+                        "target_titles": _apollo_target_titles(lead.software),
+                    },
                 )
             )
         except Exception as exc:
+            logger.warning("apollo contact_lookup_failed company={} domain={} error={}", lead.company_name, domain, exc)
             outcome.stages.append(
                 EnrichmentStageResult(
                     stage="contacts_primary",
@@ -392,6 +476,60 @@ def enrich_company_lead(lead: CompanyLead) -> CompanyEnrichmentOutcome:
             )
         finally:
             apollo_client.close()
+
+    if outcome.profile.linkedin_url:
+        outcome.stages.append(
+            EnrichmentStageResult(
+                stage="linkedin_lookup",
+                provider="apollo",
+                status="success",
+                payload={"linkedin_url": outcome.profile.linkedin_url},
+            )
+        )
+    else:
+        google_client = _build_google_search_client(timeout_seconds=timeout_seconds)
+        if google_client is None:
+            outcome.stages.append(
+                EnrichmentStageResult(
+                    stage="linkedin_lookup",
+                    provider="google_search",
+                    status="skipped",
+                    message="Google search provider not configured",
+                )
+            )
+        else:
+            try:
+                linkedin_url = google_client.resolve(lead.company_name)
+                if linkedin_url:
+                    outcome.profile.linkedin_url = linkedin_url
+                    outcome.stages.append(
+                        EnrichmentStageResult(
+                            stage="linkedin_lookup",
+                            provider="google_search",
+                            status="success",
+                            payload={"linkedin_url": linkedin_url},
+                        )
+                    )
+                else:
+                    outcome.stages.append(
+                        EnrichmentStageResult(
+                            stage="linkedin_lookup",
+                            provider="google_search",
+                            status="miss",
+                            message="No LinkedIn company URL found",
+                        )
+                    )
+            except Exception as exc:
+                outcome.stages.append(
+                    EnrichmentStageResult(
+                        stage="linkedin_lookup",
+                        provider="google_search",
+                        status="error",
+                        message=str(exc),
+                    )
+                )
+            finally:
+                google_client.close()
 
     if outcome.contacts:
         return outcome
@@ -464,6 +602,9 @@ def run_lead_enrichment_pass(
     *,
     freshness_days: int | None = None,
     limit: int | None = None,
+    company_names: list[str] | None = None,
+    force: bool = False,
+    force_domain_refresh: bool = False,
 ) -> LeadEnrichmentPassSummary:
     summary = LeadEnrichmentPassSummary()
     if not lead_enrichment_enabled():
@@ -472,19 +613,29 @@ def run_lead_enrichment_pass(
     if freshness_days is None:
         freshness_days = int(os.getenv("LEAD_ENRICHMENT_FRESHNESS_DAYS", "7"))
 
-    leads = database.get_leads(limit=limit)
+    if company_names:
+        requested = {_normalize_company_name(name) for name in company_names if _normalize_company_name(name)}
+        leads = [lead for lead in database.get_leads(limit=None) if _normalize_company_name(lead.company_name) in requested]
+        if limit is not None:
+            leads = leads[:limit]
+    else:
+        leads = database.get_leads(limit=limit)
     candidates = [lead for lead in leads if lead.lead_score in {"hot", "warm"}]
     summary.candidates = len(candidates)
 
     for lead in candidates:
-        if not should_enrich_lead(lead, freshness_days=freshness_days):
+        if not force and not should_enrich_lead(lead, freshness_days=freshness_days):
             summary.skipped += 1
             continue
 
         summary.attempted += 1
         try:
-            outcome = enrich_company_lead(lead)
+            outcome = enrich_company_lead_with_options(
+                lead,
+                force_domain_refresh=force_domain_refresh,
+            )
             persist_enrichment_outcome(database, lead, outcome)
+            _log_enrichment_outcome(outcome)
             summary.completed += 1
             summary.contacts_found += len(outcome.contacts)
         except Exception as exc:
@@ -506,6 +657,42 @@ def _build_log_entry(outcome: CompanyEnrichmentOutcome, stage: EnrichmentStageRe
         message=stage.message,
         payload=stage.payload,
     )
+
+
+def _log_enrichment_outcome(outcome: CompanyEnrichmentOutcome) -> None:
+    profile = outcome.profile
+    resolution_stage = next((stage for stage in reversed(outcome.stages) if stage.stage == "domain_resolution"), None)
+    resolution_provider = resolution_stage.provider if resolution_stage is not None else "-"
+    resolution_status = resolution_stage.status if resolution_stage is not None else "-"
+    logger.info(
+        (
+            "enrichment result company={} domain={} domain_provider={} domain_status={} linkedin_url={} sector={} "
+            "employee_count={} revenue_range={} headquarters_location={} contacts_found={}"
+        ),
+        outcome.company_name,
+        outcome.company_domain or "-",
+        resolution_provider,
+        resolution_status,
+        profile.linkedin_url or "-",
+        profile.sector or "-",
+        profile.employee_count or "-",
+        profile.revenue_range or "-",
+        profile.headquarters_location or "-",
+        len(outcome.contacts),
+    )
+
+    for contact in outcome.contacts:
+        logger.info(
+            "contact company={} name={} title={} email={} linkedin_url={} phone={} provider={} stage={}",
+            outcome.company_name,
+            contact.full_name,
+            contact.title or "-",
+            contact.email or "-",
+            contact.linkedin_url or "-",
+            contact.phone or "-",
+            contact.source_provider,
+            contact.source_stage,
+        )
 
 
 def _build_google_search_client(timeout_seconds: int) -> GoogleSearchLinkedInResolver | None:
@@ -634,6 +821,58 @@ def _clean_string(value: Any) -> str | None:
         return None
     cleaned = " ".join(value.split()).strip()
     return cleaned or None
+
+
+def _normalize_company_name(value: str) -> str:
+    cleaned = value.strip().lower()
+    tokens = re.findall(r"[a-z0-9]+", cleaned)
+    if not tokens:
+        return ""
+    legal_suffixes = {"gmbh", "inc", "ltd", "llc", "ag", "corp", "corporation", "limited", "co", "kg", "se", "plc", "sa", "bv", "srl", "pty"}
+    normalized_tokens = [token for token in tokens if token not in legal_suffixes]
+    if not normalized_tokens:
+        normalized_tokens = tokens
+    return " ".join(normalized_tokens)
+
+
+def _name_similarity(left: str, right: str) -> float:
+    left_norm = _normalize_company_name(left)
+    right_norm = _normalize_company_name(right)
+    if not left_norm or not right_norm:
+        return 0.0
+    if left_norm == right_norm:
+        return 1.0
+    return SequenceMatcher(a=left_norm, b=right_norm).ratio()
+
+
+def _apollo_target_titles(software: list[str] | None) -> list[str]:
+    ordered_titles = list(APOLLO_BASE_TARGET_TITLES)
+    for product in software or []:
+        ordered_titles.extend(APOLLO_SOFTWARE_TARGET_TITLES.get(product, []))
+
+    deduped: list[str] = []
+    seen: set[str] = set()
+    for title in ordered_titles:
+        key = title.strip().lower()
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        deduped.append(title)
+    return deduped
+
+
+def _is_relevant_apollo_person(person: dict[str, Any], target_titles: list[str]) -> bool:
+    title = (_clean_string(person.get("title")) or "").lower()
+    if not title:
+        return False
+    if any(excluded in title for excluded in APOLLO_TITLE_EXCLUSIONS):
+        return False
+
+    normalized_targets = {item.lower() for item in target_titles}
+    if title in normalized_targets:
+        return True
+
+    return any(hint in title for hint in APOLLO_RELEVANT_TITLE_HINTS)
 
 
 def _env_flag(name: str, default: bool) -> bool:

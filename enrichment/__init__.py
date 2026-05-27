@@ -3,6 +3,7 @@ from enrichment.domain_resolution import (
     DomainResolver,
     build_domain_resolver,
     canonicalize_domain,
+    resolve_company_domain,
 )
 from enrichment.lead_enrichment import (
     CompanyEnrichmentOutcome,
@@ -21,6 +22,7 @@ __all__ = [
     "LeadEnrichmentPassSummary",
     "build_domain_resolver",
     "canonicalize_domain",
+    "resolve_company_domain",
     "enrich_company_lead",
     "lead_enrichment_enabled",
     "persist_enrichment_outcome",

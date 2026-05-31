@@ -189,11 +189,13 @@ class SerperDomainResolver(BaseDomainResolver):
             )
 
         candidates: dict[str, dict[str, Any]] = {}
-        query_name = _clean_company_name_for_lookup(company_name) or company_name.strip()
-        search_queries = _serper_search_queries(company_name=company_name, query_name=query_name, location=location)
+        search_name = _expand_search_characters_unicode(company_name).strip()
+        query_name = _clean_company_name_for_lookup(company_name) or search_name
+        search_queries = _serper_search_queries(search_name=search_name, location=location)
         logger.info(
-            "domain resolver start company={} query_name={} location={} provider=serper",
+            "domain resolver start company={} search_name={} query_name={} location={} provider=serper",
             company_name,
+            search_name,
             query_name,
             location or "-",
         )
@@ -482,8 +484,32 @@ def _name_similarity(left: str, right: str) -> float:
     return SequenceMatcher(a=left_norm, b=right_norm).ratio()
 
 
+def _expand_search_characters_unicode(value: str) -> str:
+    replacements = {
+        "\u00c4": "Ae",
+        "\u00d6": "Oe",
+        "\u00dc": "Ue",
+        "\u00e4": "ae",
+        "\u00f6": "oe",
+        "\u00fc": "ue",
+        "\u00df": "ss",
+        "\u00c3\u00a4": "ae",
+        "\u00c3\u00b6": "oe",
+        "\u00c3\u00bc": "ue",
+        "\u00c3\u009f": "ss",
+        "\u00c3\u201e": "Ae",
+        "\u00c3\u2013": "Oe",
+        "\u00c3\u0153": "Ue",
+        "\u00c3\u0178": "ss",
+    }
+    expanded = value
+    for source, target in replacements.items():
+        expanded = expanded.replace(source, target)
+    return expanded
+
+
 def _normalize_company_name(value: str) -> str:
-    cleaned = value.strip().lower()
+    cleaned = _expand_search_characters_unicode(value).strip().lower()
     cleaned = re.sub(r"^[^\w]+", "", cleaned)
     cleaned = (
         cleaned.replace("ä", "ae")
@@ -576,13 +602,13 @@ def _resolve_via_clearbit_autocomplete(
     )
 
 
-def _serper_search_queries(*, company_name: str, query_name: str, location: str | None) -> list[str]:
-    queries = [f'"{query_name}" official site']
+def _serper_search_queries(*, search_name: str, location: str | None) -> list[str]:
+    queries = [f'"{search_name}" official site']
     if location:
-        queries.append(f'"{query_name}" official site {location.strip()}')
+        queries.append(f'"{search_name}" official site {location.strip()}')
     else:
-        queries.append(f'"{query_name}" company')
-    queries.append(f'"{query_name}" about')
+        queries.append(f'"{search_name}" company')
+    queries.append(f'"{search_name}" about')
 
     deduped: list[str] = []
     seen: set[str] = set()

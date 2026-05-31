@@ -247,44 +247,70 @@ GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMI
 ENGLISH_QUERIES = [
     "Teamcenter administrator",
     "Teamcenter PLM engineer",
+    "Teamcenter migration engineer",
+    "Teamcenter support engineer",
+    "Teamcenter solution architect",
     "NX CAD engineer",
     "NX CAM engineer",
-    "Solid Edge designer",
-    "Polarion ALM engineer",
-    "Siemens PLM implementation",
-    "Mendix developer Siemens",
-    "PLM consultant Teamcenter",
-    "Siemens digital industries engineer",
-    "Teamcenter integration developer",
     "NX CAD designer manufacturing",
+    # "Solid Edge designer",
+    "Polarion ALM engineer",
+    "Polarion requirements engineer",
+    "Polarion test manager",
+    "Polarion consultant",
+    # "Siemens PLM implementation",
+    "Mendix developer Siemens",
+    "Mendix low-code developer",
+    "Mendix application architect",
+    "Mendix manufacturing consultant",
+    "Mendix platform engineer",
+    "Mendix solution architect",
+    "PLM consultant Teamcenter",
+    # "Siemens digital industries engineer",
+    "Teamcenter integration developer",
 ]
 
 GERMAN_QUERIES = [
     "Teamcenter Administrator",
-    "NX Konstrukteur",
-    "Solid Edge Entwickler",
-    "Siemens PLM Berater",
     "PLM Implementierung Teamcenter",
+    "Teamcenter Migration Ingenieur",
     "Polarion ALM Ingenieur",
+    "Polarion Berater",
+    "Polarion Requirements Engineer",
+    "Mendix Entwickler",
+    "Mendix Low-Code Entwickler",
+    "Mendix Berater",
+    "Mendix Plattform Entwickler",
+    "Mendix Solution Architekt",
+    "NX Konstrukteur",
+    "NX Entwickler",
+    # "Solid Edge Entwickler",
+    # "Siemens PLM Berater",
 ]
 
 STEPSTONE_GERMAN_QUERIES = [
     "Teamcenter Administrator",
     "Teamcenter PLM Ingenieur",
+    "Teamcenter Migration Ingenieur",
+    "Teamcenter Support Ingenieur",
     "NX CAD Konstrukteur",
     "NX CAM Programmierer",
-    "Solid Edge Konstrukteur",
-    "Polarion ALM",
-    "Siemens PLM Berater",
-    "Mendix Entwickler",
-    "PLM Implementierung",
     "Siemens NX Entwickler",
+    # "Solid Edge Konstrukteur",
+    "Polarion ALM",
+    "Polarion Berater",
+    "Polarion Requirements Engineer",
+    # "Siemens PLM Berater",
+    "Mendix Entwickler",
+    "Mendix Low-Code Entwickler",
+    "Mendix Berater",
+    # "PLM Implementierung",
     "CAD Teamcenter Spezialist",
 ]
 
-LINKEDIN_LOCATIONS = ["Australia", "Canada", "United States", "United Kingdom", "France", "Germany"]
-INDEED_LOCATIONS = ["Australia", "France", "Germany", "Canada", "United Kingdom", "United States"]
-GOOGLE_LOCATIONS = ["Australia", "France", "Germany", "Canada", "United Kingdom", "United States"]
+LINKEDIN_LOCATIONS = ["Australia", "Canada", "Germany"]
+INDEED_LOCATIONS = ["Australia", "Canada", "Germany"]
+GOOGLE_LOCATIONS = ["Australia", "Canada", "Germany"]
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
@@ -299,14 +325,25 @@ CAREER_PAGE_MAX_PAGES_PER_TARGET = 4
 
 NEWS_RSS_FEEDS = [
     "https://news.google.com/rss/search?q=Teamcenter+implementation&hl=en",
-    "https://news.google.com/rss/search?q=Siemens+PLM+rollout&hl=en",
-    'https://news.google.com/rss/search?q="Solid+Edge"+manufacturing&hl=en',
     "https://news.google.com/rss/search?q=Teamcenter+digital+transformation&hl=en",
-    "https://news.google.com/rss/search?q=Siemens+Xcelerator+implementation&hl=en",
+    "https://news.google.com/rss/search?q=Teamcenter+migration&hl=en",
+    "https://news.google.com/rss/search?q=Teamcenter+upgrade&hl=en",
     "https://news.google.com/rss/search?q=Polarion+ALM+deployment&hl=en",
+    "https://news.google.com/rss/search?q=Polarion+requirements+management&hl=en",
+    "https://news.google.com/rss/search?q=Polarion+implementation&hl=en",
+    "https://news.google.com/rss/search?q=Mendix+digital+transformation&hl=en",
+    "https://news.google.com/rss/search?q=Mendix+low-code+platform&hl=en",
+    "https://news.google.com/rss/search?q=Mendix+manufacturing&hl=en",
     "https://news.google.com/rss/search?q=NX+CAD+Siemens+company&hl=en",
+    "https://news.google.com/rss/search?q=NX+manufacturing+Siemens&hl=en",
+    # "https://news.google.com/rss/search?q=Siemens+PLM+rollout&hl=en",
+    # 'https://news.google.com/rss/search?q="Solid+Edge"+manufacturing&hl=en',
+    # "https://news.google.com/rss/search?q=Siemens+Xcelerator+implementation&hl=en",
     "https://news.google.com/rss/search?q=Teamcenter+Implementierung&hl=de",
-    "https://news.google.com/rss/search?q=Siemens+PLM+Einfuhrung&hl=de",
+    "https://news.google.com/rss/search?q=NX+Siemens+Implementierung&hl=de",
+    "https://news.google.com/rss/search?q=Polarion+ALM+Einfuhrung&hl=de",
+    "https://news.google.com/rss/search?q=Mendix+Implementierung&hl=de",
+    # "https://news.google.com/rss/search?q=Siemens+PLM+Einfuhrung&hl=de",
 ]
 NEWS_RSS_USER_AGENT = "CTGT-NewsBot/1.0"
 

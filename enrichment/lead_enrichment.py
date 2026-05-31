@@ -39,6 +39,51 @@ APOLLO_BASE_TARGET_TITLES = [
     "Head of Engineering Applications",
     "Digital Engineering Manager",
 ]
+APOLLO_EXEC_TARGET_TITLES = [
+    "Chief Technology Officer",
+    "Chief Information Officer",
+    "Chief Digital Officer",
+    "VP Engineering",
+    "VP Product Development",
+    "VP IT",
+    "VP Digital Transformation",
+    "Head of Engineering",
+    "Head of Product Development",
+    "Head of IT",
+    "Head of Digital Transformation",
+    "Director of Engineering",
+    "Director of Product Development",
+    "Director of IT",
+    "Director of Digital Transformation",
+    "IT Director",
+    "Applications Director",
+]
+APOLLO_BUSINESS_TARGET_TITLES = [
+    "VP Operations",
+    "Director of Operations",
+    "Head of Operations",
+    "Manufacturing Director",
+    "Director of Manufacturing Engineering",
+    "Plant Director",
+]
+APOLLO_COMMERCIAL_TARGET_TITLES = [
+    "Chief Revenue Officer",
+    "VP Sales",
+    "Director of Sales",
+    "Head of Sales",
+    "VP Marketing",
+    "Director of Marketing",
+    "Head of Marketing",
+    "Business Development Director",
+]
+APOLLO_PEOPLE_TARGET_TITLES = [
+    "Chief Human Resources Officer",
+    "VP Human Resources",
+    "HR Director",
+    "Head of Talent Acquisition",
+    "Director of Talent Acquisition",
+    "People Director",
+]
 APOLLO_SOFTWARE_TARGET_TITLES = {
     "Teamcenter": [
         "Teamcenter Administrator",
@@ -76,17 +121,37 @@ APOLLO_RELEVANT_TITLE_HINTS = (
     "teamcenter",
     "polarion",
     "mendix",
+    "technology officer",
+    "information officer",
+    "digital officer",
     "engineering systems",
     "engineering applications",
     "engineering it",
     "digital engineering",
     "digital thread",
+    "digital transformation",
     "cad manager",
     "cad systems",
     "cad applications",
     "nx ",
     "solid edge",
     "alm",
+    "product development",
+    "operations",
+    "manufacturing",
+    "sales",
+    "marketing",
+    "human resources",
+    "talent acquisition",
+    "people director",
+    "business development",
+)
+APOLLO_TARGET_SENIORITIES = (
+    "c_suite",
+    "vp",
+    "head",
+    "director",
+    "manager",
 )
 APOLLO_TITLE_EXCLUSIONS = (
     "software engineer",
@@ -101,15 +166,19 @@ APOLLO_TITLE_EXCLUSIONS = (
     "site reliability",
     "qa ",
     "quality assurance",
-    "talent",
     "recruit",
-    "human resources",
-    "people partner",
-    "sales",
-    "account executive",
-    "marketing",
     "customer success",
     "support engineer",
+    "sales development representative",
+    "business development representative",
+    "account executive",
+    "account manager",
+    "content marketing",
+    "field marketing",
+    "recruiting coordinator",
+    "recruiting specialist",
+    "hr business partner",
+    "people partner",
 )
 
 
@@ -227,19 +296,26 @@ class ApolloClient:
 
     def find_contacts(self, domain: str, software: list[str] | None = None, limit: int = APOLLO_MAX_CONTACTS) -> list[LeadContact]:
         target_titles = _apollo_target_titles(software)
-        candidate_page_size = max(limit * 4, 20)
-        params: list[tuple[str, str | int | bool]] = [("per_page", candidate_page_size), ("include_similar_titles", "false")]
+        candidate_page_size = max(limit * 8, 40)
+        params: list[tuple[str, str | int | bool]] = [("per_page", candidate_page_size), ("include_similar_titles", "true")]
         params.append(("q_organization_domains_list[]", domain))
         for title in target_titles:
             params.append(("person_titles[]", title))
+        for seniority in APOLLO_TARGET_SENIORITIES:
+            params.append(("person_seniorities[]", seniority))
 
         response = self._http.post(APOLLO_PEOPLE_SEARCH_URL, params=params, json={})
         response.raise_for_status()
         payload = response.json()
-        people = [
+        ranked_people = sorted(
+            [
             item for item in payload.get("people", [])
             if isinstance(item, dict) and _is_relevant_apollo_person(item, target_titles)
-        ][:limit]
+            ],
+            key=lambda item: _apollo_person_rank(item, target_titles),
+            reverse=True,
+        )
+        people = _select_mixed_apollo_people(ranked_people, limit=limit)
         if not people:
             return []
 
@@ -847,6 +923,10 @@ def _name_similarity(left: str, right: str) -> float:
 
 def _apollo_target_titles(software: list[str] | None) -> list[str]:
     ordered_titles = list(APOLLO_BASE_TARGET_TITLES)
+    ordered_titles.extend(APOLLO_EXEC_TARGET_TITLES)
+    ordered_titles.extend(APOLLO_BUSINESS_TARGET_TITLES)
+    ordered_titles.extend(APOLLO_COMMERCIAL_TARGET_TITLES)
+    ordered_titles.extend(APOLLO_PEOPLE_TARGET_TITLES)
     for product in software or []:
         ordered_titles.extend(APOLLO_SOFTWARE_TARGET_TITLES.get(product, []))
 
@@ -873,6 +953,127 @@ def _is_relevant_apollo_person(person: dict[str, Any], target_titles: list[str])
         return True
 
     return any(hint in title for hint in APOLLO_RELEVANT_TITLE_HINTS)
+
+
+def _apollo_person_rank(person: dict[str, Any], target_titles: list[str]) -> tuple[int, int, int]:
+    title = (_clean_string(person.get("title")) or "").lower()
+    normalized_targets = {item.lower() for item in target_titles}
+    seniority = (_clean_string(person.get("seniority")) or "").lower()
+
+    exact_match = 1 if title in normalized_targets else 0
+    hint_match = 1 if any(hint in title for hint in APOLLO_RELEVANT_TITLE_HINTS) else 0
+    seniority_score = _apollo_seniority_rank(seniority)
+    return (exact_match, seniority_score, hint_match)
+
+
+def _select_mixed_apollo_people(people: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
+    if len(people) <= limit:
+        return people
+
+    buckets = {
+        "technical": [],
+        "business": [],
+        "commercial": [],
+        "people": [],
+        "other": [],
+    }
+    for person in people:
+        buckets[_apollo_person_bucket(person)].append(person)
+
+    selected: list[dict[str, Any]] = []
+    seen_ids: set[str] = set()
+    bucket_targets = (
+        ("technical", 2),
+        ("business", 1),
+        ("commercial", 1),
+        ("people", 1),
+    )
+
+    for bucket_name, target_count in bucket_targets:
+        for _ in range(target_count):
+            if len(selected) >= limit:
+                return selected
+            person = _pop_first_unseen_person(buckets[bucket_name], seen_ids)
+            if person is None:
+                break
+            selected.append(person)
+            person_id = _clean_string(person.get("id"))
+            if person_id:
+                seen_ids.add(person_id)
+
+    refill_order = ("technical", "business", "commercial", "people", "other")
+    while len(selected) < limit:
+        added = False
+        for bucket_name in refill_order:
+            person = _pop_first_unseen_person(buckets[bucket_name], seen_ids)
+            if person is None:
+                continue
+            selected.append(person)
+            person_id = _clean_string(person.get("id"))
+            if person_id:
+                seen_ids.add(person_id)
+            added = True
+            if len(selected) >= limit:
+                break
+        if not added:
+            break
+
+    return selected
+
+
+def _pop_first_unseen_person(people: list[dict[str, Any]], seen_ids: set[str]) -> dict[str, Any] | None:
+    while people:
+        person = people.pop(0)
+        person_id = _clean_string(person.get("id"))
+        if person_id and person_id in seen_ids:
+            continue
+        return person
+    return None
+
+
+def _apollo_person_bucket(person: dict[str, Any]) -> str:
+    title = (_clean_string(person.get("title")) or "").lower()
+    if any(token in title for token in ("sales", "marketing", "revenue", "business development")):
+        return "commercial"
+    if any(token in title for token in ("human resources", "talent", "people ", "people director", "hr ")):
+        return "people"
+    if any(token in title for token in ("operations", "manufacturing", "plant", "product development")):
+        return "business"
+    if any(
+        token in title
+        for token in (
+            "plm",
+            "teamcenter",
+            "polarion",
+            "mendix",
+            "engineering",
+            "technology",
+            "information",
+            "digital",
+            "cad",
+            "nx ",
+            "solid edge",
+            "alm",
+            "it ",
+            "cto",
+            "cio",
+        )
+    ):
+        return "technical"
+    return "other"
+
+
+def _apollo_seniority_rank(seniority: str) -> int:
+    order = {
+        "owner": 7,
+        "founder": 6,
+        "c_suite": 5,
+        "vp": 4,
+        "head": 3,
+        "director": 2,
+        "manager": 1,
+    }
+    return order.get(seniority, 0)
 
 
 def _env_flag(name: str, default: bool) -> bool:

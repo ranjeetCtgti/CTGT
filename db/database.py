@@ -935,6 +935,11 @@ def _normalize_database_url(database_url: str | None) -> str | None:
     if not cleaned:
         return None
 
+    if cleaned.startswith("postgres://"):
+        cleaned = "postgresql+psycopg2://" + cleaned[len("postgres://") :]
+    elif cleaned.startswith("postgresql://") and not cleaned.startswith("postgresql+psycopg2://"):
+        cleaned = "postgresql+psycopg2://" + cleaned[len("postgresql://") :]
+
     # Common .env mistake: raw "@" in password written as "...:password@@host..."
     # Convert first "@@" into "%40@" so password is URL-safe.
     if "://" in cleaned:

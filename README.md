@@ -84,17 +84,68 @@ $env:PIPELINE_PHASE="production"
 python pipeline.py --max-queries 2
 ```
 
+Render cron wrapper:
+
+```powershell
+python render_cron.py pipeline
+python render_cron.py enrichment
+```
+
 Print current leads:
 
 ```powershell
 python pipeline.py --leads
 ```
 
-Run the local dashboard:
+## Render Deployment
 
-```powershell
-python dashboard.py
-```
+This repository now includes a root-level `render.yaml` Blueprint with:
+
+- `ctgt-pipeline`: a cron job that runs `pipeline.py`
+- `ctgt-lead-enrichment`: a cron job that runs `lead_enrichment_pass.py`
+- `ctgt-postgres`: a Render PostgreSQL database
+
+Default schedules in `render.yaml` are UTC:
+
+- pipeline: `0 2 * * *`
+- enrichment: `30 2 * * *`
+
+Render cron jobs use an ephemeral filesystem, so this deployment relies on PostgreSQL for persistence and does not depend on local files surviving between runs.
+
+### Deploy steps
+
+1. Push this repository to GitHub/GitLab/Bitbucket.
+2. In Render, create a new Blueprint and point it at this repo.
+3. Review `render.yaml`, then provide the required secret env vars in the Render dashboard.
+4. Trigger the pipeline cron manually once.
+5. After it completes, trigger the enrichment cron manually once.
+
+### Important env vars on Render
+
+Set these for the pipeline cron if you use the corresponding providers:
+
+- `SCRAPEDO_API_KEY`
+- `GEMINI_API_KEY` or `GROQ_API_KEY`
+
+Set these for the enrichment cron as needed:
+
+- `GOOGLE_SEARCH_API_KEY`
+- `GOOGLE_SEARCH_ENGINE_ID`
+- `HUNTER_API_KEY`
+- `SERPER_API_KEY`
+
+Apollo is intentionally not configured in the current Render blueprint, so the enrichment pass will skip Apollo company/profile contact lookup stages while still running domain resolution, LinkedIn lookup, and Hunter fallback when configured.
+
+### Runtime tuning
+
+You can change job behavior without editing code:
+
+- `PIPELINE_ARGS`
+  Example: `--source all --max-queries 2`
+- `ENRICHMENT_ARGS`
+  Example: `--limit 100 --freshness-days 3`
+
+If you change the schedules, remember that Render cron expressions are interpreted in UTC.
 
 ## Smoke Test Behavior
 

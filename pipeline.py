@@ -524,6 +524,17 @@ def resolve_signal_domains(
                 if database is not None
                 else None
             )
+            projected_lead = _project_company_lead_for_signals(
+                unresolved_signals,
+                existing_lead=existing_lead,
+            )
+            if projected_lead.lead_score not in {"hot", "warm"}:
+                logger.info(
+                    "domain resolution skipped_low_band company={} projected_lead_score={}",
+                    exemplar.company_name,
+                    projected_lead.lead_score,
+                )
+                continue
             existing_domain = canonicalize_domain(existing_lead.company_domain) if existing_lead else None
             if existing_domain:
                 logger.info("domain resolution reused_existing company={} domain={}", exemplar.company_name, existing_domain)
@@ -795,6 +806,25 @@ def _apply_domain_resolution(
     signal.company_domain = company_domain
     signal.domain_resolution_source = source
     signal.domain_resolution_confidence = confidence
+
+
+def _project_company_lead_for_signals(
+    unresolved_signals: list["ExtractedSignal"],
+    *,
+    existing_lead: "CompanyLead" | None,
+) -> "CompanyLead":
+    from models.schema import CompanyLead
+
+    if existing_lead is not None:
+        projected = existing_lead.model_copy(deep=True)
+    else:
+        projected = company_lead_from_signal(unresolved_signals[0])
+        unresolved_signals = unresolved_signals[1:]
+
+    companies = {f"{projected.company_name.lower()}|{projected.company_domain or ''}": projected}
+    for signal in unresolved_signals:
+        upsert_local_company(companies, signal)
+    return next(iter(companies.values()))
 
 
 def _resolve_domain_for_company_group(

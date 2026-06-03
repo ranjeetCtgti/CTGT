@@ -7,9 +7,19 @@ import sys
 import threading
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from time import time
 
 
 _job_lock = threading.Lock()
+_status_lock = threading.Lock()
+_pipeline_status: dict[str, object] = {
+    "state": "idle",
+    "started_at": None,
+    "finished_at": None,
+    "exit_code": None,
+    "stdout": "",
+    "stderr": "",
+}
 
 
 def _expected_token() -> str | None:
@@ -43,6 +53,38 @@ def _run_pipeline() -> tuple[int, str, str]:
     return completed.returncode, completed.stdout, completed.stderr
 
 
+def _read_status() -> dict[str, object]:
+    with _status_lock:
+        return dict(_pipeline_status)
+
+
+def _write_status(**updates: object) -> None:
+    with _status_lock:
+        _pipeline_status.update(updates)
+
+
+def _run_pipeline_in_background() -> None:
+    try:
+        code, stdout, stderr = _run_pipeline()
+        _write_status(
+            state="succeeded" if code == 0 else "failed",
+            finished_at=time(),
+            exit_code=code,
+            stdout=stdout,
+            stderr=stderr,
+        )
+    except Exception as exc:
+        _write_status(
+            state="failed",
+            finished_at=time(),
+            exit_code=-1,
+            stdout="",
+            stderr=str(exc),
+        )
+    finally:
+        _job_lock.release()
+
+
 class TriggerHandler(BaseHTTPRequestHandler):
     server_version = "CTGTTrigger/1.0"
 
@@ -54,6 +96,9 @@ class TriggerHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
         if self.path == "/healthz":
             self._write_json(HTTPStatus.OK, {"ok": True, "service": "trigger-api"})
+            return
+        if self.path == "/pipeline-status":
+            self._write_json(HTTPStatus.OK, {"ok": True, **_read_status()})
             return
         self._write_json(HTTPStatus.NOT_FOUND, {"error": "not_found"})
 
@@ -68,21 +113,33 @@ class TriggerHandler(BaseHTTPRequestHandler):
 
         acquired = _job_lock.acquire(blocking=False)
         if not acquired:
-            self._write_json(HTTPStatus.CONFLICT, {"error": "pipeline_already_running"})
+            self._write_json(
+                HTTPStatus.CONFLICT,
+                {
+                    "ok": False,
+                    "error": "pipeline_already_running",
+                    **_read_status(),
+                },
+            )
             return
 
-        try:
-            code, stdout, stderr = _run_pipeline()
-        finally:
-            _job_lock.release()
+        _write_status(
+            state="running",
+            started_at=time(),
+            finished_at=None,
+            exit_code=None,
+            stdout="",
+            stderr="",
+        )
+        thread = threading.Thread(target=_run_pipeline_in_background, daemon=True)
+        thread.start()
 
         self._write_json(
-            HTTPStatus.OK if code == 0 else HTTPStatus.INTERNAL_SERVER_ERROR,
+            HTTPStatus.ACCEPTED,
             {
-                "ok": code == 0,
-                "exit_code": code,
-                "stdout": stdout,
-                "stderr": stderr,
+                "ok": True,
+                "message": "pipeline_started",
+                **_read_status(),
             },
         )
 

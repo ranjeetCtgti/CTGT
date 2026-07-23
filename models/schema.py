@@ -19,6 +19,12 @@ class RawJobPosting(BaseModel):
     query: str
     title: str
     company_name: str | None = None
+    # JobSpy exposes both the job-board company profile and, when available,
+    # the company's direct website. Keep both so the direct website can be
+    # trusted before falling back to external domain resolution.
+    company_url: str | None = None
+    company_url_direct: str | None = None
+    company_industry: str | None = None
     location: str | None = None
     snippet: str | None = None
     # Full job description — populated by JobSpy (linkedin_fetch_description=True
@@ -39,6 +45,7 @@ class RawSignalDocument(BaseModel):
     query: str
     title: str
     company_name: str | None = None
+    company_industry: str | None = None
     location: str | None = None
     snippet: str | None = None
     description: str | None = None
@@ -52,8 +59,13 @@ class ExtractedSignal(BaseModel):
 
     company_name: str
     company_domain: str | None = None
+    # Preserve JobSpy's company profile URL exactly as supplied. When no direct
+    # employer URL is available, its host is also used as the fallback domain.
+    company_url: str | None = None
+    linkedin_url: str | None = None
     location: str | None = None
     industry: str | None = None
+    company_industry: str | None = None
     software: list[str] = Field(default_factory=list)
     signal_type: SignalType
     signal_source: SignalSource
@@ -90,9 +102,11 @@ class CompanyLead(BaseModel):
 
     company_name: str
     company_domain: str | None = None
+    company_url: str | None = None
     linkedin_url: str | None = None
     location: str | None = None
     industry: str | None = None
+    company_industry: str | None = None
     sector: str | None = None
     headquarters_location: str | None = None
     employee_count: str | None = None

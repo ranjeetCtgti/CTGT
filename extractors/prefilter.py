@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 
 from config import (
@@ -14,6 +15,7 @@ from config import (
 
 
 RELEVANT_CONTEXT_RADIUS = 120
+AMBIGUOUS_STANDALONE_ALIASES = {"tc", "nx"}
 
 
 @dataclass
@@ -43,8 +45,7 @@ def keyword_prefilter(text: str) -> PrefilterResult:
     )
 
     has_min_context = len(relevant_context.strip()) >= MIN_RELEVANT_CONTEXT_CHARS
-    has_min_text = len(normalized) >= MIN_RELEVANT_CONTEXT_CHARS
-    passed = bool(matched_products) and (has_min_context or has_min_text)
+    passed = bool(matched_products) and has_min_context
     return PrefilterResult(
         passed=passed,
         normalized_text=normalized,
@@ -69,14 +70,33 @@ def _match_keywords(normalized_text: str) -> dict[str, list[str]]:
             *PLM_KEYWORDS_DE.get(product, []),
             *SOFTWARE_ALIASES.get(product.lower(), set()),
         ]
-        hits = sorted({keyword for keyword in keywords if keyword in normalized_text})
+        hits = sorted(
+            {
+                normalize_text(keyword)
+                for keyword in keywords
+                if normalize_text(keyword) not in AMBIGUOUS_STANDALONE_ALIASES
+                and _contains_keyword(normalized_text, keyword)
+            }
+        )
         if hits:
             matched[product] = hits
     return matched
 
 
+def _contains_keyword(normalized_text: str, keyword: str) -> bool:
+    normalized_keyword = normalize_text(keyword)
+    if not normalized_keyword:
+        return False
+    escaped = re.escape(normalized_keyword).replace(r"\ ", r"\s+")
+    return re.search(rf"(?<![a-z0-9]){escaped}(?![a-z0-9])", normalized_text) is not None
+
+
 def _match_phrases(normalized_text: str, phrases: list[str]) -> list[str]:
-    return [phrase for phrase in phrases if phrase in normalized_text]
+    return [
+        normalize_text(phrase)
+        for phrase in phrases
+        if _contains_keyword(normalized_text, phrase)
+    ]
 
 
 def _extract_relevant_context(normalized_text: str, phrases: list[str]) -> str:

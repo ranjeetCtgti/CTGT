@@ -19,7 +19,9 @@ except ImportError:
                     continue
                 key, value = line.split("=", 1)
                 key = key.strip()
-                value = value.strip()
+                # Match python-dotenv's common inline-comment behavior so a
+                # setting such as VALUE=foo # note resolves to "foo".
+                value = value.split(" #", 1)[0].strip()
                 if not key or key in os.environ:
                     continue
                 os.environ[key] = value

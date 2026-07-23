@@ -26,7 +26,9 @@ except ImportError:
                     continue
                 key, value = line.split("=", 1)
                 key = key.strip()
-                value = value.strip()
+                # Match python-dotenv's common inline-comment behavior so a
+                # setting such as VALUE=foo # note resolves to "foo".
+                value = value.split(" #", 1)[0].strip()
                 if not key or key in os.environ:
                     continue
                 os.environ[key] = value
@@ -70,6 +72,12 @@ DEFAULT_SMOKE_TEST_QUERIES = 3
 DOMAIN_RESOLUTION_OUTCOME_RESOLVED = "resolved"
 DOMAIN_RESOLUTION_OUTCOME_UNRESOLVED = "unresolved"
 DOMAIN_RESOLUTION_OUTCOME_ERROR = "error"
+JOBSPY_COMPANY_DOMAIN_SOURCE = "jobspy_company_url_direct"
+JOBSPY_COMPANY_URL_DOMAIN_SOURCE = "jobspy_company_url"
+TRUSTED_JOBSPY_DOMAIN_SOURCES = {
+    JOBSPY_COMPANY_DOMAIN_SOURCE,
+    JOBSPY_COMPANY_URL_DOMAIN_SOURCE,
+}
 
 
 @dataclass(slots=True)
@@ -216,9 +224,11 @@ def run_pipeline_for_sources(
     from db import init_database
     from scrapers.scrapedo_client import ScrapeDoClient
 
-    database: Database | None = None
-    if not args.dry_run:
-        database = init_database()
+    from pipeline_config import set_runtime_search_config
+
+    config_database = init_database()
+    set_runtime_search_config(config_database.get_pipeline_search_config())
+    database: Database | None = None if args.dry_run else config_database
 
     timeout_seconds = int(os.getenv("REQUEST_TIMEOUT_SECONDS", DEFAULT_REQUEST_TIMEOUT_SECONDS))
     batch_size = int(os.getenv("BATCH_SIZE", DEFAULT_BATCH_SIZE))
@@ -383,10 +393,21 @@ def filter_postings(
     summary: PipelineSummary,
 ) -> list["RawJobPosting"]:
     from extractors.prefilter import keyword_prefilter
+    from industry_filter import matching_excluded_industry
 
     filtered: list[RawJobPosting] = []
     for posting in postings:
         stats = summary.ensure_source(posting.source)
+        excluded_industry = matching_excluded_industry(posting.company_industry)
+        if excluded_industry:
+            logger.info(
+                "posting excluded source={} company={} company_industry={} matched={}",
+                posting.source,
+                posting.company_name or "",
+                posting.company_industry,
+                excluded_industry,
+            )
+            continue
         if keyword_prefilter(_document_text(posting)).passed:
             filtered.append(posting)
             stats.prefilter_hits += 1
@@ -426,12 +447,24 @@ def process_signals(
     summary: PipelineSummary,
     database: "Database" | None,
 ) -> None:
+    from industry_filter import matching_excluded_industry
+
     for signal in signals:
         stats = summary.ensure_source(signal.signal_source)
         stats.signals += 1
 
         if _is_consulting_company_name(signal.company_name):
             logger.info("signal excluded consulting company={} source={}", signal.company_name, signal.signal_source)
+            continue
+        excluded_industry = matching_excluded_industry(signal.industry)
+        if excluded_industry:
+            logger.info(
+                "signal excluded industry company={} source={} industry={} matched={}",
+                signal.company_name,
+                signal.signal_source,
+                signal.industry,
+                excluded_industry,
+            )
             continue
 
         if database is None:
@@ -440,6 +473,7 @@ def process_signals(
 
         save_result = database.save_signal(signal)
         if not save_result.created:
+            database.update_company_industry(signal)
             stats.duplicate_signals += 1
             continue
 
@@ -486,6 +520,8 @@ def resolve_signal_domains(
 
     from enrichment import build_domain_resolver, canonicalize_domain
 
+    _propagate_trusted_jobspy_domains(signals, summary)
+
     grouped_signals: dict[str, list[ExtractedSignal]] = defaultdict(list)
     for signal in signals:
         if canonicalize_domain(signal.company_domain):
@@ -524,17 +560,6 @@ def resolve_signal_domains(
                 if database is not None
                 else None
             )
-            projected_lead = _project_company_lead_for_signals(
-                unresolved_signals,
-                existing_lead=existing_lead,
-            )
-            if projected_lead.lead_score not in {"hot", "warm"}:
-                logger.info(
-                    "domain resolution skipped_low_band company={} projected_lead_score={}",
-                    exemplar.company_name,
-                    projected_lead.lead_score,
-                )
-                continue
             existing_domain = canonicalize_domain(existing_lead.company_domain) if existing_lead else None
             if existing_domain:
                 logger.info("domain resolution reused_existing company={} domain={}", exemplar.company_name, existing_domain)
@@ -689,9 +714,11 @@ def company_lead_from_signal(signal: "ExtractedSignal") -> "CompanyLead":
     return CompanyLead(
         company_name=signal.company_name,
         company_domain=canonicalize_domain(signal.company_domain),
-        linkedin_url=None,
+        company_url=signal.company_url,
+        linkedin_url=signal.linkedin_url,
         location=signal.location,
         industry=signal.industry,
+        company_industry=signal.company_industry,
         sector=None,
         headquarters_location=None,
         employee_count=None,
@@ -734,8 +761,11 @@ def upsert_local_company(
     existing.signal_sources = _merge_unique(existing.signal_sources, [signal.signal_source])
     existing.migration_risk = existing.migration_risk or signal.migration
     existing.company_domain = existing.company_domain or signal_domain
+    existing.company_url = existing.company_url or signal.company_url
+    existing.linkedin_url = existing.linkedin_url or signal.linkedin_url
     existing.location = signal.location or existing.location
     existing.industry = signal.industry or existing.industry
+    existing.company_industry = signal.company_industry or existing.company_industry
     if signal_domain and signal.domain_resolution_source:
         existing.enrichment_source = signal.domain_resolution_source
         existing.enrichment_confidence = signal.domain_resolution_confidence
@@ -766,10 +796,7 @@ def _document_text(posting: "RawJobPosting") -> str:
     return " | ".join(
         value
         for value in [
-            posting.query,
             posting.title,
-            posting.company_name,
-            posting.location,
             posting.snippet,
             getattr(posting, "description", None),
         ]
@@ -808,23 +835,57 @@ def _apply_domain_resolution(
     signal.domain_resolution_confidence = confidence
 
 
-def _project_company_lead_for_signals(
-    unresolved_signals: list["ExtractedSignal"],
-    *,
-    existing_lead: "CompanyLead" | None,
-) -> "CompanyLead":
-    from models.schema import CompanyLead
+def _propagate_trusted_jobspy_domains(
+    signals: list["ExtractedSignal"],
+    summary: PipelineSummary,
+) -> None:
+    """Share one unambiguous JobSpy direct domain across same-company signals."""
+    from enrichment import canonicalize_domain
 
-    if existing_lead is not None:
-        projected = existing_lead.model_copy(deep=True)
-    else:
-        projected = company_lead_from_signal(unresolved_signals[0])
-        unresolved_signals = unresolved_signals[1:]
+    signals_by_company: dict[str, list[ExtractedSignal]] = defaultdict(list)
+    trusted_domains_by_company: dict[str, set[str]] = defaultdict(set)
 
-    companies = {f"{projected.company_name.lower()}|{projected.company_domain or ''}": projected}
-    for signal in unresolved_signals:
-        upsert_local_company(companies, signal)
-    return next(iter(companies.values()))
+    for signal in signals:
+        company_key = _normalize_company_name(signal.company_name)
+        if not company_key:
+            continue
+        signals_by_company[company_key].append(signal)
+        if signal.domain_resolution_source not in TRUSTED_JOBSPY_DOMAIN_SOURCES:
+            continue
+        trusted_domain = canonicalize_domain(signal.company_domain)
+        if trusted_domain:
+            trusted_domains_by_company[company_key].add(trusted_domain)
+
+    for company_key, trusted_domains in trusted_domains_by_company.items():
+        if len(trusted_domains) != 1:
+            exemplar = signals_by_company[company_key][0]
+            logger.warning(
+                "jobspy domain conflict company={} domains={}",
+                exemplar.company_name,
+                sorted(trusted_domains),
+            )
+            summary.domain_resolution.conflicts += 1
+            continue
+
+        trusted_domain = next(iter(trusted_domains))
+        trusted_source = next(
+            (
+                signal.domain_resolution_source
+                for signal in signals_by_company[company_key]
+                if canonicalize_domain(signal.company_domain) == trusted_domain
+                and signal.domain_resolution_source in TRUSTED_JOBSPY_DOMAIN_SOURCES
+            ),
+            JOBSPY_COMPANY_DOMAIN_SOURCE,
+        )
+        for signal in signals_by_company[company_key]:
+            if canonicalize_domain(signal.company_domain):
+                continue
+            _apply_domain_resolution(
+                signal,
+                trusted_domain,
+                trusted_source,
+                1.0,
+            )
 
 
 def _resolve_domain_for_company_group(
@@ -1001,8 +1062,7 @@ def validate_runtime_config_for_sources(
             required_env = ["GEMINI_API_KEY"]
         if "stepstone" in selected_sources:
             required_env.append("SCRAPEDO_API_KEY")
-        if not args.dry_run:
-            required_env.append("DATABASE_URL")
+        required_env.append("DATABASE_URL")
 
     if _enrichment_enabled() and not args.leads:
         provider = (os.getenv("ENRICHMENT_PROVIDER") or "serper").strip().lower()
@@ -1085,6 +1145,7 @@ def _normalize_raw_posting(posting: "RawJobPosting | RawSignalDocument") -> "Raw
             query=posting.query,
             title=posting.title,
             company_name=posting.company_name,
+            company_industry=posting.company_industry,
             location=posting.location,
             snippet=posting.snippet,
             description=posting.description,

@@ -7,6 +7,7 @@ import sys
 import threading
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from typing import TextIO
 from time import time
 
 
@@ -42,15 +43,58 @@ def _is_authorized(handler: BaseHTTPRequestHandler) -> bool:
     return provided == expected
 
 
+def _stream_output(
+    pipe: TextIO,
+    sink: TextIO,
+    chunks: list[str],
+    status_field: str,
+) -> None:
+    try:
+        for line in iter(pipe.readline, ""):
+            chunks.append(line)
+            sink.write(line)
+            sink.flush()
+            with _status_lock:
+                _pipeline_status[status_field] = "".join(chunks)
+    finally:
+        pipe.close()
+
+
 def _run_pipeline() -> tuple[int, str, str]:
-    command = [sys.executable, "render_cron.py", "pipeline"]
-    completed = subprocess.run(
+    command = [sys.executable, "-u", "render_cron.py", "pipeline"]
+    child_env = os.environ.copy()
+    child_env["PYTHONUNBUFFERED"] = "1"
+    process = subprocess.Popen(
         command,
-        capture_output=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
         text=True,
-        check=False,
+        bufsize=1,
+        env=child_env,
     )
-    return completed.returncode, completed.stdout, completed.stderr
+    if process.stdout is None or process.stderr is None:
+        process.kill()
+        raise RuntimeError("Could not capture pipeline output streams.")
+
+    stdout_chunks: list[str] = []
+    stderr_chunks: list[str] = []
+    stdout_thread = threading.Thread(
+        target=_stream_output,
+        args=(process.stdout, sys.stdout, stdout_chunks, "stdout"),
+        daemon=True,
+    )
+    stderr_thread = threading.Thread(
+        target=_stream_output,
+        args=(process.stderr, sys.stderr, stderr_chunks, "stderr"),
+        daemon=True,
+    )
+    stdout_thread.start()
+    stderr_thread.start()
+
+    return_code = process.wait()
+    stdout_thread.join()
+    stderr_thread.join()
+    return return_code, "".join(stdout_chunks), "".join(stderr_chunks)
 
 
 def _read_status() -> dict[str, object]:

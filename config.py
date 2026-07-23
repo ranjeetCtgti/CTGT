@@ -182,6 +182,101 @@ EXCLUDED_COMPANIES = [
     "ansys",
     "hexagon ab",
     "aveva",
+    "opentext",
+    "w3global",
+    "sri tech solutions inc",
+    "sri tech solutions inc.",
+]
+
+# Structured scraper metadata and extraction results use this list to remove
+# service-sector employers before persistence. Keep these values lowercase;
+# matching is case-insensitive and covers more specific labels such as
+# "IT Services and IT Consulting".
+EXCLUDED_INDUSTRIES = [
+    # 1. IT & Software Services
+    "it services",
+    "it consulting",
+    "information technology",
+    "information services",
+    "software development",
+    "computer software",
+    "enterprise software",
+    "saas",
+    "cloud services",
+    "technology, information and media",
+    "information and media",
+    "internet publishing",
+    "internet marketplace platforms",
+
+    # 2. Consulting & Advisory
+    "consulting",
+    "management consulting",
+    "business consulting",
+    "technology consulting",
+    "plm consulting",
+    "plm services",
+    "advisory",
+    "professional services",
+    "system integrator",
+    "integrator",
+    "hospitality",
+    "retail",
+    "health and human services",
+    "hospitals and health care",
+    "hospital & health care",
+    "medical practice",
+    "health, wellness & fitness",
+    "banking",
+    "financial services",
+    "investment management",
+    "insurance",
+    "consumer services",
+    "government administration",
+    "civic and social organizations",
+    "technology, information and internet",
+
+    # 3. Staffing, Recruiting & Talent
+    "staffing",
+    "recruiting",
+    "talent solutions",
+    "human resources",
+    "human resources services",
+    "employment agency",
+    "outsourcing",
+    "bpo",
+
+    # 4. Agencies & Digital Transformation
+    "agency",
+    "digital agency",
+    "marketing services",
+    "market research",
+    "public relations & communications",
+    "technical consulting",
+    "non-profit organizations",
+    "non-profit organizations and primary and secondary education",
+    "education",
+    "professional training & coaching",
+    "construction",
+    "civil engineering",
+    "logistics & supply chain",
+    "sports",
+    "music",
+]
+
+# Canonical labels the extraction model can use when a scraper does not provide
+# structured industry metadata (notably Stepstone and news feeds).
+EXCLUDED_INDUSTRY_CATEGORIES = [
+    "IT & Software Services",
+    "Consulting & Advisory",
+    "Staffing, Recruiting & Outsourcing",
+    "Hospitality",
+    "Retail",
+    "Healthcare & Human Services",
+    "Banking & Financial Services",
+    "Insurance",
+    "Consumer Services",
+    "Government & Civic Organizations",
+    "Nonprofit & Education",
 ]
 
 # Scoring
@@ -225,7 +320,7 @@ LEAD_THRESHOLDS = {
     "warm": 35,
 }
 
-MIN_CONFIDENCE = 0.3
+MIN_CONFIDENCE = 0.65
 MIN_RELEVANT_CONTEXT_CHARS = 50
 
 INDUSTRY_CHOICES = [
@@ -239,6 +334,8 @@ INDUSTRY_CHOICES = [
     "Other Manufacturing",
     "Unknown",
 ]
+
+MODEL_INDUSTRY_CHOICES = INDUSTRY_CHOICES + EXCLUDED_INDUSTRY_CATEGORIES
 
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash-lite")
 GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
@@ -308,9 +405,9 @@ STEPSTONE_GERMAN_QUERIES = [
     "CAD Teamcenter Spezialist",
 ]
 
-LINKEDIN_LOCATIONS = ["Australia", "Canada", "Germany"]
-INDEED_LOCATIONS = ["Australia", "Canada", "Germany"]
-GOOGLE_LOCATIONS = ["Australia", "Canada", "Germany"]
+LINKEDIN_LOCATIONS = ["Canada", "Germany", "United States"]
+INDEED_LOCATIONS = ["Canada", "Germany", "United States"]
+GOOGLE_LOCATIONS = ["Canada", "Germany", "United States"]
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"

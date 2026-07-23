@@ -18,6 +18,8 @@ services:
         sync: false
       - key: GROQ_API_KEY
         sync: false
+      - key: SERPER_API_KEY
+        sync: false
       - key: LOG_LEVEL
         value: INFO
       - key: PIPELINE_PHASE
@@ -35,7 +37,11 @@ services:
       - key: BATCH_SIZE
         value: "10"
       - key: ENRICHMENT_ENABLED
-        value: "false"
+        value: "true"
+      - key: ENRICHMENT_PROVIDER
+        value: serper
+      - key: ENRICHMENT_TIMEOUT_SECONDS
+        value: "15"
       - key: LEAD_ENRICHMENT_ENABLED
         value: "false"
       - key: PIPELINE_ARGS

@@ -19,6 +19,7 @@ from config import (
     CAREER_PAGE_USER_AGENTS,
     DEFAULT_REQUEST_TIMEOUT_SECONDS,
 )
+from industry_filter import matching_excluded_industry
 from models.schema import RawSignalDocument
 
 
@@ -104,6 +105,15 @@ def load_targets(path: Path | None = None) -> list[CareerPageTarget]:
             industry = _clean(row.get("industry"))
             if not all([company_name, domain, careers_url, country, industry]):
                 continue
+            excluded_industry = matching_excluded_industry(industry)
+            if excluded_industry:
+                logger.info(
+                    "career_page target excluded company={} industry={} matched={}",
+                    company_name,
+                    industry,
+                    excluded_industry,
+                )
+                continue
             targets.append(
                 CareerPageTarget(
                     company_name=company_name,
@@ -136,6 +146,7 @@ def parse_career_page(html: str, target: CareerPageTarget, final_url: str) -> Ra
         query=f"{target.company_name} career page",
         title=title,
         company_name=target.company_name,
+        company_industry=target.industry,
         location=target.country,
         snippet=full_text[:500],
         description=full_text,

@@ -15,16 +15,21 @@ pip install -r requirements.txt
 
 - `SCRAPEDO_API_KEY` for Stepstone runs
 - `GEMINI_API_KEY` when `LLM_PROVIDER=gemini`
-- `GEMINI_MODEL=gemma-4-31b-it` to use Gemma 4 31B on the Gemini API
+- `GEMINI_MODEL=gemini-2.5-flash-lite` for the default Gemini extractor
 - `GROQ_API_KEY` when `LLM_PROVIDER=groq`
 - `GROQ_MODEL_ID=qwen/qwen3-32b` unless you want a different Groq-supported model
 - `LLM_REQUESTS_PER_MINUTE=25` to keep layer 2 model traffic in the current 25-30 RPM limit
+- `SERPER_API_KEY` for fallback company-domain resolution
 - `DATABASE_URL`
 - optionally expand `data/career_page_targets.csv` with your target companies
 - optionally tune `CAREER_PAGE_MAX_PAGES_PER_TARGET` for broader Phase 2 career-page coverage
 
-Default sample configuration uses Gemini with `gemma-4-31b-it`. Groq remains available by setting `LLM_PROVIDER=groq`.
+Default sample configuration uses Gemini with `gemini-2.5-flash-lite`. Groq remains available by setting `LLM_PROVIDER=groq`.
 Hugging Face provider support is currently disabled.
+
+For JobSpy records, the original job-board profile in `company_url` is preserved unchanged, including LinkedIn or Indeed profile URLs. `company_url_direct` supplies the preferred canonical `company_domain`; when it is absent, the host from `company_url` is used instead. Serper domain resolution runs only when neither URL yields a domain.
+
+Apollo enrichment is disabled by default, even when `APOLLO_API_KEY` is present. It runs only when `APOLLO_ENRICHMENT_ENABLED=true` is explicitly configured; otherwise the enrichment pass continues with Google LinkedIn lookup and Hunter contact fallback.
 
 ## Commands
 
@@ -126,6 +131,7 @@ Set these for the pipeline cron if you use the corresponding providers:
 
 - `SCRAPEDO_API_KEY`
 - `GEMINI_API_KEY` or `GROQ_API_KEY`
+- `SERPER_API_KEY`
 
 Set these for the enrichment cron as needed:
 

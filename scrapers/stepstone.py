@@ -6,8 +6,9 @@ from urllib.parse import urlencode, urljoin
 from bs4 import BeautifulSoup, Tag
 from loguru import logger
 
-from config import GEO_CODE_BY_COUNTRY, STEPSTONE_GERMAN_QUERIES
+from config import GEO_CODE_BY_COUNTRY
 from models.schema import RawJobPosting
+from pipeline_config import build_stepstone_search_plan
 from scrapers.scrapedo_client import ScrapeDoClient, ScrapeRequest
 
 
@@ -73,9 +74,7 @@ def build_search_url(query: str) -> str:
 
 
 def build_search_plan(max_queries: int | None = None) -> list[str]:
-    if max_queries is not None:
-        return STEPSTONE_GERMAN_QUERIES[:max_queries]
-    return STEPSTONE_GERMAN_QUERIES
+    return build_stepstone_search_plan(max_queries=max_queries)
 
 
 def _stepstone_request(query: str, target_url: str) -> ScrapeRequest:

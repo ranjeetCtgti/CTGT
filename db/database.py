@@ -10,7 +10,7 @@ from typing import Any
 from uuid import uuid4
 
 from loguru import logger
-from sqlalchemy import JSON, Boolean, DateTime, Float, Index, Integer, String, Text, case, create_engine, func, inspect, select, text
+from sqlalchemy import JSON, Boolean, DateTime, Float, Index, Integer, String, Text, UniqueConstraint, case, create_engine, func, inspect, select, text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.engine import Engine, make_url
 from sqlalchemy.exc import IntegrityError
@@ -19,6 +19,22 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sess
 from config import LEAD_THRESHOLDS, MULTI_SOURCE_BONUS, VOLUME_BONUS_SECOND_SIGNAL, VOLUME_BONUS_THIRD_PLUS_SIGNAL
 from enrichment.domain_resolution import canonicalize_domain
 from models.schema import CompanyLead, ExtractedSignal, LeadContact, LeadScore
+
+
+JOBSPY_COMPANY_DOMAIN_SOURCE = "jobspy_company_url_direct"
+JOBSPY_COMPANY_URL_DOMAIN_SOURCE = "jobspy_company_url"
+TRUSTED_JOBSPY_DOMAIN_SOURCES = {
+    JOBSPY_COMPANY_DOMAIN_SOURCE,
+    JOBSPY_COMPANY_URL_DOMAIN_SOURCE,
+}
+LOWER_TRUST_DOMAIN_SOURCES = {
+    "clearbit_autocomplete",
+    "company_name_domain",
+    "existing_company",
+    "lead_enrichment",
+    "serper",
+    "source_url_news",
+}
 
 
 class DatabaseError(Exception):
@@ -39,8 +55,10 @@ class SignalRecord(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     company_name: Mapped[str] = mapped_column(Text, nullable=False)
     company_domain: Mapped[str | None] = mapped_column(Text, nullable=True)
+    company_url: Mapped[str | None] = mapped_column(Text, nullable=True)
     location: Mapped[str | None] = mapped_column(Text, nullable=True)
     industry: Mapped[str | None] = mapped_column(Text, nullable=True)
+    company_industry: Mapped[str | None] = mapped_column(Text, nullable=True)
     software: Mapped[list[str]] = mapped_column(_json_type(), nullable=False, default=list)
     signal_type: Mapped[str] = mapped_column(String(32), nullable=False)
     signal_source: Mapped[str] = mapped_column(String(32), nullable=False)
@@ -71,9 +89,11 @@ class CompanyRecord(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     company_name: Mapped[str] = mapped_column(Text, nullable=False)
     company_domain: Mapped[str | None] = mapped_column(Text, nullable=True, unique=True)
+    company_url: Mapped[str | None] = mapped_column(Text, nullable=True)
     linkedin_url: Mapped[str | None] = mapped_column(Text, nullable=True)
     location: Mapped[str | None] = mapped_column(Text, nullable=True)
     industry: Mapped[str | None] = mapped_column(Text, nullable=True)
+    company_industry: Mapped[str | None] = mapped_column(Text, nullable=True)
     sector: Mapped[str | None] = mapped_column(Text, nullable=True)
     headquarters_location: Mapped[str | None] = mapped_column(Text, nullable=True)
     employee_count: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -179,6 +199,65 @@ class EnrichmentLogRecord(Base):
     )
 
 
+class PipelineQueryRecord(Base):
+    __tablename__ = "pipeline_queries"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    query_text: Mapped[str] = mapped_column(Text, nullable=False)
+    locale: Mapped[str] = mapped_column(String(8), nullable=False, default="en")
+    sources: Mapped[list[str]] = mapped_column(_json_type(), nullable=False, default=list)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
+    )
+
+    __table_args__ = (
+        UniqueConstraint("query_text", "locale", name="uq_pipeline_queries_text_locale"),
+    )
+
+
+class PipelineLocationRecord(Base):
+    __tablename__ = "pipeline_locations"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    location_name: Mapped[str] = mapped_column(Text, nullable=False)
+    locale: Mapped[str] = mapped_column(String(8), nullable=False, default="en")
+    sources: Mapped[list[str]] = mapped_column(_json_type(), nullable=False, default=list)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+        server_default=func.now(),
+    )
+
+    __table_args__ = (
+        UniqueConstraint("location_name", "locale", name="uq_pipeline_locations_name_locale"),
+    )
+
+
+class PipelineConfigMetaRecord(Base):
+    __tablename__ = "pipeline_config_meta"
+
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    value: Mapped[str] = mapped_column(Text, nullable=False)
+
+
 @dataclass(slots=True)
 class ScrapeLogEntry:
     source: str
@@ -213,8 +292,10 @@ class SaveSignalResult:
 class SignalView:
     company_name: str
     company_domain: str | None
+    company_url: str | None
     location: str | None
     industry: str | None
+    company_industry: str | None
     software: list[str]
     signal_type: str
     signal_source: str
@@ -264,8 +345,16 @@ class Database:
         self.session_factory = sessionmaker(bind=self.engine, expire_on_commit=False, future=True)
 
     def initialize(self) -> None:
+        existing_tables = set(inspect(self.engine).get_table_names())
+        seed_queries = "pipeline_queries" not in existing_tables
+        seed_locations = "pipeline_locations" not in existing_tables
         Base.metadata.create_all(self.engine)
         self._ensure_compat_columns()
+        if seed_queries or seed_locations:
+            self._seed_pipeline_config(
+                seed_queries=seed_queries,
+                seed_locations=seed_locations,
+            )
 
     def session(self) -> Session:
         return self.session_factory()
@@ -275,17 +364,25 @@ class Database:
         table_names = set(inspector.get_table_names())
         if "signals" in table_names:
             signal_columns = {column["name"] for column in inspector.get_columns("signals")}
-            if "reason" not in signal_columns:
-                with self.engine.begin() as connection:
-                    connection.execute(text("ALTER TABLE signals ADD COLUMN reason TEXT"))
+            signal_compat_columns = {
+                "reason": "ALTER TABLE signals ADD COLUMN reason TEXT",
+                "company_url": "ALTER TABLE signals ADD COLUMN company_url TEXT",
+                "company_industry": "ALTER TABLE signals ADD COLUMN company_industry TEXT",
+            }
+            with self.engine.begin() as connection:
+                for column_name, ddl in signal_compat_columns.items():
+                    if column_name not in signal_columns:
+                        connection.execute(text(ddl))
         if "companies" in table_names:
             company_columns = {column["name"] for column in inspector.get_columns("companies")}
             compat_columns = {
+                "company_url": "ALTER TABLE companies ADD COLUMN company_url TEXT",
                 "linkedin_url": "ALTER TABLE companies ADD COLUMN linkedin_url TEXT",
                 "sector": "ALTER TABLE companies ADD COLUMN sector TEXT",
                 "headquarters_location": "ALTER TABLE companies ADD COLUMN headquarters_location TEXT",
                 "employee_count": "ALTER TABLE companies ADD COLUMN employee_count TEXT",
                 "revenue_range": "ALTER TABLE companies ADD COLUMN revenue_range TEXT",
+                "company_industry": "ALTER TABLE companies ADD COLUMN company_industry TEXT",
                 "enrichment_source": "ALTER TABLE companies ADD COLUMN enrichment_source VARCHAR(64)",
                 "enrichment_confidence": "ALTER TABLE companies ADD COLUMN enrichment_confidence FLOAT",
                 "enriched_at": "ALTER TABLE companies ADD COLUMN enriched_at TIMESTAMPTZ",
@@ -313,20 +410,87 @@ class Database:
         if "enrichment_log" not in table_names:
             EnrichmentLogRecord.__table__.create(self.engine, checkfirst=True)
 
+    def _seed_pipeline_config(self, *, seed_queries: bool, seed_locations: bool) -> None:
+        from pipeline_config import default_pipeline_search_config
+
+        defaults = default_pipeline_search_config()
+        with self.session() as session:
+            if seed_queries:
+                session.add_all(
+                    PipelineQueryRecord(
+                        query_text=item.value,
+                        locale=item.locale,
+                        sources=list(item.sources),
+                    )
+                    for item in defaults.queries
+                )
+            if seed_locations:
+                session.add_all(
+                    PipelineLocationRecord(
+                        location_name=item.value,
+                        locale=item.locale,
+                        sources=list(item.sources),
+                    )
+                    for item in defaults.locations
+                )
+            session.merge(PipelineConfigMetaRecord(key="defaults_seeded", value="true"))
+            session.commit()
+
+    def get_pipeline_search_config(self) -> Any:
+        from pipeline_config import PipelineLocation, PipelineQuery, PipelineSearchConfig
+
+        with self.session() as session:
+            query_rows = session.scalars(
+                select(PipelineQueryRecord).order_by(
+                    PipelineQueryRecord.locale,
+                    PipelineQueryRecord.query_text,
+                )
+            ).all()
+            location_rows = session.scalars(
+                select(PipelineLocationRecord).order_by(
+                    PipelineLocationRecord.locale,
+                    PipelineLocationRecord.location_name,
+                )
+            ).all()
+
+        return PipelineSearchConfig(
+            queries=tuple(
+                PipelineQuery(
+                    value=row.query_text,
+                    locale=row.locale,
+                    sources=tuple(row.sources or []),
+                )
+                for row in query_rows
+            ),
+            locations=tuple(
+                PipelineLocation(
+                    value=row.location_name,
+                    locale=row.locale,
+                    sources=tuple(row.sources or []),
+                )
+                for row in location_rows
+            ),
+        )
+
     def save_signal(self, signal: ExtractedSignal) -> SaveSignalResult:
         signal_domain = canonicalize_domain(signal.company_domain)
         with self.session() as session:
             existing = session.scalar(
-                select(SignalRecord.id).where(SignalRecord.source_url == str(signal.source_url)).limit(1)
+                select(SignalRecord).where(SignalRecord.source_url == str(signal.source_url)).limit(1)
             )
             if existing is not None:
-                return SaveSignalResult(created=False, record_id=existing, duplicate_url=True)
+                if signal.company_industry and existing.company_industry != signal.company_industry:
+                    existing.company_industry = signal.company_industry
+                    session.commit()
+                return SaveSignalResult(created=False, record_id=existing.id, duplicate_url=True)
 
             record = SignalRecord(
                 company_name=signal.company_name,
                 company_domain=signal_domain,
+                company_url=signal.company_url,
                 location=signal.location,
                 industry=signal.industry,
+                company_industry=signal.company_industry,
                 software=list(signal.software),
                 signal_type=signal.signal_type,
                 signal_source=signal.signal_source,
@@ -354,20 +518,68 @@ class Database:
             session.refresh(record)
             return SaveSignalResult(created=True, record_id=record.id)
 
-    def upsert_company(self, signal: ExtractedSignal) -> CompanyLead:
+    def update_company_industry(self, signal: ExtractedSignal) -> None:
+        if not signal.company_industry:
+            return
+
         signal_domain = canonicalize_domain(signal.company_domain)
         with self.session() as session:
             company = self._find_company_record(session, signal.company_name, signal_domain)
+            if company is None or company.company_industry == signal.company_industry:
+                return
+            company.company_industry = signal.company_industry
+            company.last_updated = datetime.now(timezone.utc)
+            session.commit()
+
+    def upsert_company(self, signal: ExtractedSignal) -> CompanyLead:
+        signal_domain = canonicalize_domain(signal.company_domain)
+        trusted_jobspy_domain = (
+            bool(signal_domain)
+            and signal.domain_resolution_source in TRUSTED_JOBSPY_DOMAIN_SOURCES
+        )
+        with self.session() as session:
+            domain_is_available = True
+            if trusted_jobspy_domain:
+                # Match the employer first. A domain-first lookup could otherwise
+                # merge this signal into an unrelated company that already owns
+                # a bad/shared domain.
+                company = self._find_company_record(session, signal.company_name, None)
+                domain_owner = session.scalar(
+                    select(CompanyRecord)
+                    .where(CompanyRecord.company_domain == signal_domain)
+                    .limit(1)
+                )
+                if company is None and (
+                    domain_owner is None
+                    or _names_similar(domain_owner.company_name, signal.company_name)
+                ):
+                    company = domain_owner
+                if domain_owner is not None and (
+                    company is None or domain_owner.id != company.id
+                ):
+                    domain_is_available = False
+                    logger.warning(
+                        "jobspy domain assignment conflict company={} domain={} owner={}",
+                        signal.company_name,
+                        signal_domain,
+                        domain_owner.company_name,
+                    )
+            else:
+                company = self._find_company_record(session, signal.company_name, signal_domain)
+
             now = datetime.now(timezone.utc)
             signal_score = _compute_signal_score(signal)
 
             if company is None:
+                initial_domain = signal_domain if domain_is_available else None
                 company = CompanyRecord(
                     company_name=signal.company_name,
-                    company_domain=signal_domain,
-                    linkedin_url=None,
+                    company_domain=initial_domain,
+                    company_url=signal.company_url,
+                    linkedin_url=signal.linkedin_url,
                     location=signal.location,
                     industry=signal.industry,
+                    company_industry=signal.company_industry,
                     sector=None,
                     headquarters_location=None,
                     employee_count=None,
@@ -379,9 +591,15 @@ class Database:
                     total_score=signal_score,
                     lead_score=_lead_grade(signal_score),
                     contacts=[],
-                    enrichment_source=signal.domain_resolution_source,
-                    enrichment_confidence=signal.domain_resolution_confidence,
-                    enriched_at=now if signal_domain and signal.domain_resolution_source else None,
+                    enrichment_source=(
+                        signal.domain_resolution_source if initial_domain else None
+                    ),
+                    enrichment_confidence=(
+                        signal.domain_resolution_confidence if initial_domain else None
+                    ),
+                    enriched_at=(
+                        now if initial_domain and signal.domain_resolution_source else None
+                    ),
                     last_enrichment_at=None,
                     first_seen=signal.detected_at,
                     last_updated=now,
@@ -391,7 +609,49 @@ class Database:
                 session.refresh(company)
                 return _to_company_lead(company)
 
+            identity_metadata_changed = False
+            existing_domain = canonicalize_domain(company.company_domain)
+            should_assign_domain = bool(
+                signal_domain
+                and domain_is_available
+                and (
+                    not existing_domain
+                    or (
+                        trusted_jobspy_domain
+                        and existing_domain != signal_domain
+                        and _is_lower_trust_domain_source(company.enrichment_source)
+                    )
+                )
+            )
+            should_upgrade_jobspy_provenance = bool(
+                trusted_jobspy_domain
+                and domain_is_available
+                and existing_domain == signal_domain
+                and company.enrichment_source not in TRUSTED_JOBSPY_DOMAIN_SOURCES
+            )
+            if should_assign_domain:
+                company.company_domain = signal_domain
+                identity_metadata_changed = True
+            if should_assign_domain or should_upgrade_jobspy_provenance:
+                company.enrichment_source = signal.domain_resolution_source
+                company.enrichment_confidence = signal.domain_resolution_confidence
+                company.enriched_at = now
+                identity_metadata_changed = True
+            if signal.company_url and not company.company_url:
+                company.company_url = signal.company_url
+                identity_metadata_changed = True
+            if signal.linkedin_url and not company.linkedin_url:
+                company.linkedin_url = signal.linkedin_url
+                identity_metadata_changed = True
+            if signal.company_industry and signal.company_industry != company.company_industry:
+                company.company_industry = signal.company_industry
+                identity_metadata_changed = True
+
             if self._is_recent_same_source(session, company, signal):
+                if identity_metadata_changed:
+                    company.last_updated = now
+                    session.commit()
+                    session.refresh(company)
                 return _to_company_lead(company)
 
             source_count_before = len(company.signal_sources or [])
@@ -399,13 +659,9 @@ class Database:
             company.software = _merge_unique(company.software, signal.software)
             company.signal_sources = _merge_unique(company.signal_sources, [signal.signal_source])
             company.migration_risk = company.migration_risk or signal.migration
-            company.company_domain = company.company_domain or signal_domain
             company.location = signal.location or company.location
             company.industry = signal.industry or company.industry
-            if signal_domain and signal.domain_resolution_source:
-                company.enrichment_source = signal.domain_resolution_source
-                company.enrichment_confidence = signal.domain_resolution_confidence
-                company.enriched_at = now
+            company.company_industry = signal.company_industry or company.company_industry
 
             company.total_score += signal_score
             if company.signal_count == 2:
@@ -856,13 +1112,28 @@ def _names_similar(left: str, right: str) -> bool:
     return SequenceMatcher(a=left_norm, b=right_norm).ratio() >= 0.88
 
 
+def _is_lower_trust_domain_source(source: str | None) -> bool:
+    if not source:
+        # Older records predate enrichment provenance. Treat their domains as
+        # unverified so an authoritative JobSpy direct URL can correct them.
+        return True
+    providers = {
+        provider.strip().lower()
+        for provider in source.split(",")
+        if provider.strip()
+    }
+    return bool(providers & LOWER_TRUST_DOMAIN_SOURCES)
+
+
 def _to_company_lead(record: CompanyRecord) -> CompanyLead:
     return CompanyLead(
         company_name=record.company_name,
         company_domain=canonicalize_domain(record.company_domain),
+        company_url=record.company_url,
         linkedin_url=record.linkedin_url,
         location=record.location,
         industry=record.industry,
+        company_industry=record.company_industry,
         sector=record.sector,
         headquarters_location=record.headquarters_location,
         employee_count=record.employee_count,
@@ -890,8 +1161,10 @@ def _to_signal_view(signal: SignalRecord, company: CompanyRecord | None) -> Sign
     return SignalView(
         company_name=signal.company_name,
         company_domain=signal.company_domain,
+        company_url=signal.company_url,
         location=signal.location,
         industry=signal.industry,
+        company_industry=signal.company_industry,
         software=list(signal.software or []),
         signal_type=signal.signal_type,
         signal_source=signal.signal_source,

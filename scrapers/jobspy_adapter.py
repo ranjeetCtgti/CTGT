@@ -7,8 +7,9 @@ from typing import Any
 
 from loguru import logger
 
-from config import ENGLISH_QUERIES, GERMAN_QUERIES, GOOGLE_LOCATIONS, INDEED_LOCATIONS, LINKEDIN_LOCATIONS
+from industry_filter import matching_excluded_industry
 from models.schema import RawJobPosting
+from pipeline_config import build_jobspy_search_plan
 
 try:
     import pandas as pd
@@ -36,25 +37,7 @@ class CollectorResult:
 
 
 def build_search_plan(source: str, max_queries: int | None = None) -> list[tuple[str, str]]:
-    if source not in JOBSPY_SUPPORTED_SOURCES:
-        raise ValueError(f"Unsupported JobSpy source: {source}")
-
-    plan: list[tuple[str, str]] = []
-    if source == "linkedin":
-        for location in LINKEDIN_LOCATIONS:
-            queries = GERMAN_QUERIES if location == "Germany" else ENGLISH_QUERIES
-            for query in queries:
-                plan.append((query, location))
-    else:
-        locations = INDEED_LOCATIONS if source == "indeed" else GOOGLE_LOCATIONS
-        for location in locations:
-            queries = GERMAN_QUERIES if location == "Germany" else ENGLISH_QUERIES
-            for query in queries:
-                plan.append((query, location))
-
-    if max_queries is not None:
-        return plan[:max_queries]
-    return plan
+    return build_jobspy_search_plan(source, max_queries=max_queries)
 
 
 def scrape_linkedin(_: Any | None = None, max_queries: int | None = None) -> CollectorResult:
@@ -146,9 +129,24 @@ def _normalize_row(
 
     title = _clean_value(row.get("title"))
     company_name = _clean_value(row.get("company")) or _clean_value(row.get("company_name"))
+    company_url = _clean_value(row.get("company_url"))
+    company_url_direct = _clean_value(row.get("company_url_direct"))
+    company_industry = _clean_value(row.get("company_industry"))
     location = _clean_value(row.get("location")) or fallback_location
     job_url = _clean_value(row.get("job_url_direct")) or _clean_value(row.get("job_url"))
     posted_date = _format_posted_date(row.get("date_posted"))
+
+    excluded_industry = matching_excluded_industry(company_industry)
+    if excluded_industry:
+        logger.info(
+            "jobspy row excluded source={} query={} company={} company_industry={} matched={}",
+            source,
+            query,
+            company_name or "",
+            company_industry,
+            excluded_industry,
+        )
+        return None
 
     # JobSpy returns the full job description in the "description" column.
     # We store it in both fields:
@@ -175,6 +173,9 @@ def _normalize_row(
             query=query,
             title=title,
             company_name=company_name,
+            company_url=company_url,
+            company_url_direct=company_url_direct,
+            company_industry=company_industry,
             location=location,
             snippet=snippet,
             description=description,

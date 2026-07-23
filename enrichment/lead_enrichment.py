@@ -403,6 +403,11 @@ def lead_enrichment_enabled() -> bool:
     return _env_flag("LEAD_ENRICHMENT_ENABLED", default=False)
 
 
+def apollo_enrichment_enabled() -> bool:
+    """Require an explicit opt-in; an API key alone must not activate Apollo."""
+    return _env_flag("APOLLO_ENRICHMENT_ENABLED", default=False)
+
+
 def should_enrich_lead(lead: CompanyLead, freshness_days: int) -> bool:
     if lead.lead_score not in {"hot", "warm"}:
         return False
@@ -487,7 +492,11 @@ def enrich_company_lead_with_options(
                 stage="company_profile",
                 provider="apollo",
                 status="skipped",
-                message="Apollo API key not configured",
+                message=(
+                    "Apollo enrichment disabled"
+                    if not apollo_enrichment_enabled()
+                    else "Apollo API key not configured"
+                ),
             )
         )
     else:
@@ -780,6 +789,8 @@ def _build_google_search_client(timeout_seconds: int) -> GoogleSearchLinkedInRes
 
 
 def _build_apollo_client(timeout_seconds: int) -> ApolloClient | None:
+    if not apollo_enrichment_enabled():
+        return None
     api_key = (os.getenv("APOLLO_API_KEY") or "").strip()
     if not api_key:
         return None

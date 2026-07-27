@@ -286,6 +286,34 @@ class KeywordRecord(Base):
     )
 
 
+class KeywordCompanyResultRecord(Base):
+    __tablename__ = "keyword_company_results"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    keyword_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    keyword_text: Mapped[str] = mapped_column(Text, nullable=False)
+    company_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    source_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    first_discovered_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+    last_seen_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+    times_seen: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+
+    __table_args__ = (
+        UniqueConstraint("keyword_id", "company_id", name="uq_keyword_company_result"),
+        Index("idx_keyword_company_results_keyword", keyword_id),
+        Index("idx_keyword_company_results_company", company_id),
+        Index("idx_keyword_company_results_last_seen", last_seen_at),
+    )
+
+
 @dataclass(slots=True)
 class ScrapeLogEntry:
     source: str
@@ -376,6 +404,24 @@ class KeywordSearchItem:
     last_searched_at: datetime | None
 
 
+@dataclass(slots=True)
+class KeywordCompanySearchItem:
+    id: int
+    keyword_id: int
+    keyword: str
+    company_id: int
+    company_name: str
+    company_domain: str | None
+    company_url: str | None
+    linkedin_url: str | None
+    location: str | None
+    industry: str | None
+    source_url: str | None
+    first_discovered_at: datetime
+    last_seen_at: datetime
+    times_seen: int
+
+
 class Database:
     def __init__(self, database_url: str | None = None, echo: bool = False) -> None:
         self.database_url = _normalize_database_url(database_url or os.getenv("DATABASE_URL"))
@@ -427,6 +473,67 @@ class Database:
             record.updated_at = now
             session.flush()
             return _to_keyword_search_item(record)
+
+    def record_keyword_company(
+        self,
+        keyword_id: int,
+        company_name: str,
+        company_domain: str | None = None,
+        *,
+        source_url: str | None = None,
+        seen_at: datetime | None = None,
+    ) -> KeywordCompanySearchItem | None:
+        normalized_domain = canonicalize_domain(company_domain)
+        with self.session() as session, session.begin():
+            keyword = session.get(KeywordRecord, keyword_id)
+            if keyword is None:
+                return None
+            company = self._find_company_record(session, company_name, normalized_domain)
+            if company is None:
+                return None
+
+            record = session.scalar(
+                select(KeywordCompanyResultRecord)
+                .where(KeywordCompanyResultRecord.keyword_id == keyword_id)
+                .where(KeywordCompanyResultRecord.company_id == company.id)
+                .limit(1)
+            )
+            observed_at = _ensure_utc(seen_at) if seen_at is not None else datetime.now(timezone.utc)
+            if record is None:
+                record = KeywordCompanyResultRecord(
+                    keyword_id=keyword.id,
+                    keyword_text=keyword.keyword,
+                    company_id=company.id,
+                    source_url=source_url,
+                    first_discovered_at=observed_at,
+                    last_seen_at=observed_at,
+                    times_seen=1,
+                )
+                session.add(record)
+            else:
+                record.keyword_text = keyword.keyword
+                record.source_url = source_url or record.source_url
+                record.last_seen_at = max(_ensure_utc(record.last_seen_at), observed_at)
+                record.times_seen += 1
+            session.flush()
+            return _to_keyword_company_search_item(record, company)
+
+    def list_keyword_companies(self, limit: int = 500) -> list[KeywordCompanySearchItem]:
+        safe_limit = max(1, min(limit, 1000))
+        with self.session() as session:
+            rows = session.execute(
+                select(KeywordCompanyResultRecord, CompanyRecord)
+                .join(
+                    CompanyRecord,
+                    CompanyRecord.id == KeywordCompanyResultRecord.company_id,
+                )
+                .order_by(KeywordCompanyResultRecord.last_seen_at.desc())
+                .limit(safe_limit)
+            ).all()
+            return [
+                _to_keyword_company_search_item(result, company)
+                for result, company in rows
+            ]
 
     def _ensure_compat_columns(self) -> None:
         inspector = inspect(self.engine)
@@ -1300,6 +1407,28 @@ def _to_keyword_search_item(record: KeywordRecord) -> KeywordSearchItem:
         created_at=_ensure_utc(record.created_at),
         updated_at=_ensure_utc(record.updated_at),
         last_searched_at=_ensure_utc(record.last_searched_at) if record.last_searched_at is not None else None,
+    )
+
+
+def _to_keyword_company_search_item(
+    record: KeywordCompanyResultRecord,
+    company: CompanyRecord,
+) -> KeywordCompanySearchItem:
+    return KeywordCompanySearchItem(
+        id=record.id,
+        keyword_id=record.keyword_id,
+        keyword=record.keyword_text,
+        company_id=company.id,
+        company_name=company.company_name,
+        company_domain=canonicalize_domain(company.company_domain),
+        company_url=company.company_url,
+        linkedin_url=company.linkedin_url,
+        location=company.location,
+        industry=company.company_industry or company.industry,
+        source_url=record.source_url,
+        first_discovered_at=_ensure_utc(record.first_discovered_at),
+        last_seen_at=_ensure_utc(record.last_seen_at),
+        times_seen=record.times_seen,
     )
 
 

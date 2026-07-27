@@ -1,4 +1,4 @@
-from db.database import KeywordRecord, _names_similar, init_database
+from db.database import CompanyRecord, KeywordRecord, _names_similar, init_database
 
 
 def test_all_keywords_remain_available_after_each_search() -> None:
@@ -44,6 +44,40 @@ def test_keyword_search_error_does_not_remove_the_keyword() -> None:
     assert searched.search_count == 1
     assert searched.last_error == "Browser session unavailable"
     assert database.list_keywords()[0].keyword == "battery manufacturers in Sweden"
+
+
+def test_keyword_company_ledger_only_contains_explicitly_attributed_companies() -> None:
+    database = init_database("sqlite+pysqlite:///:memory:")
+    with database.session() as session, session.begin():
+        session.add(KeywordRecord(keyword="robotics startups in Canada"))
+        session.add_all(
+            [
+                CompanyRecord(company_name="Codex Robotics", company_domain="codexrobotics.ca"),
+                CompanyRecord(company_name="Ordinary Pipeline Company"),
+            ]
+        )
+
+    keyword = database.list_keywords()[0]
+    first = database.record_keyword_company(
+        keyword.id,
+        "Codex Robotics",
+        "codexrobotics.ca",
+        source_url="https://codexrobotics.ca/",
+    )
+    second = database.record_keyword_company(
+        keyword.id,
+        "Codex Robotics",
+        "codexrobotics.ca",
+        source_url="https://codexrobotics.ca/about",
+    )
+
+    assert first is not None
+    assert second is not None
+    assert second.times_seen == 2
+    results = database.list_keyword_companies()
+    assert [item.company_name for item in results] == ["Codex Robotics"]
+    assert results[0].keyword == "robotics startups in Canada"
+    assert results[0].source_url == "https://codexrobotics.ca/about"
 
 
 def test_short_brand_names_are_not_merged_by_shared_industry_descriptor() -> None:

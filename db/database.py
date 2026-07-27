@@ -258,6 +258,34 @@ class PipelineConfigMetaRecord(Base):
     value: Mapped[str] = mapped_column(Text, nullable=False)
 
 
+class KeywordRecord(Base):
+    __tablename__ = "keywords"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    keyword: Mapped[str] = mapped_column(Text, nullable=False)
+    google_xray_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    search_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    last_result_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    last_error: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
+    last_searched_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    __table_args__ = (
+        Index("uq_keywords_normalized", func.lower(keyword), unique=True),
+        Index("idx_keywords_last_searched", last_searched_at),
+    )
+
+
 @dataclass(slots=True)
 class ScrapeLogEntry:
     source: str
@@ -335,6 +363,19 @@ class EnrichmentLogEntry:
     payload: dict[str, Any] | None = None
 
 
+@dataclass(slots=True)
+class KeywordSearchItem:
+    id: int
+    keyword: str
+    google_xray_enabled: bool
+    search_count: int
+    last_result_count: int
+    last_error: str | None
+    created_at: datetime
+    updated_at: datetime
+    last_searched_at: datetime | None
+
+
 class Database:
     def __init__(self, database_url: str | None = None, echo: bool = False) -> None:
         self.database_url = _normalize_database_url(database_url or os.getenv("DATABASE_URL"))
@@ -358,6 +399,34 @@ class Database:
 
     def session(self) -> Session:
         return self.session_factory()
+
+    def list_keywords(self, limit: int = 500) -> list[KeywordSearchItem]:
+        safe_limit = max(1, min(limit, 500))
+        statement = select(KeywordRecord).order_by(
+            KeywordRecord.created_at.asc(),
+        ).limit(safe_limit)
+        with self.session() as session:
+            return [_to_keyword_search_item(record) for record in session.scalars(statement).all()]
+
+    def record_keyword_search(
+        self,
+        keyword_id: int,
+        *,
+        result_count: int = 0,
+        error: str | None = None,
+    ) -> KeywordSearchItem | None:
+        with self.session() as session, session.begin():
+            record = session.get(KeywordRecord, keyword_id)
+            if record is None:
+                return None
+            now = datetime.now(timezone.utc)
+            record.search_count += 1
+            record.last_result_count = max(0, result_count)
+            record.last_error = error.strip()[:4000] if error else None
+            record.last_searched_at = now
+            record.updated_at = now
+            session.flush()
+            return _to_keyword_search_item(record)
 
     def _ensure_compat_columns(self) -> None:
         inspector = inspect(self.engine)
@@ -405,6 +474,16 @@ class Database:
                 for column_name, ddl in compat_columns.items():
                     if column_name not in scrape_columns:
                         connection.execute(text(ddl))
+        if "keywords" in table_names:
+            keyword_columns = {column["name"] for column in inspector.get_columns("keywords")}
+            if "google_xray_enabled" not in keyword_columns:
+                with self.engine.begin() as connection:
+                    connection.execute(
+                        text(
+                            "ALTER TABLE keywords ADD COLUMN "
+                            "google_xray_enabled BOOLEAN NOT NULL DEFAULT FALSE"
+                        )
+                    )
         if "leads_contacts" not in table_names:
             LeadContactRecord.__table__.create(self.engine, checkfirst=True)
         if "enrichment_log" not in table_names:
@@ -1109,6 +1188,32 @@ def _names_similar(left: str, right: str) -> bool:
         return True
     if left_tokens and right_tokens and right_tokens.issubset(left_tokens | {"gmbh", "inc", "ltd", "llc", "ag"}):
         return True
+
+    # Generic business descriptors can make unrelated short brand names look
+    # deceptively similar (for example, "ABCO Industries" and
+    # "Ebco Industries"). Compare the distinctive name tokens separately so
+    # those records are not merged merely because their descriptors match.
+    generic_descriptors = {
+        "company",
+        "global",
+        "group",
+        "holdings",
+        "industries",
+        "industry",
+        "international",
+        "services",
+        "solutions",
+        "systems",
+        "technologies",
+        "technology",
+    }
+    left_core = " ".join(token for token in left_norm.split() if token not in generic_descriptors)
+    right_core = " ".join(token for token in right_norm.split() if token not in generic_descriptors)
+    if left_core and right_core and left_core != right_core:
+        core_ratio = SequenceMatcher(a=left_core, b=right_core).ratio()
+        if min(len(left_core), len(right_core)) <= 4 and core_ratio < 0.9:
+            return False
+
     return SequenceMatcher(a=left_norm, b=right_norm).ratio() >= 0.88
 
 
@@ -1181,6 +1286,20 @@ def _to_signal_view(signal: SignalRecord, company: CompanyRecord | None) -> Sign
         lead_score=lead_score,
         company_total_score=company_total_score,
         company_signal_count=company_signal_count,
+    )
+
+
+def _to_keyword_search_item(record: KeywordRecord) -> KeywordSearchItem:
+    return KeywordSearchItem(
+        id=record.id,
+        keyword=record.keyword,
+        google_xray_enabled=record.google_xray_enabled,
+        search_count=record.search_count,
+        last_result_count=record.last_result_count,
+        last_error=record.last_error,
+        created_at=_ensure_utc(record.created_at),
+        updated_at=_ensure_utc(record.updated_at),
+        last_searched_at=_ensure_utc(record.last_searched_at) if record.last_searched_at is not None else None,
     )
 
 

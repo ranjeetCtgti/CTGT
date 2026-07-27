@@ -1291,16 +1291,32 @@ def _names_similar(left: str, right: str) -> bool:
         return True
     left_tokens = set(left_norm.split())
     right_tokens = set(right_norm.split())
-    if left_tokens and right_tokens and left_tokens.issubset(right_tokens | {"gmbh", "inc", "ltd", "llc", "ag"}):
-        return True
-    if left_tokens and right_tokens and right_tokens.issubset(left_tokens | {"gmbh", "inc", "ltd", "llc", "ag"}):
-        return True
+    identity_descriptors = {
+        "aerospace",
+        "company",
+        "group",
+        "industries",
+        "industry",
+        "robotics",
+        "solutions",
+        "space",
+        "systems",
+        "technologies",
+        "technology",
+    }
+    if left_tokens and right_tokens and left_tokens.issubset(right_tokens):
+        if (right_tokens - left_tokens).issubset(identity_descriptors):
+            return True
+    if left_tokens and right_tokens and right_tokens.issubset(left_tokens):
+        if (left_tokens - right_tokens).issubset(identity_descriptors):
+            return True
 
     # Generic business descriptors can make unrelated short brand names look
     # deceptively similar (for example, "ABCO Industries" and
     # "Ebco Industries"). Compare the distinctive name tokens separately so
     # those records are not merged merely because their descriptors match.
     generic_descriptors = {
+        "aerospace",
         "company",
         "global",
         "group",

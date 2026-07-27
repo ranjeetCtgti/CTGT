@@ -84,5 +84,17 @@ def test_short_brand_names_are_not_merged_by_shared_industry_descriptor() -> Non
     assert _names_similar("ABCO Industries", "Ebco Industries Ltd.") is False
 
 
+def test_short_aerospace_brands_are_not_merged() -> None:
+    assert _names_similar("PAL Aerospace", "GAL Aerospace") is False
+
+
+def test_acquired_brand_is_not_merged_into_parent_name_without_identity_evidence() -> None:
+    assert _names_similar("Creaform - Ametek", "AMETEK") is False
+
+
+def test_brand_name_can_match_a_contextual_industry_suffix() -> None:
+    assert _names_similar("Wyvern", "Wyvern Space") is True
+
+
 def test_legal_suffix_variants_still_match() -> None:
     assert _names_similar("GHGSat", "GHGSat Inc.") is True

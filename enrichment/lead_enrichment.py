@@ -695,24 +695,22 @@ def run_lead_enrichment_pass(
     if not lead_enrichment_enabled():
         return summary
 
-    if freshness_days is None:
-        freshness_days = int(os.getenv("LEAD_ENRICHMENT_FRESHNESS_DAYS", "7"))
-
+    # Qualification is the hard gate for enrichment. Normal runs also select only
+    # companies that have never been enriched; --force remains an explicit manual
+    # override for re-enriching an already-qualified company.
+    leads = database.get_qualified_keyword_leads(
+        limit=None if company_names else limit,
+        only_unenriched=not force,
+    )
     if company_names:
         requested = {_normalize_company_name(name) for name in company_names if _normalize_company_name(name)}
-        leads = [lead for lead in database.get_leads(limit=None) if _normalize_company_name(lead.company_name) in requested]
+        leads = [lead for lead in leads if _normalize_company_name(lead.company_name) in requested]
         if limit is not None:
             leads = leads[:limit]
-    else:
-        leads = database.get_leads(limit=limit)
-    candidates = [lead for lead in leads if lead.lead_score in {"hot", "warm"}]
+    candidates = leads
     summary.candidates = len(candidates)
 
     for lead in candidates:
-        if not force and not should_enrich_lead(lead, freshness_days=freshness_days):
-            summary.skipped += 1
-            continue
-
         summary.attempted += 1
         try:
             outcome = enrich_company_lead_with_options(

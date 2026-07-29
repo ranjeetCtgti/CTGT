@@ -143,6 +143,53 @@ def test_keyword_company_qualification_brief_is_persisted_and_retained() -> None
     assert seen_again.recommended_products == ["Teamcenter", "Tecnomatix", "NX"]
 
 
+def test_qualified_keyword_leads_exclude_unqualified_and_enriched_companies() -> None:
+    database = init_database("sqlite+pysqlite:///:memory:")
+    enriched_at = datetime(2026, 7, 28, tzinfo=timezone.utc)
+    with database.session() as session, session.begin():
+        session.add(KeywordRecord(keyword="Canadian advanced manufacturers"))
+        session.add_all(
+            [
+                CompanyRecord(company_name="Qualified Cold Company", lead_score="cold"),
+                CompanyRecord(
+                    company_name="Already Enriched Company",
+                    lead_score="hot",
+                    last_enrichment_at=enriched_at,
+                ),
+                CompanyRecord(company_name="Needs Review Company", lead_score="hot"),
+            ]
+        )
+
+    keyword = database.list_keywords()[0]
+    database.record_keyword_company(
+        keyword.id,
+        "Qualified Cold Company",
+        qualification_status="qualified",
+        opportunity_score=80,
+    )
+    database.record_keyword_company(
+        keyword.id,
+        "Already Enriched Company",
+        qualification_status="qualified",
+        opportunity_score=90,
+    )
+    database.record_keyword_company(
+        keyword.id,
+        "Needs Review Company",
+        qualification_status="needs_review",
+        opportunity_score=40,
+    )
+
+    unenriched = database.get_qualified_keyword_leads()
+    all_qualified = database.get_qualified_keyword_leads(only_unenriched=False)
+
+    assert [lead.company_name for lead in unenriched] == ["Qualified Cold Company"]
+    assert {lead.company_name for lead in all_qualified} == {
+        "Qualified Cold Company",
+        "Already Enriched Company",
+    }
+
+
 def test_short_brand_names_are_not_merged_by_shared_industry_descriptor() -> None:
     assert _names_similar("ABCO Industries", "Ebco Industries Ltd.") is False
 

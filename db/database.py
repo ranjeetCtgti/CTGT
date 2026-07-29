@@ -1046,6 +1046,41 @@ class Database:
             companies = session.scalars(stmt).all()
             return [_to_company_lead(company) for company in companies]
 
+    def get_qualified_keyword_leads(
+        self,
+        limit: int | None = None,
+        *,
+        only_unenriched: bool = True,
+    ) -> list[CompanyLead]:
+        """Return companies explicitly qualified by at least one keyword research result."""
+        with self.session() as session:
+            latest_qualification = (
+                select(
+                    KeywordCompanyResultRecord.company_id.label("company_id"),
+                    func.max(KeywordCompanyResultRecord.qualified_at).label("qualified_at"),
+                )
+                .where(KeywordCompanyResultRecord.qualification_status == "qualified")
+                .group_by(KeywordCompanyResultRecord.company_id)
+                .subquery()
+            )
+            stmt = (
+                select(CompanyRecord)
+                .join(
+                    latest_qualification,
+                    latest_qualification.c.company_id == CompanyRecord.id,
+                )
+                .order_by(
+                    latest_qualification.c.qualified_at.desc().nullslast(),
+                    CompanyRecord.last_updated.desc(),
+                )
+            )
+            if only_unenriched:
+                stmt = stmt.where(CompanyRecord.last_enrichment_at.is_(None))
+            if limit is not None:
+                stmt = stmt.limit(limit)
+            companies = session.scalars(stmt).all()
+            return [_to_company_lead(company) for company in companies]
+
     def get_signals(
         self,
         source: str | None = None,

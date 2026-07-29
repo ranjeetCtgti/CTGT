@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from db.database import CompanyRecord, KeywordRecord, _names_similar, init_database
 
 
@@ -78,6 +80,67 @@ def test_keyword_company_ledger_only_contains_explicitly_attributed_companies() 
     assert [item.company_name for item in results] == ["Codex Robotics"]
     assert results[0].keyword == "robotics startups in Canada"
     assert results[0].source_url == "https://codexrobotics.ca/about"
+
+
+def test_keyword_company_qualification_brief_is_persisted_and_retained() -> None:
+    database = init_database("sqlite+pysqlite:///:memory:")
+    with database.session() as session, session.begin():
+        session.add(KeywordRecord(keyword="aerospace manufacturers in Canada"))
+        session.add(
+            CompanyRecord(
+                company_name="Northstar Aerospace",
+                company_domain="northstar.example",
+            )
+        )
+
+    keyword = database.list_keywords()[0]
+    signal_date = datetime(2026, 7, 21, tzinfo=timezone.utc)
+    qualified = database.record_keyword_company(
+        keyword.id,
+        "Northstar Aerospace",
+        "northstar.example",
+        source_url="https://news.example/northstar-expansion",
+        source_title="Northstar opens a new composite manufacturing line",
+        source_publisher="Manufacturing News",
+        signal_label="New composite manufacturing line",
+        signal_date=signal_date,
+        challenge_summary="Scaling engineering change control across a new production line.",
+        why_relevant=(
+            "Teamcenter can govern product and process revisions while Tecnomatix validates "
+            "the expanded factory flow."
+        ),
+        recommended_products=["Teamcenter", "Tecnomatix", "NX"],
+        qualification_status="qualified",
+        opportunity_score=86,
+        manufacturing_fit_score=95,
+        trigger_score=85,
+        solution_fit_score=90,
+        evidence_quality_score=80,
+    )
+
+    assert qualified is not None
+    assert qualified.qualification_status == "qualified"
+    assert qualified.opportunity_score == 86
+    assert qualified.signal_date == signal_date
+    assert qualified.recommended_products == ["Teamcenter", "Tecnomatix", "NX"]
+    assert qualified.qualified_at is not None
+
+    seen_again = database.record_keyword_company(
+        keyword.id,
+        "Northstar Aerospace",
+        "northstar.example",
+        source_url="https://northstar.example/",
+    )
+
+    assert seen_again is not None
+    assert seen_again.times_seen == 2
+    assert seen_again.qualification_status == "qualified"
+    assert seen_again.opportunity_score == 86
+    assert seen_again.source_url == "https://news.example/northstar-expansion"
+    assert seen_again.challenge_summary == (
+        "Scaling engineering change control across a new production line."
+    )
+    assert seen_again.recommended_products == ["Teamcenter", "Tecnomatix", "NX"]
 
 
 def test_short_brand_names_are_not_merged_by_shared_industry_descriptor() -> None:

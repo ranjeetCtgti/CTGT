@@ -294,6 +294,24 @@ class KeywordCompanyResultRecord(Base):
     keyword_text: Mapped[str] = mapped_column(Text, nullable=False)
     company_id: Mapped[int] = mapped_column(Integer, nullable=False)
     source_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    source_title: Mapped[str | None] = mapped_column(Text, nullable=True)
+    source_publisher: Mapped[str | None] = mapped_column(Text, nullable=True)
+    signal_label: Mapped[str | None] = mapped_column(Text, nullable=True)
+    signal_date: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    challenge_summary: Mapped[str | None] = mapped_column(Text, nullable=True)
+    why_relevant: Mapped[str | None] = mapped_column(Text, nullable=True)
+    recommended_products: Mapped[list[str]] = mapped_column(_json_type(), nullable=False, default=list)
+    qualification_status: Mapped[str] = mapped_column(
+        String(32),
+        nullable=False,
+        default="needs_review",
+    )
+    opportunity_score: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    manufacturing_fit_score: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    trigger_score: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    solution_fit_score: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    evidence_quality_score: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    qualified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     first_discovered_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
@@ -417,6 +435,20 @@ class KeywordCompanySearchItem:
     location: str | None
     industry: str | None
     source_url: str | None
+    source_title: str | None
+    source_publisher: str | None
+    signal_label: str | None
+    signal_date: datetime | None
+    challenge_summary: str | None
+    why_relevant: str | None
+    recommended_products: list[str]
+    qualification_status: str
+    opportunity_score: int
+    manufacturing_fit_score: int
+    trigger_score: int
+    solution_fit_score: int
+    evidence_quality_score: int
+    qualified_at: datetime | None
     first_discovered_at: datetime
     last_seen_at: datetime
     times_seen: int
@@ -481,6 +513,19 @@ class Database:
         company_domain: str | None = None,
         *,
         source_url: str | None = None,
+        source_title: str | None = None,
+        source_publisher: str | None = None,
+        signal_label: str | None = None,
+        signal_date: datetime | None = None,
+        challenge_summary: str | None = None,
+        why_relevant: str | None = None,
+        recommended_products: list[str] | None = None,
+        qualification_status: str | None = None,
+        opportunity_score: int | None = None,
+        manufacturing_fit_score: int | None = None,
+        trigger_score: int | None = None,
+        solution_fit_score: int | None = None,
+        evidence_quality_score: int | None = None,
         seen_at: datetime | None = None,
     ) -> KeywordCompanySearchItem | None:
         normalized_domain = canonicalize_domain(company_domain)
@@ -499,12 +544,49 @@ class Database:
                 .limit(1)
             )
             observed_at = _ensure_utc(seen_at) if seen_at is not None else datetime.now(timezone.utc)
+            normalized_status = _normalize_qualification_status(qualification_status)
+            has_qualification_update = any(
+                value is not None
+                for value in (
+                    source_title,
+                    source_publisher,
+                    signal_label,
+                    signal_date,
+                    challenge_summary,
+                    why_relevant,
+                    recommended_products,
+                    qualification_status,
+                    opportunity_score,
+                    manufacturing_fit_score,
+                    trigger_score,
+                    solution_fit_score,
+                    evidence_quality_score,
+                )
+            )
             if record is None:
                 record = KeywordCompanyResultRecord(
                     keyword_id=keyword.id,
                     keyword_text=keyword.keyword,
                     company_id=company.id,
                     source_url=source_url,
+                    source_title=_clean_optional_text(source_title),
+                    source_publisher=_clean_optional_text(source_publisher),
+                    signal_label=_clean_optional_text(signal_label),
+                    signal_date=_ensure_utc(signal_date) if signal_date is not None else None,
+                    challenge_summary=_clean_optional_text(challenge_summary),
+                    why_relevant=_clean_optional_text(why_relevant),
+                    recommended_products=_merge_unique([], recommended_products),
+                    qualification_status=normalized_status or "needs_review",
+                    opportunity_score=_clamp_score(opportunity_score),
+                    manufacturing_fit_score=_clamp_score(manufacturing_fit_score),
+                    trigger_score=_clamp_score(trigger_score),
+                    solution_fit_score=_clamp_score(solution_fit_score),
+                    evidence_quality_score=_clamp_score(evidence_quality_score),
+                    qualified_at=(
+                        observed_at
+                        if normalized_status in {"qualified", "watchlist", "disqualified"}
+                        else None
+                    ),
                     first_discovered_at=observed_at,
                     last_seen_at=observed_at,
                     times_seen=1,
@@ -512,7 +594,51 @@ class Database:
                 session.add(record)
             else:
                 record.keyword_text = keyword.keyword
-                record.source_url = source_url or record.source_url
+                record_has_qualification_brief = bool(
+                    record.challenge_summary
+                    or record.why_relevant
+                    or record.signal_label
+                    or record.recommended_products
+                    or record.opportunity_score
+                    or record.qualification_status != "needs_review"
+                )
+                if source_url is not None and (
+                    record.source_url is None
+                    or has_qualification_update
+                    or not record_has_qualification_brief
+                ):
+                    record.source_url = source_url
+                record.source_title = _clean_optional_text(source_title) or record.source_title
+                record.source_publisher = (
+                    _clean_optional_text(source_publisher) or record.source_publisher
+                )
+                record.signal_label = _clean_optional_text(signal_label) or record.signal_label
+                record.signal_date = (
+                    _ensure_utc(signal_date) if signal_date is not None else record.signal_date
+                )
+                record.challenge_summary = (
+                    _clean_optional_text(challenge_summary) or record.challenge_summary
+                )
+                record.why_relevant = _clean_optional_text(why_relevant) or record.why_relevant
+                if recommended_products is not None:
+                    record.recommended_products = _merge_unique([], recommended_products)
+                if normalized_status is not None:
+                    record.qualification_status = normalized_status
+                    record.qualified_at = (
+                        observed_at
+                        if normalized_status in {"qualified", "watchlist", "disqualified"}
+                        else None
+                    )
+                if opportunity_score is not None:
+                    record.opportunity_score = _clamp_score(opportunity_score)
+                if manufacturing_fit_score is not None:
+                    record.manufacturing_fit_score = _clamp_score(manufacturing_fit_score)
+                if trigger_score is not None:
+                    record.trigger_score = _clamp_score(trigger_score)
+                if solution_fit_score is not None:
+                    record.solution_fit_score = _clamp_score(solution_fit_score)
+                if evidence_quality_score is not None:
+                    record.evidence_quality_score = _clamp_score(evidence_quality_score)
                 record.last_seen_at = max(_ensure_utc(record.last_seen_at), observed_at)
                 record.times_seen += 1
             session.flush()
@@ -567,6 +693,53 @@ class Database:
             with self.engine.begin() as connection:
                 for column_name, ddl in compat_columns.items():
                     if column_name not in company_columns:
+                        connection.execute(text(ddl))
+        if "keyword_company_results" in table_names:
+            keyword_company_columns = {
+                column["name"] for column in inspector.get_columns("keyword_company_results")
+            }
+            keyword_company_compat_columns = {
+                "source_title": "ALTER TABLE keyword_company_results ADD COLUMN source_title TEXT",
+                "source_publisher": "ALTER TABLE keyword_company_results ADD COLUMN source_publisher TEXT",
+                "signal_label": "ALTER TABLE keyword_company_results ADD COLUMN signal_label TEXT",
+                "signal_date": "ALTER TABLE keyword_company_results ADD COLUMN signal_date TIMESTAMPTZ",
+                "challenge_summary": "ALTER TABLE keyword_company_results ADD COLUMN challenge_summary TEXT",
+                "why_relevant": "ALTER TABLE keyword_company_results ADD COLUMN why_relevant TEXT",
+                "recommended_products": (
+                    "ALTER TABLE keyword_company_results "
+                    "ADD COLUMN recommended_products JSONB NOT NULL DEFAULT '[]'::jsonb"
+                ),
+                "qualification_status": (
+                    "ALTER TABLE keyword_company_results "
+                    "ADD COLUMN qualification_status VARCHAR(32) NOT NULL DEFAULT 'needs_review'"
+                ),
+                "opportunity_score": (
+                    "ALTER TABLE keyword_company_results "
+                    "ADD COLUMN opportunity_score INTEGER NOT NULL DEFAULT 0"
+                ),
+                "manufacturing_fit_score": (
+                    "ALTER TABLE keyword_company_results "
+                    "ADD COLUMN manufacturing_fit_score INTEGER NOT NULL DEFAULT 0"
+                ),
+                "trigger_score": (
+                    "ALTER TABLE keyword_company_results "
+                    "ADD COLUMN trigger_score INTEGER NOT NULL DEFAULT 0"
+                ),
+                "solution_fit_score": (
+                    "ALTER TABLE keyword_company_results "
+                    "ADD COLUMN solution_fit_score INTEGER NOT NULL DEFAULT 0"
+                ),
+                "evidence_quality_score": (
+                    "ALTER TABLE keyword_company_results "
+                    "ADD COLUMN evidence_quality_score INTEGER NOT NULL DEFAULT 0"
+                ),
+                "qualified_at": (
+                    "ALTER TABLE keyword_company_results ADD COLUMN qualified_at TIMESTAMPTZ"
+                ),
+            }
+            with self.engine.begin() as connection:
+                for column_name, ddl in keyword_company_compat_columns.items():
+                    if column_name not in keyword_company_columns:
                         connection.execute(text(ddl))
         if "scrape_log" in table_names:
             scrape_columns = {column["name"] for column in inspector.get_columns("scrape_log")}
@@ -1246,6 +1419,30 @@ def _merge_unique(current: list[Any] | None, incoming: list[Any] | None) -> list
     return merged
 
 
+def _clean_optional_text(value: str | None) -> str | None:
+    if value is None:
+        return None
+    cleaned = value.strip()
+    return cleaned or None
+
+
+def _clamp_score(value: int | None) -> int:
+    return max(0, min(100, int(value or 0)))
+
+
+def _normalize_qualification_status(value: str | None) -> str | None:
+    if value is None:
+        return None
+    normalized = value.strip().lower().replace("-", "_").replace(" ", "_")
+    allowed = {"needs_review", "qualified", "watchlist", "disqualified"}
+    if normalized not in allowed:
+        raise ValueError(
+            "qualification_status must be one of: "
+            "needs_review, qualified, watchlist, disqualified"
+        )
+    return normalized
+
+
 def _normalize_contacts(contacts: list[LeadContact]) -> list[LeadContact]:
     normalized: list[LeadContact] = []
     seen: set[str] = set()
@@ -1442,6 +1639,24 @@ def _to_keyword_company_search_item(
         location=company.location,
         industry=company.company_industry or company.industry,
         source_url=record.source_url,
+        source_title=record.source_title,
+        source_publisher=record.source_publisher,
+        signal_label=record.signal_label,
+        signal_date=(
+            _ensure_utc(record.signal_date) if record.signal_date is not None else None
+        ),
+        challenge_summary=record.challenge_summary,
+        why_relevant=record.why_relevant,
+        recommended_products=list(record.recommended_products or []),
+        qualification_status=record.qualification_status or "needs_review",
+        opportunity_score=record.opportunity_score or 0,
+        manufacturing_fit_score=record.manufacturing_fit_score or 0,
+        trigger_score=record.trigger_score or 0,
+        solution_fit_score=record.solution_fit_score or 0,
+        evidence_quality_score=record.evidence_quality_score or 0,
+        qualified_at=(
+            _ensure_utc(record.qualified_at) if record.qualified_at is not None else None
+        ),
         first_discovered_at=_ensure_utc(record.first_discovered_at),
         last_seen_at=_ensure_utc(record.last_seen_at),
         times_seen=record.times_seen,

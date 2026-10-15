@@ -1,6 +1,7 @@
 .env
 .env.*
 !.env.example
+PRIVATE_CODEX_SECOND_DEVICE_BOOTSTRAP_PROMPT.md
 __pycache__/
 */__pycache__/
 *.py[cod]

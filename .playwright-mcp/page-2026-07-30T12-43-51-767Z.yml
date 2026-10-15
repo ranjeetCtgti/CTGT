@@ -1,0 +1,790 @@
+- generic [ref=f13e1]:
+  - link [ref=f13e2] [cursor=pointer]:
+    - /url: "#main-content"
+    - text: Skip to main content
+  - banner [ref=f13e3]:
+    - navigation [ref=f13e4]:
+      - link [ref=f13e5] [cursor=pointer]:
+        - /url: /?trk=organization_guest_nav-header-logo
+        - generic [ref=f13e6]: LinkedIn
+      - list [ref=f13e8]:
+        - listitem [ref=f13e9]:
+          - link [ref=f13e10] [cursor=pointer]:
+            - /url: https://www.linkedin.com/top-content?trk=organization_guest_guest_nav_menu_topContent
+            - generic [ref=f13e12]: Top Content
+        - listitem [ref=f13e13]:
+          - link [ref=f13e14] [cursor=pointer]:
+            - /url: https://www.linkedin.com/pub/dir/+/+?trk=organization_guest_guest_nav_menu_people
+            - generic [ref=f13e16]: People
+        - listitem [ref=f13e17]:
+          - link [ref=f13e18] [cursor=pointer]:
+            - /url: https://www.linkedin.com/learning/search?trk=organization_guest_guest_nav_menu_learning
+            - generic [ref=f13e20]: Learning
+        - listitem [ref=f13e21]:
+          - link [ref=f13e22] [cursor=pointer]:
+            - /url: https://www.linkedin.com/jobs/search?trk=organization_guest_guest_nav_menu_jobs
+            - generic [ref=f13e24]: Jobs
+        - listitem [ref=f13e25]:
+          - link [ref=f13e26] [cursor=pointer]:
+            - /url: https://www.linkedin.com/games?trk=organization_guest_guest_nav_menu_games
+            - generic [ref=f13e28]: Games
+        - listitem [ref=f13e29]:
+          - link [ref=f13e30] [cursor=pointer]:
+            - /url: ms-windows-store://pdp/?ProductId=9WZDNCRFJ4Q7&mode=mini&cid=guest_nav_upsell&trk=organization_guest_guest_nav_menu_windows
+            - generic [ref=f13e32]: Get the app
+      - generic [ref=f13e33]:
+        - link [ref=f13e34] [cursor=pointer]:
+          - /url: https://www.linkedin.com/login?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&fromSignIn=true&trk=organization_guest_nav-header-signin
+          - text: Sign in
+        - link [ref=f13e35] [cursor=pointer]:
+          - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_nav-header-join
+          - text: Join now
+  - main [ref=f13e36]:
+    - generic [ref=f13e37]:
+      - generic [ref=f13e38]:
+        - figure [ref=f13e39]
+        - generic [ref=f13e43]:
+          - generic [ref=f13e46]:
+            - generic [ref=f13e47]:
+              - heading [level=1] [ref=f13e48]: Maritime Launch Services
+              - heading [level=2] [ref=f13e49]: Aviation and Aerospace Component Manufacturing
+              - heading [level=3] [ref=f13e50]:
+                - text: Halifax, Nova Scotia
+                - generic [ref=f13e51]: ·
+                - text: 8,987 followers
+              - heading [level=4] [ref=f13e52]:
+                - generic [ref=f13e53]: Canada's First Commercial Spaceport
+              - link [ref=f13e55] [cursor=pointer]:
+                - /url: https://www.linkedin.com/login?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&fromSignIn=true&trk=top-card_top-card-secondary-button-top-card-secondary-cta
+                - text: Follow
+            - list [ref=f13e57]:
+              - listitem [ref=f13e58]:
+                - link [ref=f13e60] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fsearch%2Fresults%2Fpeople%2F%3FfacetCurrentCompany%3D%255B35655094%255D&trk=org-employees_cta_face-pile-cta
+                  - paragraph [ref=f13e63]: Discover all 13 employees
+          - button [ref=f13e66] [cursor=pointer]
+      - generic [ref=f13e67]:
+        - generic [ref=f13e68]:
+          - heading [level=2] [ref=f13e69]: About us
+          - generic [ref=f13e70]:
+            - paragraph [ref=f13e71]: "Maritime Launch (Cboe CA: MAXQ, OTCQB: MAXQF) is a Canadian-owned commercial space company based in Nova Scotia. Maritime Launch is developing Spaceport Nova Scotia, a dual-use commercial spaceport designed to support both civil and defence-related space missions. The spaceport will provide satellite launch services to domestic and international clients across the global commercial space market, supporting a wide range of orbital inclinations from a single location. Spaceport Nova Scotia is Canada’s first commercial orbital launch complex, enabling launch vehicles to place satellites into low Earth orbit. For more information about Maritime Launch and Spaceport Nova Scotia, visit www.maritimelaunch.com"
+            - generic [ref=f13e72]:
+              - generic [ref=f13e73]:
+                - term [ref=f13e74]: Website
+                - definition [ref=f13e75]:
+                  - link [ref=f13e76] [cursor=pointer]:
+                    - /url: https://www.linkedin.com/redir/redirect?url=https%3A%2F%2Fwww%2Emaritimelaunch%2Ecom&urlhash=2jXt&trk=about_website
+                    - text: https://www.maritimelaunch.com
+              - generic [ref=f13e77]:
+                - term [ref=f13e78]: Industry
+                - definition [ref=f13e79]: Aviation and Aerospace Component Manufacturing
+              - generic [ref=f13e80]:
+                - term [ref=f13e81]: Company size
+                - definition [ref=f13e82]: 2-10 employees
+              - generic [ref=f13e83]:
+                - term [ref=f13e84]: Headquarters
+                - definition [ref=f13e85]: Halifax, Nova Scotia
+              - generic [ref=f13e86]:
+                - term [ref=f13e87]: Type
+                - definition [ref=f13e88]: Privately Held
+              - generic [ref=f13e89]:
+                - term [ref=f13e90]: Founded
+                - definition [ref=f13e91]: "2016"
+        - generic [ref=f13e92]:
+          - heading [level=2] [ref=f13e93]: Locations
+          - list [ref=f13e95]:
+            - listitem [ref=f13e96]:
+              - text: Primary
+              - generic [ref=f13e97]:
+                - paragraph [ref=f13e98]: Upper Water Street
+                - paragraph [ref=f13e99]: Halifax, Nova Scotia, CA
+              - link [ref=f13e100] [cursor=pointer]:
+                - /url: https://www.bing.com/maps?where=Upper+Water+Street+Halifax+Nova+Scotia+CA&trk=org-locations_url
+                - text: Get directions
+            - listitem [ref=f13e101]:
+              - paragraph [ref=f13e103]: Halifax, CA
+              - link [ref=f13e104] [cursor=pointer]:
+                - /url: https://www.bing.com/maps?where=Halifax+CA&trk=org-locations_url
+                - text: Get directions
+        - generic [ref=f13e105]:
+          - heading [level=2] [ref=f13e106]: Employees at Maritime Launch Services
+          - generic [ref=f13e107]:
+            - list [ref=f13e108]:
+              - listitem [ref=f13e109]:
+                - link [ref=f13e110] [cursor=pointer]:
+                  - /url: https://ca.linkedin.com/in/yaroslav-pustovyi?trk=org-employees
+                  - heading [level=3] [ref=f13e113]: Yaroslav Pustovyi
+              - listitem [ref=f13e114]:
+                - link [ref=f13e115] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/in/robertfeierbach?trk=org-employees
+                  - heading [level=3] [ref=f13e118]: Robert Feierbach
+              - listitem [ref=f13e119]:
+                - link [ref=f13e120] [cursor=pointer]:
+                  - /url: https://ca.linkedin.com/in/rita-theil-3084b17?trk=org-employees
+                  - heading [level=3] [ref=f13e123]: Rita Theil
+              - listitem [ref=f13e124]:
+                - link [ref=f13e125] [cursor=pointer]:
+                  - /url: https://ca.linkedin.com/in/ian-mcleod-6b403115?trk=org-employees
+                  - heading [level=3] [ref=f13e128]: Ian McLeod
+            - link [ref=f13e129] [cursor=pointer]:
+              - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fsearch%2Fresults%2Fpeople%2F%3FfacetCurrentCompany%3D%255B35655094%255D&trk=public_biz_employees-join
+              - text: See all employees
+        - generic [ref=f13e130]:
+          - heading [level=2] [ref=f13e131]: Updates
+          - list [ref=f13e133]:
+            - listitem [ref=f13e134]:
+              - generic [ref=f13e135]:
+                - link [ref=f13e136] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/maritimelaunch_bnn-bloomberg-canada-business-news-tsx-activity-7487895424226197504-wDRh
+                - article [ref=f13e137]:
+                  - generic [ref=f13e138]:
+                    - generic [ref=f13e140]:
+                      - link [ref=f13e141] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/maritimelaunch?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f13e143]:
+                        - link [ref=f13e145] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/maritimelaunch?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Maritime Launch Services
+                        - paragraph [ref=f13e146]: 8,987 followers
+                        - time [ref=f13e148]: 1d
+                    - button [ref=f13e151] [cursor=pointer]
+                  - paragraph [ref=f13e153]:
+                    - text: Today, Maritime Launch is featured on
+                    - link [ref=f13e154] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/company/bnn-bloomberg?trk=organization_guest_main-feed-card-text
+                      - text: BNN Bloomberg
+                    - text: . 🚀 Thank you for shining a spotlight on Maritime Launch, $MAXQ and Spaceport Nova Scotia. Canada is building sovereign commercial launch capacity, and we’re proud to be leading the way. Canada’s journey to orbit starts in Nova Scotia. 🇨🇦
+                    - link [ref=f13e155] [cursor=pointer]:
+                      - /url: https://lnkd.in/exir-Xy?trk=organization_guest_main-feed-card-text
+                      - text: https://lnkd.in/exir-Xy
+                    - link [ref=f13e156] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/company/cboe?trk=organization_guest_main-feed-card-text
+                      - text: Cboe Global Markets
+                    - link [ref=f13e157] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fcboe&trk=organization_guest_main-feed-card-text
+                      - text: "#CBOE"
+                    - link [ref=f13e158] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fcanadianspace&trk=organization_guest_main-feed-card-text
+                      - text: "#CanadianSpace"
+                    - link [ref=f13e159] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fspaceeconomy&trk=organization_guest_main-feed-card-text
+                      - text: "#SpaceEconomy"
+                    - link [ref=f13e160] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fmaritimelaunch&trk=organization_guest_main-feed-card-text
+                      - text: "#MaritimeLaunch"
+                    - link [ref=f13e161] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fmaxq&trk=organization_guest_main-feed-card-text
+                      - text: "#MAXQ"
+                  - button [ref=f13e163] [cursor=pointer]:
+                    - generic [ref=f13e166]:
+                      - generic [ref=f13e167]: BNN Bloomberg - Canada Business News, TSX Today, Oil and Energy Prices
+                      - generic [ref=f13e168]: bnnbloomberg.ca
+                  - generic [ref=f13e169]:
+                    - link [ref=f13e170] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_social-actions-reactions
+                      - generic [ref=f13e171]: "59"
+                    - link [ref=f13e172] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_social-actions-comments
+                      - text: · 1 Comment
+                  - generic [ref=f13e173]:
+                    - link [ref=f13e174] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f13e176]: Like
+                    - link [ref=f13e177] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f13e179]: Comment
+                    - link [ref=f13e180] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f13e182]: Share
+            - listitem [ref=f13e183]:
+              - generic [ref=f13e184]:
+                - link [ref=f13e185] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/maritimelaunch_maritimelaunch-discoverycentre-stem-activity-7486060167038390272-3vZu
+                - article [ref=f13e186]:
+                  - generic [ref=f13e187]:
+                    - generic [ref=f13e189]:
+                      - link [ref=f13e190] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/maritimelaunch?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f13e192]:
+                        - link [ref=f13e194] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/maritimelaunch?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Maritime Launch Services
+                        - paragraph [ref=f13e195]: 8,987 followers
+                        - time [ref=f13e197]: 6d
+                    - button [ref=f13e200] [cursor=pointer]
+                  - generic [ref=f13e201]:
+                    - paragraph [ref=f13e202]:
+                      - text: From curiosity to launch. 🚀 An incredible day at the Halifax Discovery Centre connecting with future scientists, engineers, dreamers, and explorers. A strong space sector in Canada starts with inspiring the next generation 🇨🇦✨
+                      - link [ref=f13e203] [cursor=pointer]:
+                        - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fmaritimelaunch&trk=organization_guest_main-feed-card-text
+                        - text: "#MaritimeLaunch"
+                      - link [ref=f13e204] [cursor=pointer]:
+                        - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fdiscoverycentre&trk=organization_guest_main-feed-card-text
+                        - text: "#DiscoveryCentre"
+                      - link [ref=f13e205] [cursor=pointer]:
+                        - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fstem&trk=organization_guest_main-feed-card-text
+                        - text: "#STEM"
+                      - link [ref=f13e206] [cursor=pointer]:
+                        - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fcanadasgatewaytospace&trk=organization_guest_main-feed-card-text
+                        - text: "#CanadasGatewayToSpace"
+                      - link [ref=f13e207] [cursor=pointer]:
+                        - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fnovascotia&trk=organization_guest_main-feed-card-text
+                        - text: "#NovaScotia"
+                    - button [ref=f13e208] [cursor=pointer]: …more
+                  - generic [ref=f13e211]:
+                    - link [ref=f13e212] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_social-actions-reactions
+                      - generic [ref=f13e213]: "111"
+                    - link [ref=f13e214] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_social-actions-comments
+                      - text: · 4 Comments
+                  - generic [ref=f13e215]:
+                    - link [ref=f13e216] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f13e218]: Like
+                    - link [ref=f13e219] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f13e221]: Comment
+                    - link [ref=f13e222] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f13e224]: Share
+            - listitem [ref=f13e225]:
+              - generic [ref=f13e226]:
+                - link [ref=f13e227] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/activity-7485013936963018752-xY7r
+                - article [ref=f13e228]:
+                  - paragraph [ref=f13e229]:
+                    - link [ref=f13e230] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/company/maritimelaunch?trk=organization_guest_main-feed-card_feed-reaction-header
+                      - text: Maritime Launch Services
+                    - text: reposted this
+                  - generic [ref=f13e231]:
+                    - generic [ref=f13e233]:
+                      - link [ref=f13e234] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/spaceqmedia?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f13e236]:
+                        - link [ref=f13e238] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/spaceqmedia?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: SpaceQ
+                        - paragraph [ref=f13e239]: 1,618 followers
+                        - time [ref=f13e241]: 1w
+                    - button [ref=f13e244] [cursor=pointer]
+                  - paragraph [ref=f13e246]: Canadians back sovereign launch capabilities in new Abacus Data poll A new national survey conducted by Abacus Data for Maritime Launch Services reveals that 68 per cent of Canadians believe the country should have the ability to launch satellites from its own soil. This report is the first comprehensive public polling data on sovereign launch capabilities in Canada. The findings suggest strong public support for domestic space infrastructure, effectively justifying recent federal policy moves and sector funding....
+                  - button [ref=f13e248] [cursor=pointer]:
+                    - generic [ref=f13e251]:
+                      - generic [ref=f13e252]: Canadians back sovereign launch capabilities in new Abacus Data poll
+                      - generic [ref=f13e253]: https://spaceq.ca
+                  - generic [ref=f13e254]:
+                    - link [ref=f13e255] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_social-actions-reactions
+                      - generic [ref=f13e256]: "46"
+                    - link [ref=f13e257] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_social-actions-comments
+                      - text: · 1 Comment
+                  - generic [ref=f13e258]:
+                    - link [ref=f13e259] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f13e261]: Like
+                    - link [ref=f13e262] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f13e264]: Comment
+                    - link [ref=f13e265] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f13e267]: Share
+            - listitem [ref=f13e268]:
+              - generic [ref=f13e269]:
+                - link [ref=f13e270] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/activity-7483467996305190912-zXdT
+                - article [ref=f13e271]:
+                  - paragraph [ref=f13e272]:
+                    - link [ref=f13e273] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/company/maritimelaunch?trk=organization_guest_main-feed-card_feed-reaction-header
+                      - text: Maritime Launch Services
+                    - text: reposted this
+                  - generic [ref=f13e274]:
+                    - generic [ref=f13e276]:
+                      - link [ref=f13e277] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/in/dr-david-coletto-b44a8622?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f13e279]:
+                        - link [ref=f13e281] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/in/dr-david-coletto-b44a8622?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Dr. David Coletto
+                        - time [ref=f13e283]: 2w
+                    - button [ref=f13e286] [cursor=pointer]
+                  - paragraph [ref=f13e288]:
+                    - text: The Artemis II mission created a moment of real pride for Canadians. Our new polling suggests people want that pride turned into capacity. Most support sovereign launch infrastructure and see it as connected to security, growth, and independence.
+                    - link [ref=f13e289] [cursor=pointer]:
+                      - /url: https://lnkd.in/g49uyVkh?trk=organization_guest_main-feed-card-text
+                      - text: https://lnkd.in/g49uyVkh
+                  - list [ref=f13e290]:
+                    - listitem [ref=f13e291]
+                  - generic [ref=f13e293]:
+                    - link [ref=f13e294] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_social-actions-reactions
+                      - generic [ref=f13e295]: "18"
+                    - link [ref=f13e296] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_social-actions-comments
+                      - text: · 1 Comment
+                  - generic [ref=f13e297]:
+                    - link [ref=f13e298] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f13e300]: Like
+                    - link [ref=f13e301] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f13e303]: Comment
+                    - link [ref=f13e304] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f13e306]: Share
+            - listitem [ref=f13e307]:
+              - generic [ref=f13e308]:
+                - link [ref=f13e309] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/maritimelaunch_a-career-built-on-service-leadership-and-activity-7483113807112753152-LCxd
+                - article [ref=f13e310]:
+                  - generic [ref=f13e311]:
+                    - generic [ref=f13e313]:
+                      - link [ref=f13e314] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/maritimelaunch?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f13e316]:
+                        - link [ref=f13e318] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/maritimelaunch?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Maritime Launch Services
+                        - paragraph [ref=f13e319]: 8,987 followers
+                        - time [ref=f13e321]: 2w
+                    - button [ref=f13e324] [cursor=pointer]
+                  - paragraph [ref=f13e326]:
+                    - text: A career built on service, leadership, and inspiring others. For decades,
+                    - link [ref=f13e327] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/in/jeremy-hansen-6646582b?trk=organization_guest_main-feed-card-text
+                      - text: Jeremy Hansen
+                    - text: has proudly served Canada as a Royal Canadian Air Force fighter pilot, military leader, astronaut, and ambassador for science and exploration. Throughout his career, he has exemplified professionalism, dedication, and a commitment to serving something greater than himself. Beyond his remarkable accomplishments, Jeremy has devoted countless hours to engaging with students and communities across the country, encouraging young Canadians to pursue careers in STEM and believe in what's possible. Recently, we had the privilege of welcoming Jeremy to Chedabucto Education Centre near Spaceport Nova Scotia. He shared the story of his journey to becoming an astronaut, the challenges, the perseverance, and the curiosity that helped shape his path. He also spoke about the importance of launching from Canada and the incredible opportunities a strong Canadian space sector can create for future generations. Thank you, Jeremy, for your extraordinary service to Canada, your leadership, and your unwavering commitment to inspiring future generations. Your legacy reaches far beyond the missions you fly- we wish you best on your next chapter! 🚀🇨🇦 👨🚀
+                  - list [ref=f13e328]:
+                    - listitem [ref=f13e329]
+                  - link [ref=f13e332] [cursor=pointer]:
+                    - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_social-actions-reactions
+                    - generic [ref=f13e333]: "93"
+                  - generic [ref=f13e334]:
+                    - link [ref=f13e335] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f13e337]: Like
+                    - link [ref=f13e338] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f13e340]: Comment
+                    - link [ref=f13e341] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f13e343]: Share
+            - listitem [ref=f13e344]:
+              - generic [ref=f13e345]:
+                - link [ref=f13e346] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/activity-7480622223578267648-WrQD
+                - article [ref=f13e347]:
+                  - paragraph [ref=f13e348]:
+                    - link [ref=f13e349] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/company/maritimelaunch?trk=organization_guest_main-feed-card_feed-reaction-header
+                      - text: Maritime Launch Services
+                    - text: reposted this
+                  - generic [ref=f13e350]:
+                    - generic [ref=f13e352]:
+                      - link [ref=f13e353] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/invest-nova-scotia?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f13e355]:
+                        - link [ref=f13e357] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/invest-nova-scotia?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Invest Nova Scotia
+                        - paragraph [ref=f13e358]: 28,375 followers
+                        - time [ref=f13e360]:
+                          - text: 3w
+                          - generic [ref=f13e361]: ·
+                          - text: Edited
+                    - button [ref=f13e364] [cursor=pointer]
+                  - paragraph [ref=f13e366]:
+                    - text: A major milestone for Canada's space industry. German aerospace company
+                    - link [ref=f13e367] [cursor=pointer]:
+                      - /url: https://de.linkedin.com/company/isaraerospace?trk=organization_guest_main-feed-card-text
+                      - text: Isar Aerospace
+                    - text: has signed a 10-year agreement with
+                    - link [ref=f13e368] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/company/maritimelaunch?trk=organization_guest_main-feed-card-text
+                      - text: Maritime Launch Services
+                    - text: "to use Spaceport Nova Scotia, marking another significant step in establishing Nova Scotia as a gateway for commercial and sovereign space access. The partnership reinforces the province's growing role in the global space economy and strengthens Canada's launch capabilities. Read the article:"
+                    - link [ref=f13e369] [cursor=pointer]:
+                      - /url: https://lnkd.in/gHiJ6s2s?trk=organization_guest_main-feed-card-text
+                      - text: https://lnkd.in/gHiJ6s2s
+                    - text: "With world-class research, a skilled workforce, growing commercial space capabilities, and Canada's first commercial spaceport, Nova Scotia is helping shape the future of the space industry. Learn why Nova Scotia is becoming one of Canada’s most compelling locations for space companies looking to grow:"
+                    - link [ref=f13e370] [cursor=pointer]:
+                      - /url: https://lnkd.in/ghYEQuw9?trk=organization_guest_main-feed-card-text
+                      - text: https://lnkd.in/ghYEQuw9
+                    - link [ref=f13e371] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/in/jonathan-coles-28698030?trk=organization_guest_main-feed-card-text
+                      - text: Jonathan Coles
+                    - link [ref=f13e372] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fspace&trk=organization_guest_main-feed-card-text
+                      - text: "#Space"
+                    - link [ref=f13e373] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Faerospace&trk=organization_guest_main-feed-card-text
+                      - text: "#Aerospace"
+                    - link [ref=f13e374] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Finnovation&trk=organization_guest_main-feed-card-text
+                      - text: "#Innovation"
+                    - link [ref=f13e375] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fspacetech&trk=organization_guest_main-feed-card-text
+                      - text: "#SpaceTech"
+                    - link [ref=f13e376] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fnovascotia&trk=organization_guest_main-feed-card-text
+                      - text: "#NovaScotia"
+                    - link [ref=f13e377] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Finvestns&trk=organization_guest_main-feed-card-text
+                      - text: "#InvestNS"
+                    - link [ref=f13e378] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fcommercialspace&trk=organization_guest_main-feed-card-text
+                      - text: "#CommercialSpace"
+                  - button [ref=f13e380] [cursor=pointer]:
+                    - generic [ref=f13e383]:
+                      - generic [ref=f13e384]: German aerospace company signs 10-year deal to use N.S. space launch pad | CBC News
+                      - generic [ref=f13e385]: cbc.ca
+                  - link [ref=f13e387] [cursor=pointer]:
+                    - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_social-actions-reactions
+                    - generic [ref=f13e388]: "127"
+                  - generic [ref=f13e389]:
+                    - link [ref=f13e390] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f13e392]: Like
+                    - link [ref=f13e393] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f13e395]: Comment
+                    - link [ref=f13e396] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f13e398]: Share
+            - listitem [ref=f13e399]:
+              - generic [ref=f13e400]:
+                - link [ref=f13e401] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/maritimelaunch_canadas-space-posture-has-a-gap-sovereign-activity-7481493562203938816-Wc6X
+                - article [ref=f13e402]:
+                  - generic [ref=f13e403]:
+                    - generic [ref=f13e405]:
+                      - link [ref=f13e406] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/maritimelaunch?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f13e408]:
+                        - link [ref=f13e410] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/maritimelaunch?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Maritime Launch Services
+                        - paragraph [ref=f13e411]: 8,987 followers
+                        - time [ref=f13e413]: 2w
+                    - button [ref=f13e416] [cursor=pointer]
+                  - paragraph [ref=f13e418]:
+                    - text: With domestic launch, Canada will be able to dictate the schedules and the expansion of Canadian space networks for the benefit of Canada specifically. From new satellites — built in Canada — to an increased space presence, Canadian sovereign launch will facilitate the growth of the Canadian space ecosystem for the expansion of space capabilities.
+                    - link [ref=f13e419] [cursor=pointer]:
+                      - /url: https://lnkd.in/e8SK66Qa?trk=organization_guest_main-feed-card-text
+                      - text: https://lnkd.in/e8SK66Qa
+                  - button [ref=f13e421] [cursor=pointer]:
+                    - generic [ref=f13e424]:
+                      - generic [ref=f13e425]: Canada’s Space Posture Has a Gap. Sovereign Launch Can Close It
+                      - generic [ref=f13e426]: cigionline.org
+                  - link [ref=f13e428] [cursor=pointer]:
+                    - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_social-actions-reactions
+                    - generic [ref=f13e429]: "82"
+                  - generic [ref=f13e430]:
+                    - link [ref=f13e431] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f13e433]: Like
+                    - link [ref=f13e434] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f13e436]: Comment
+                    - link [ref=f13e437] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f13e439]: Share
+            - listitem [ref=f13e440]:
+              - generic [ref=f13e441]:
+                - link [ref=f13e442] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/activity-7481074946065113088-iF5o
+                - article [ref=f13e443]:
+                  - paragraph [ref=f13e444]:
+                    - link [ref=f13e445] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/company/maritimelaunch?trk=organization_guest_main-feed-card_feed-reaction-header
+                      - text: Maritime Launch Services
+                    - text: reposted this
+                  - generic [ref=f13e446]:
+                    - generic [ref=f13e448]:
+                      - link [ref=f13e449] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/in/timhoustonns?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f13e451]:
+                        - link [ref=f13e453] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/in/timhoustonns?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Tim Houston
+                        - time [ref=f13e455]: 2w
+                    - button [ref=f13e458] [cursor=pointer]
+                  - paragraph [ref=f13e460]: Congratulations to Maritime Launch Services and Isar Aerospace on this exciting partnership. This is another major step forward for Nova Scotia’s growing aerospace and defence sector. It brings new investment, creates good-paying jobs, and strengthens our economy while putting Nova Scotia at the forefront of Canada’s emerging space industry. When global companies choose to partner with Nova Scotia, it’s a sign that we are winning on the world stage. Let's keep going!
+                  - list [ref=f13e461]:
+                    - listitem [ref=f13e462]
+                  - generic [ref=f13e464]:
+                    - link [ref=f13e465] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_social-actions-reactions
+                      - generic [ref=f13e466]: "351"
+                    - link [ref=f13e467] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_social-actions-comments
+                      - text: · 7 Comments
+                  - generic [ref=f13e468]:
+                    - link [ref=f13e469] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f13e471]: Like
+                    - link [ref=f13e472] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f13e474]: Comment
+                    - link [ref=f13e475] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f13e477]: Share
+            - listitem [ref=f13e478]:
+              - generic [ref=f13e479]:
+                - link [ref=f13e480] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/maritimelaunch_maritime-launch-services-spaceport-nova-activity-7480647480582381568-iRqj
+                - article [ref=f13e481]:
+                  - generic [ref=f13e482]:
+                    - generic [ref=f13e484]:
+                      - link [ref=f13e485] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/maritimelaunch?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f13e487]:
+                        - link [ref=f13e489] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/maritimelaunch?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Maritime Launch Services
+                        - paragraph [ref=f13e490]: 8,987 followers
+                        - time [ref=f13e492]: 3w
+                    - button [ref=f13e495] [cursor=pointer]
+                  - paragraph [ref=f13e497]:
+                    - text: "Today we're launching something different.. our new website! Space is for everyone: the teams preparing to reach orbit, the investors backing a new Canadian industry, the partners and communities who've shaped our progress from day one, and a country ready to lead the next chapter in space. Our new site is built for all of you. One place to see what we're building, where it's headed, and how to get involved. Explore what we're building at"
+                    - link [ref=f13e498] [cursor=pointer]:
+                      - /url: http://maritimelaunch.com?trk=organization_guest_main-feed-card-text
+                      - text: maritimelaunch.com
+                    - text: Go for Launch. 🚀 🇨🇦
+                  - button [ref=f13e500] [cursor=pointer]:
+                    - generic [ref=f13e503]:
+                      - generic [ref=f13e504]: Maritime Launch Services | Spaceport Nova Scotia
+                      - generic [ref=f13e505]: maritimelaunch.com
+                  - generic [ref=f13e506]:
+                    - link [ref=f13e507] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_social-actions-reactions
+                      - generic [ref=f13e508]: "110"
+                    - link [ref=f13e509] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_social-actions-comments
+                      - text: · 3 Comments
+                  - generic [ref=f13e510]:
+                    - link [ref=f13e511] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f13e513]: Like
+                    - link [ref=f13e514] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f13e516]: Comment
+                    - link [ref=f13e517] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f13e519]: Share
+            - listitem [ref=f13e520]:
+              - generic [ref=f13e521]:
+                - link [ref=f13e522] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/maritimelaunch_we-are-proud-to-announce-that-maritime-launch-activity-7480298971928612864-TZ4U
+                - article [ref=f13e523]:
+                  - generic [ref=f13e524]:
+                    - generic [ref=f13e526]:
+                      - link [ref=f13e527] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/maritimelaunch?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f13e529]:
+                        - link [ref=f13e531] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/maritimelaunch?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Maritime Launch Services
+                        - paragraph [ref=f13e532]: 8,987 followers
+                        - time [ref=f13e534]:
+                          - text: 3w
+                          - generic [ref=f13e535]: ·
+                          - text: Edited
+                    - button [ref=f13e538] [cursor=pointer]
+                  - paragraph [ref=f13e540]:
+                    - text: We are proud to announce that Maritime Launch Services has signed a 10-year agreement with
+                    - link [ref=f13e541] [cursor=pointer]:
+                      - /url: https://de.linkedin.com/company/isaraerospace?trk=organization_guest_main-feed-card-text
+                      - text: Isar Aerospace
+                    - text: to establish a dedicated launch complex for the Spectrum launch vehicle at Spaceport Nova Scotia. The agreement was signed today in Ankara, Türkiye, during the NATO Summit Defence Industry Forum by Stephen Matier, President and CEO of Maritime Launch Services, and Daniel Metzler, Chief Executive Officer of Isar Aerospace. Through this partnership, Isar Aerospace will establish its North American launch operations at Spaceport Nova Scotia, with construction beginning this year and first orbital launches targeted for 2028. As Canada’s dual-use orbital spaceport, Spaceport Nova Scotia is being developed as a multi-user launch facility supporting commercial, civil and defence missions while strengthening sovereign access to space for Canada and our allies.
+                  - list [ref=f13e542]:
+                    - listitem [ref=f13e543]
+                  - generic [ref=f13e545]:
+                    - link [ref=f13e546] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_social-actions-reactions
+                      - generic [ref=f13e547]: "266"
+                    - link [ref=f13e548] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_social-actions-comments
+                      - text: · 12 Comments
+                  - generic [ref=f13e549]:
+                    - link [ref=f13e550] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f13e552]: Like
+                    - link [ref=f13e553] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f13e555]: Comment
+                    - link [ref=f13e556] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f13e558]: Share
+    - generic [ref=f13e559]:
+      - generic [ref=f13e560]:
+        - heading [level=2] [ref=f13e561]: Similar pages
+        - generic [ref=f13e563]:
+          - list [ref=f13e564]:
+            - listitem [ref=f13e565]:
+              - link [ref=f13e566] [cursor=pointer]:
+                - /url: https://ca.linkedin.com/company/nordspace-ca?trk=similar-pages
+                - generic [ref=f13e567]:
+                  - heading [level=3] [ref=f13e568]: NordSpace
+                  - paragraph [ref=f13e569]: Defense and Space Manufacturing
+                  - paragraph [ref=f13e570]: Markham, Ontario
+            - listitem [ref=f13e571]:
+              - link [ref=f13e572] [cursor=pointer]:
+                - /url: https://ca.linkedin.com/company/reaction-dynamics?trk=similar-pages
+                - generic [ref=f13e573]:
+                  - heading [level=3] [ref=f13e574]: Reaction Dynamics
+                  - paragraph [ref=f13e575]: Aviation and Aerospace Component Manufacturing
+                  - paragraph [ref=f13e576]: St-Hubert, Quebec
+            - listitem [ref=f13e577]:
+              - link [ref=f13e578] [cursor=pointer]:
+                - /url: https://ca.linkedin.com/company/mdaspace?trk=similar-pages
+                - generic [ref=f13e579]:
+                  - heading [level=3] [ref=f13e580]: MDA Space
+                  - paragraph [ref=f13e581]: Defense and Space Manufacturing
+                  - paragraph [ref=f13e582]: Brampton, Ontario
+            - listitem [ref=f13e583]:
+              - link [ref=f13e584] [cursor=pointer]:
+                - /url: https://ca.linkedin.com/company/canada-rocket-company?trk=similar-pages
+                - generic [ref=f13e585]:
+                  - heading [level=3] [ref=f13e586]: Canada Rocket Company
+                  - paragraph [ref=f13e587]: Defense and Space Manufacturing
+          - button [ref=f13e588] [cursor=pointer]: Show more similar pages
+      - generic [ref=f13e590]:
+        - heading [level=2] [ref=f13e591]: Browse jobs
+        - generic [ref=f13e593]:
+          - list [ref=f13e594]:
+            - listitem [ref=f13e595]:
+              - link [ref=f13e596] [cursor=pointer]:
+                - /url: https://www.linkedin.com/jobs/mechanical-engineer-jobs?trk=organization_guest-browse_jobs
+                - generic [ref=f13e597]:
+                  - heading [level=3] [ref=f13e598]: Mechanical Engineer jobs
+                  - generic [ref=f13e599]: 46,392 open jobs
+            - listitem [ref=f13e600]:
+              - link [ref=f13e601] [cursor=pointer]:
+                - /url: https://www.linkedin.com/jobs/electrical-engineering-intern-jobs?trk=organization_guest-browse_jobs
+                - generic [ref=f13e602]:
+                  - heading [level=3] [ref=f13e603]: Electrical Engineering Intern jobs
+                  - generic [ref=f13e604]: 17,303 open jobs
+            - listitem [ref=f13e605]:
+              - link [ref=f13e606] [cursor=pointer]:
+                - /url: https://www.linkedin.com/jobs/mechanical-engineering-intern-jobs?trk=organization_guest-browse_jobs
+                - generic [ref=f13e607]:
+                  - heading [level=3] [ref=f13e608]: Mechanical Engineering Intern jobs
+                  - generic [ref=f13e609]: 1,499 open jobs
+            - listitem [ref=f13e610]:
+              - link [ref=f13e611] [cursor=pointer]:
+                - /url: https://www.linkedin.com/jobs/design-engineer-jobs?trk=organization_guest-browse_jobs
+                - generic [ref=f13e612]:
+                  - heading [level=3] [ref=f13e613]: Design Engineer jobs
+                  - generic [ref=f13e614]: 129,783 open jobs
+            - listitem [ref=f13e615]:
+              - link [ref=f13e616] [cursor=pointer]:
+                - /url: https://www.linkedin.com/jobs/materials-specialist-jobs?trk=organization_guest-browse_jobs
+                - generic [ref=f13e617]:
+                  - heading [level=3] [ref=f13e618]: Materials Specialist jobs
+                  - generic [ref=f13e619]: 12,887 open jobs
+            - listitem [ref=f13e620]:
+              - link [ref=f13e621] [cursor=pointer]:
+                - /url: https://www.linkedin.com/jobs/aerospace-engineer-jobs?trk=organization_guest-browse_jobs
+                - generic [ref=f13e622]:
+                  - heading [level=3] [ref=f13e623]: Aerospace Engineer jobs
+                  - generic [ref=f13e624]: 29,888 open jobs
+            - listitem [ref=f13e625]:
+              - link [ref=f13e626] [cursor=pointer]:
+                - /url: https://www.linkedin.com/jobs/pricing-analyst-jobs?trk=organization_guest-browse_jobs
+                - generic [ref=f13e627]:
+                  - heading [level=3] [ref=f13e628]: Pricing Analyst jobs
+                  - generic [ref=f13e629]: 52,167 open jobs
+            - listitem [ref=f13e630]:
+              - link [ref=f13e631] [cursor=pointer]:
+                - /url: https://www.linkedin.com/jobs/model-jobs?trk=organization_guest-browse_jobs
+                - generic [ref=f13e632]:
+                  - heading [level=3] [ref=f13e633]: Model jobs
+                  - generic [ref=f13e634]: 475,289 open jobs
+            - listitem [ref=f13e635]:
+              - link [ref=f13e636] [cursor=pointer]:
+                - /url: https://www.linkedin.com/jobs/electrical-engineer-jobs?trk=organization_guest-browse_jobs
+                - generic [ref=f13e637]:
+                  - heading [level=3] [ref=f13e638]: Electrical Engineer jobs
+                  - generic [ref=f13e639]: 60,569 open jobs
+            - listitem [ref=f13e640]:
+              - link [ref=f13e641] [cursor=pointer]:
+                - /url: https://www.linkedin.com/jobs/graduate-engineer-jobs?trk=organization_guest-browse_jobs
+                - generic [ref=f13e642]:
+                  - heading [level=3] [ref=f13e643]: Graduate Engineer jobs
+                  - generic [ref=f13e644]: 29,651 open jobs
+          - button [ref=f13e645] [cursor=pointer]: Show more jobs like this
+  - button [ref=f13e651] [cursor=pointer]: More searches
+  - contentinfo [ref=f13e653]:
+    - list [ref=f13e654]:
+      - generic [ref=f13e655]: LinkedIn
+      - generic [ref=f13e657]: © 2026
+      - listitem [ref=f13e658]:
+        - link [ref=f13e659] [cursor=pointer]:
+          - /url: https://about.linkedin.com?trk=d_org_guest_company_overview_footer-about
+          - text: About
+      - listitem [ref=f13e660]:
+        - link [ref=f13e661] [cursor=pointer]:
+          - /url: https://www.linkedin.com/accessibility?trk=d_org_guest_company_overview_footer-accessibility
+          - text: Accessibility
+      - listitem [ref=f13e662]:
+        - link [ref=f13e663] [cursor=pointer]:
+          - /url: https://www.linkedin.com/legal/user-agreement?trk=d_org_guest_company_overview_footer-user-agreement
+          - text: User Agreement
+      - listitem [ref=f13e664]:
+        - link [ref=f13e665] [cursor=pointer]:
+          - /url: https://www.linkedin.com/legal/privacy-policy?trk=d_org_guest_company_overview_footer-privacy-policy
+          - text: Privacy Policy
+      - listitem [ref=f13e666]:
+        - link [ref=f13e667] [cursor=pointer]:
+          - /url: https://www.linkedin.com/legal/cookie-policy?trk=d_org_guest_company_overview_footer-cookie-policy
+          - text: Cookie Policy
+      - listitem [ref=f13e668]:
+        - link [ref=f13e669] [cursor=pointer]:
+          - /url: https://www.linkedin.com/legal/copyright-policy?trk=d_org_guest_company_overview_footer-copyright-policy
+          - text: Copyright Policy
+      - listitem [ref=f13e670]:
+        - link [ref=f13e671] [cursor=pointer]:
+          - /url: https://brand.linkedin.com/policies?trk=d_org_guest_company_overview_footer-brand-policy
+          - text: Brand Policy
+      - listitem [ref=f13e672]:
+        - link [ref=f13e673] [cursor=pointer]:
+          - /url: https://www.linkedin.com/psettings/guest-controls?trk=d_org_guest_company_overview_footer-guest-controls
+          - text: Guest Controls
+      - listitem [ref=f13e674]:
+        - link [ref=f13e675] [cursor=pointer]:
+          - /url: https://www.linkedin.com/legal/professional-community-policies?trk=d_org_guest_company_overview_footer-community-guide
+          - text: Community Guidelines
+      - listitem [ref=f13e676]:
+        - button [ref=f13e678]: Language
+  - dialog [active] [ref=f13e681]:
+    - button "Dismiss" [ref=f13e682] [cursor=pointer]
+    - generic [ref=f13e684]:
+      - heading "Sign in to see who you already know at Maritime Launch Services" [level=2] [ref=f13e686]
+      - generic [ref=f13e687]:
+        - generic:
+          - generic:
+            - button "Continue with google"
+        - button "Sign in with Email" [ref=f13e688] [cursor=pointer]
+        - paragraph [ref=f13e692]: or
+        - generic:
+          - generic:
+            - button "Continue with google"
+        - paragraph [ref=f13e693]:
+          - text: New to LinkedIn?
+          - link "Join now" [ref=f13e694] [cursor=pointer]:
+            - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Fmaritimelaunch&trk=organization_guest_contextual-sign-in-modal_join-link
+        - paragraph [ref=f13e695]:
+          - text: By clicking Continue to join or sign in, you agree to LinkedIn’s
+          - link "User Agreement" [ref=f13e696] [cursor=pointer]:
+            - /url: /legal/user-agreement?trk=linkedin-tc_auth-button_user-agreement
+          - text: ","
+          - link "Privacy Policy" [ref=f13e697] [cursor=pointer]:
+            - /url: /legal/privacy-policy?trk=linkedin-tc_auth-button_privacy-policy
+          - text: ", and"
+          - link "Cookie Policy" [ref=f13e698] [cursor=pointer]:
+            - /url: /legal/cookie-policy?trk=linkedin-tc_auth-button_cookie-policy
+          - text: .

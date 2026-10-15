@@ -1,0 +1,776 @@
+- generic [ref=f20e1]:
+  - link [ref=f20e2] [cursor=pointer]:
+    - /url: "#main-content"
+    - text: Skip to main content
+  - banner [ref=f20e3]:
+    - navigation [ref=f20e4]:
+      - link [ref=f20e5] [cursor=pointer]:
+        - /url: /?trk=organization_guest_nav-header-logo
+        - generic [ref=f20e6]: LinkedIn
+      - list [ref=f20e8]:
+        - listitem [ref=f20e9]:
+          - link [ref=f20e10] [cursor=pointer]:
+            - /url: https://www.linkedin.com/top-content?trk=organization_guest_guest_nav_menu_topContent
+            - generic [ref=f20e12]: Top Content
+        - listitem [ref=f20e13]:
+          - link [ref=f20e14] [cursor=pointer]:
+            - /url: https://www.linkedin.com/pub/dir/+/+?trk=organization_guest_guest_nav_menu_people
+            - generic [ref=f20e16]: People
+        - listitem [ref=f20e17]:
+          - link [ref=f20e18] [cursor=pointer]:
+            - /url: https://www.linkedin.com/learning/search?trk=organization_guest_guest_nav_menu_learning
+            - generic [ref=f20e20]: Learning
+        - listitem [ref=f20e21]:
+          - link [ref=f20e22] [cursor=pointer]:
+            - /url: https://www.linkedin.com/jobs/search?trk=organization_guest_guest_nav_menu_jobs
+            - generic [ref=f20e24]: Jobs
+        - listitem [ref=f20e25]:
+          - link [ref=f20e26] [cursor=pointer]:
+            - /url: https://www.linkedin.com/games?trk=organization_guest_guest_nav_menu_games
+            - generic [ref=f20e28]: Games
+        - listitem [ref=f20e29]:
+          - link [ref=f20e30] [cursor=pointer]:
+            - /url: ms-windows-store://pdp/?ProductId=9WZDNCRFJ4Q7&mode=mini&cid=guest_nav_upsell&trk=organization_guest_guest_nav_menu_windows
+            - generic [ref=f20e32]: Get the app
+      - generic [ref=f20e33]:
+        - link [ref=f20e34] [cursor=pointer]:
+          - /url: https://www.linkedin.com/login?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&fromSignIn=true&trk=organization_guest_nav-header-signin
+          - text: Sign in
+        - link [ref=f20e35] [cursor=pointer]:
+          - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_nav-header-join
+          - text: Join now
+  - main [ref=f20e36]:
+    - generic [ref=f20e37]:
+      - generic [ref=f20e38]:
+        - figure [ref=f20e39]
+        - generic [ref=f20e43]:
+          - generic [ref=f20e46]:
+            - generic [ref=f20e47]:
+              - heading [level=1] [ref=f20e48]: Ocean Pacific Marine Store & Boatyard
+              - heading [level=2] [ref=f20e49]: Maritime Transportation
+              - heading [level=3] [ref=f20e50]:
+                - text: Campbell River, British Columbia
+                - generic [ref=f20e51]: ·
+                - text: 409 followers
+              - link [ref=f20e53] [cursor=pointer]:
+                - /url: https://www.linkedin.com/login?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&fromSignIn=true&trk=top-card_top-card-secondary-button-top-card-secondary-cta
+                - text: Follow
+            - list [ref=f20e55]:
+              - listitem [ref=f20e56]:
+                - link [ref=f20e58] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fsearch%2Fresults%2Fpeople%2F%3FfacetCurrentCompany%3D%255B18649819%255D&trk=org-employees_cta_face-pile-cta
+                  - paragraph [ref=f20e61]: Discover all 22 employees
+          - button [ref=f20e64] [cursor=pointer]
+      - generic [ref=f20e65]:
+        - generic [ref=f20e66]:
+          - heading [level=2] [ref=f20e67]: About us
+          - generic [ref=f20e68]:
+            - paragraph [ref=f20e69]: Ocean Pacific Marine Supply & Boatyard Ltd. is located on Northern Vancouver Island in the City of Campbell River at the Discovery Harbour Marina. The boatyard has been in operation since 1985 having moved to its current location in 2007. The boatyard is located adjacent to the Marine Store and provides 5982 sq meters of hard surface which is serviced by a 150 ton Marine Travelift. Additionally, four vessel enclosures are available and serviceable by the Marine Travelift. Ocean Pacific services commercial vessels which require outfitting and installation of standard equipment; upgrade and modification to equipment and systems; periodic and scheduled maintenance; structural modification and repair. The company can refer to considerable experience in the repair of all types of hulls including wood, fiberglass, aluminium and steel. Ocean Pacific prides itself on its highly trained staff including numerous ABYC certified technicians. The company is registered to ISO 9001 quality management system as well as certified by the Canadian Welding Bureau.
+            - generic [ref=f20e70]:
+              - generic [ref=f20e71]:
+                - term [ref=f20e72]: Website
+                - definition [ref=f20e73]:
+                  - link [ref=f20e74] [cursor=pointer]:
+                    - /url: https://www.linkedin.com/redir/redirect?url=http%3A%2F%2Fwww%2Eoceanpacificmarine%2Ecom&urlhash=sO6F&trk=about_website
+                    - text: http://www.oceanpacificmarine.com
+              - generic [ref=f20e75]:
+                - term [ref=f20e76]: Industry
+                - definition [ref=f20e77]: Maritime Transportation
+              - generic [ref=f20e78]:
+                - term [ref=f20e79]: Company size
+                - definition [ref=f20e80]: 51-200 employees
+              - generic [ref=f20e81]:
+                - term [ref=f20e82]: Headquarters
+                - definition [ref=f20e83]: Campbell River, British Columbia
+              - generic [ref=f20e84]:
+                - term [ref=f20e85]: Type
+                - definition [ref=f20e86]: Self-Owned
+              - generic [ref=f20e87]:
+                - term [ref=f20e88]: Founded
+                - definition [ref=f20e89]: "1985"
+              - generic [ref=f20e90]:
+                - term [ref=f20e91]: Specialties
+                - definition [ref=f20e92]: Marine Repair, Marine Electronics, and Marine Retail Sales
+        - generic [ref=f20e93]:
+          - heading [level=2] [ref=f20e94]: Locations
+          - list [ref=f20e96]:
+            - listitem [ref=f20e97]:
+              - text: Primary
+              - generic [ref=f20e98]:
+                - paragraph [ref=f20e99]: 1370 Island Hwy
+                - paragraph [ref=f20e100]: Campbell River, British Columbia, CA
+              - link [ref=f20e101] [cursor=pointer]:
+                - /url: https://www.bing.com/maps?where=1370+Island+Hwy+Campbell+River+British+Columbia+CA&trk=org-locations_url
+                - text: Get directions
+        - generic [ref=f20e102]:
+          - heading [level=2] [ref=f20e103]: Employees at Ocean Pacific Marine Store & Boatyard
+          - generic [ref=f20e104]:
+            - list [ref=f20e105]:
+              - listitem [ref=f20e106]:
+                - link [ref=f20e107] [cursor=pointer]:
+                  - /url: https://ca.linkedin.com/in/shale-leech-4501b717?trk=org-employees
+                  - heading [level=3] [ref=f20e110]: Shale Leech
+              - listitem [ref=f20e111]:
+                - link [ref=f20e112] [cursor=pointer]:
+                  - /url: https://ca.linkedin.com/in/grahamgeorge1?trk=org-employees
+                  - heading [level=3] [ref=f20e115]: Graham George
+              - listitem [ref=f20e116]:
+                - link [ref=f20e117] [cursor=pointer]:
+                  - /url: https://ca.linkedin.com/in/govindaadvani?trk=org-employees
+                  - heading [level=3] [ref=f20e120]: Govinda Advani
+              - listitem [ref=f20e121]:
+                - link [ref=f20e122] [cursor=pointer]:
+                  - /url: https://ca.linkedin.com/in/lisa-mccosh-87609042?trk=org-employees
+                  - heading [level=3] [ref=f20e125]: Lisa McCosh
+            - link [ref=f20e126] [cursor=pointer]:
+              - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fsearch%2Fresults%2Fpeople%2F%3FfacetCurrentCompany%3D%255B18649819%255D&trk=public_biz_employees-join
+              - text: See all employees
+        - generic [ref=f20e127]:
+          - heading [level=2] [ref=f20e128]: Updates
+          - list [ref=f20e130]:
+            - listitem [ref=f20e131]:
+              - generic [ref=f20e132]:
+                - link [ref=f20e133] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/ocean-pacific-marine-store-boatyard_were-excited-to-welcome-taylor-haisell-activity-7488020424505602048-pcil
+                - article [ref=f20e134]:
+                  - generic [ref=f20e135]:
+                    - generic [ref=f20e137]:
+                      - link [ref=f20e138] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f20e140]:
+                        - link [ref=f20e142] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Ocean Pacific Marine Store & Boatyard
+                        - paragraph [ref=f20e143]: 409 followers
+                        - time [ref=f20e145]: 1d
+                    - button [ref=f20e148] [cursor=pointer]
+                  - paragraph [ref=f20e150]:
+                    - text: We're excited to welcome
+                    - link [ref=f20e151] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/in/taylor-haisell-6071a23b4?trk=organization_guest_main-feed-card-text
+                      - text: Taylor Haisell
+                    - text: ", who joined Ocean Pacific earlier this month as a Junior Marine Systems Engineer. Taylor holds a mechanical engineering degree from the University of Victoria and brings hands-on experience designing and building marine vessels, from composite hulls and autonomous craft to engine, hydraulic, and electrical systems. As part of our Program Team, Taylor will support the engineering efforts on our new construction program while working toward his Professional Engineer (P.Eng.) designation through structured mentorship. Welcome to Ocean Pacific, Taylor! We're thrilled to have you on board. 🎉"
+                  - list [ref=f20e152]:
+                    - listitem [ref=f20e153]
+                  - generic [ref=f20e155]:
+                    - link [ref=f20e156] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_social-actions-reactions
+                      - generic [ref=f20e157]: "21"
+                    - link [ref=f20e158] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_social-actions-comments
+                      - text: · 1 Comment
+                  - generic [ref=f20e159]:
+                    - link [ref=f20e160] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f20e162]: Like
+                    - link [ref=f20e163] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f20e165]: Comment
+                    - link [ref=f20e166] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f20e168]: Share
+            - listitem [ref=f20e169]:
+              - generic [ref=f20e170]:
+                - link [ref=f20e171] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/ocean-pacific-marine-store-boatyard_ocean-pacific-marine-awarded-747-million-activity-7478578292170702848-wUo0
+                - article [ref=f20e172]:
+                  - generic [ref=f20e173]:
+                    - generic [ref=f20e175]:
+                      - link [ref=f20e176] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f20e178]:
+                        - link [ref=f20e180] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Ocean Pacific Marine Store & Boatyard
+                        - paragraph [ref=f20e181]: 409 followers
+                        - time [ref=f20e183]: 3w
+                    - button [ref=f20e186] [cursor=pointer]
+                  - paragraph [ref=f20e188]:
+                    - text: "Today is a BIG day for the Ocean Pacific Marine team. We're incredibly excited to share that Ocean Pacific Marine has been awarded a $74.7 million contract to design and build three Next Generation Police Coastal Patrol Vessels for the RCMP. For us, this is about so much more than building boats. It's about creating skilled jobs, investing in our people, growing our local economy, and showcasing the incredible talent that exists right here in BC. We're also proud to be delivering this project alongside two outstanding partners:"
+                    - link [ref=f20e189] [cursor=pointer]:
+                      - /url: https://uk.linkedin.com/company/camarc-design?trk=organization_guest_main-feed-card-text
+                      - text: Camarc Design
+                    - text: ", whose world-class patrol vessel expertise will help bring these vessels to life, and"
+                    - link [ref=f20e190] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/company/bracewell-marine-group?trk=organization_guest_main-feed-card-text
+                      - text: Bracewell Marine Group
+                    - text: ", whose fabrication expertise will play a key role in their successful delivery. We're looking forward to what we'll accomplish together. This milestone belongs to every employee, customer, partner, and supporter who has been part of our journey over the past 41 years. Thank you for believing in us. Now... it's time to get building. 💪 Read the full announcement below."
+                    - link [ref=f20e191] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Foceanpacificmarine&trk=organization_guest_main-feed-card-text
+                      - text: "#OceanPacificMarine"
+                    - link [ref=f20e192] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fshipbuilding&trk=organization_guest_main-feed-card-text
+                      - text: "#Shipbuilding"
+                    - link [ref=f20e193] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fcampbellriver&trk=organization_guest_main-feed-card-text
+                      - text: "#CampbellRiver"
+                    - link [ref=f20e194] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Frcmp&trk=organization_guest_main-feed-card-text
+                      - text: "#RCMP"
+                    - link [ref=f20e195] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fmadeincanada&trk=organization_guest_main-feed-card-text
+                      - text: "#MadeInCanada"
+                    - link [ref=f20e196] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fmarineindustry&trk=organization_guest_main-feed-card-text
+                      - text: "#MarineIndustry"
+                    - link [ref=f20e197] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fbritishcolumbia&trk=organization_guest_main-feed-card-text
+                      - text: "#BritishColumbia"
+                    - link [ref=f20e198] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fskilledtrades&trk=organization_guest_main-feed-card-text
+                      - text: "#SkilledTrades"
+                  - iframe [ref=f20e199]:
+                    
+                  - generic [ref=f20e200]:
+                    - link [ref=f20e201] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_social-actions-reactions
+                      - generic [ref=f20e202]: "84"
+                    - link [ref=f20e203] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_social-actions-comments
+                      - text: · 37 Comments
+                  - generic [ref=f20e204]:
+                    - link [ref=f20e205] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f20e207]: Like
+                    - link [ref=f20e208] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f20e210]: Comment
+                    - link [ref=f20e211] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f20e213]: Share
+            - listitem [ref=f20e214]:
+              - generic [ref=f20e215]:
+                - link [ref=f20e216] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/ocean-pacific-marine-store-boatyard_happy-canada-day-its-always-rewarding-activity-7478198712507203584-iMUQ
+                - article [ref=f20e217]:
+                  - generic [ref=f20e218]:
+                    - generic [ref=f20e220]:
+                      - link [ref=f20e221] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f20e223]:
+                        - link [ref=f20e225] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Ocean Pacific Marine Store & Boatyard
+                        - paragraph [ref=f20e226]: 409 followers
+                        - time [ref=f20e228]:
+                          - text: 4w
+                          - generic [ref=f20e229]: ·
+                          - text: Edited
+                    - button [ref=f20e232] [cursor=pointer]
+                  - paragraph [ref=f20e234]:
+                    - text: 🇨🇦 Happy Canada Day! It’s always rewarding to see the
+                    - link [ref=f20e235] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/company/canadian-coast-guard?trk=organization_guest_main-feed-card-text
+                      - text: Canadian Coast Guard/Garde côtière canadienne
+                    - text: vessels out doing what they were built to do, whether responding to emergencies or quietly standing by so Canadians can safely enjoy days like this. CCGS Cape St. James is one of the 47’ Cape-class lifeboats our team at Ocean Pacific Marine has had the privilege of renewing through our Vessel Life Extension Program. Seeing these vessels continue serving communities across our coast is a reminder that the work of skilled marine trades extends well beyond the shipyard. We’re honoured to play a small part in helping keep Canadians safe on the water. From all of us at Ocean Pacific Marine, have a safe, happy, and memorable Canada Day! 🍁🌊
+                    - link [ref=f20e236] [cursor=pointer]:
+                      - /url: https://lnkd.in/gFBVuQ3a?trk=organization_guest_main-feed-card-text
+                      - text: https://lnkd.in/gFBVuQ3a
+                  - article [ref=f20e237]:
+                    - generic [ref=f20e238]:
+                      - link [ref=f20e239] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/canadian-coast-guard?trk=organization_guest_main-feed-card_reshare_feed-actor-image
+                      - generic [ref=f20e241]:
+                        - link [ref=f20e243] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/canadian-coast-guard?trk=organization_guest_main-feed-card_reshare_feed-actor-name
+                          - text: Canadian Coast Guard/Garde côtière canadienne
+                        - paragraph [ref=f20e244]: 38,349 followers
+                        - time [ref=f20e246]: 4w
+                    - paragraph [ref=f20e248]: "Surf’s up! 🤙 Our Tofino lifeboat, CCGS Cape St. James, kept watch at the Vancouver Island Longboard Surf Contest ready to respond if needed while surfers chased the perfect wave. From assisting vessels in need to supporting surf competitions, we’re there wherever Canadians are on the water. Whether it's work or play, we're proud to help keep our waterways safe so everyone can enjoy their day on the coast and make it home safely. Photo 📷: UkeeTube"
+                    - list [ref=f20e249]:
+                      - listitem [ref=f20e250]
+                  - link [ref=f20e253] [cursor=pointer]:
+                    - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_social-actions-reactions
+                    - generic [ref=f20e254]: "5"
+                  - generic [ref=f20e255]:
+                    - link [ref=f20e256] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f20e258]: Like
+                    - link [ref=f20e259] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f20e261]: Comment
+                    - link [ref=f20e262] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f20e264]: Share
+            - listitem [ref=f20e265]:
+              - generic [ref=f20e266]:
+                - link [ref=f20e267] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/ocean-pacific-marine-store-boatyard_were-excited-to-welcome-himanshu-r-surukanti-activity-7476373099769159680-XEDH
+                - article [ref=f20e268]:
+                  - generic [ref=f20e269]:
+                    - generic [ref=f20e271]:
+                      - link [ref=f20e272] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f20e274]:
+                        - link [ref=f20e276] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Ocean Pacific Marine Store & Boatyard
+                        - paragraph [ref=f20e277]: 409 followers
+                        - time [ref=f20e279]: 1mo
+                    - button [ref=f20e282] [cursor=pointer]
+                  - paragraph [ref=f20e284]:
+                    - text: We're excited to welcome
+                    - link [ref=f20e285] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/in/himanshu-surukanti?trk=organization_guest_main-feed-card-text
+                      - text: Himanshu R. Surukanti
+                    - text: to Ocean Pacific as our Finance Intern for the summer. Himanshu joins us with a strong foundation in finance and analytics, and a sharp, detail-driven approach to problem-solving. Over the coming months he'll be supporting our finance team across forecasting, modelling, and process improvement work as we continue to grow. Welcome to OP, Himanshu! Thrilled to have you onboard! 🎉
+                  - list [ref=f20e286]:
+                    - listitem [ref=f20e287]
+                  - generic [ref=f20e289]:
+                    - link [ref=f20e290] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_social-actions-reactions
+                      - generic [ref=f20e291]: "55"
+                    - link [ref=f20e292] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_social-actions-comments
+                      - text: · 2 Comments
+                  - generic [ref=f20e293]:
+                    - link [ref=f20e294] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f20e296]: Like
+                    - link [ref=f20e297] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f20e299]: Comment
+                    - link [ref=f20e300] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f20e302]: Share
+            - listitem [ref=f20e303]:
+              - generic [ref=f20e304]:
+                - link [ref=f20e305] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/ocean-pacific-marine-store-boatyard_growth-is-a-team-effort-and-were-thrilled-activity-7473075093632626688-UsfD
+                - article [ref=f20e306]:
+                  - generic [ref=f20e307]:
+                    - generic [ref=f20e309]:
+                      - link [ref=f20e310] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f20e312]:
+                        - link [ref=f20e314] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Ocean Pacific Marine Store & Boatyard
+                        - paragraph [ref=f20e315]: 409 followers
+                        - time [ref=f20e317]: 1mo
+                    - button [ref=f20e320] [cursor=pointer]
+                  - paragraph [ref=f20e322]:
+                    - text: Growth is a team effort and we're thrilled to have Graham now leading the way as Program Manager. Welcome to OP,
+                    - link [ref=f20e323] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/in/grahamgeorge1?trk=organization_guest_main-feed-card-text
+                      - text: Graham
+                    - text: "! ⚓"
+                    - link [ref=f20e324] [cursor=pointer]:
+                      - /url: https://lnkd.in/gQ-2yJvU?trk=organization_guest_main-feed-card-text
+                      - text: https://lnkd.in/gQ-2yJvU
+                  - article [ref=f20e325]:
+                    - generic [ref=f20e326]:
+                      - link [ref=f20e327] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/in/grahamgeorge1?trk=organization_guest_main-feed-card_reshare_feed-actor-image
+                      - generic [ref=f20e329]:
+                        - link [ref=f20e331] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/in/grahamgeorge1?trk=organization_guest_main-feed-card_reshare_feed-actor-name
+                          - text: Graham George
+                        - time [ref=f20e333]: 1mo
+                    - paragraph [ref=f20e335]:
+                      - text: I am excited to announce that I have joined Ocean Pacific Marine as Program Manager. Ocean Pacific Marine Store & Boatyard is experiencing significant growth, and I look forward to working alongside a talented team as we continue building on an already strong reputation for quality, service, and customer experience. I would also like to thank the team at Butler Concrete & Aggregate. The past two years provided tremendous opportunities, valuable experience, and lasting relationships that helped prepare me for this next chapter. Onward.
+                      - link [ref=f20e336] [cursor=pointer]:
+                        - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fnewjob&trk=organization_guest_main-feed-card_reshare-text
+                        - text: "#newjob"
+                      - link [ref=f20e337] [cursor=pointer]:
+                        - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Foceanpacificmarine&trk=organization_guest_main-feed-card_reshare-text
+                        - text: "#oceanpacificmarine"
+                  - link [ref=f20e339] [cursor=pointer]:
+                    - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_social-actions-reactions
+                    - generic [ref=f20e340]: "10"
+                  - generic [ref=f20e341]:
+                    - link [ref=f20e342] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f20e344]: Like
+                    - link [ref=f20e345] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f20e347]: Comment
+                    - link [ref=f20e348] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f20e350]: Share
+            - listitem [ref=f20e351]:
+              - generic [ref=f20e352]:
+                - link [ref=f20e353] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/ocean-pacific-marine-store-boatyard_were-excited-to-welcome-graham-george-to-activity-7473069836689055745-YjRN
+                - article [ref=f20e354]:
+                  - generic [ref=f20e355]:
+                    - generic [ref=f20e357]:
+                      - link [ref=f20e358] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f20e360]:
+                        - link [ref=f20e362] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Ocean Pacific Marine Store & Boatyard
+                        - paragraph [ref=f20e363]: 409 followers
+                        - time [ref=f20e365]: 1mo
+                    - button [ref=f20e368] [cursor=pointer]
+                  - paragraph [ref=f20e370]:
+                    - text: We’re excited to welcome
+                    - link [ref=f20e371] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/in/grahamgeorge1?trk=organization_guest_main-feed-card-text
+                      - text: Graham George
+                    - text: to Ocean Pacific as Program Manager and member of our Senior Management Team, based in Campbell River. Graham brings deep experience in marine operations, project management, and program leadership, with a strong track record of delivering complex work in high-performance environments. His leadership style, operational expertise, and collaborative approach will be a strong addition to our team as we continue to grow and take on new opportunities. Welcome to OP, Graham! Thrilled to have you onboard!🎉
+                  - list [ref=f20e372]:
+                    - listitem [ref=f20e373]
+                  - generic [ref=f20e375]:
+                    - link [ref=f20e376] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_social-actions-reactions
+                      - generic [ref=f20e377]: "63"
+                    - link [ref=f20e378] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_social-actions-comments
+                      - text: · 1 Comment
+                  - generic [ref=f20e379]:
+                    - link [ref=f20e380] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f20e382]: Like
+                    - link [ref=f20e383] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f20e385]: Comment
+                    - link [ref=f20e386] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f20e388]: Share
+            - listitem [ref=f20e389]:
+              - generic [ref=f20e390]:
+                - link [ref=f20e391] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/ocean-pacific-marine-store-boatyard_this-week-marks-nearly-four-years-of-partnership-activity-7472414805836865536-YgmV
+                - article [ref=f20e392]:
+                  - generic [ref=f20e393]:
+                    - generic [ref=f20e395]:
+                      - link [ref=f20e396] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f20e398]:
+                        - link [ref=f20e400] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Ocean Pacific Marine Store & Boatyard
+                        - paragraph [ref=f20e401]: 409 followers
+                        - time [ref=f20e403]:
+                          - text: 1mo
+                          - generic [ref=f20e404]: ·
+                          - text: Edited
+                    - button [ref=f20e407] [cursor=pointer]
+                  - paragraph [ref=f20e409]:
+                    - text: This week marks nearly four years of partnership between the
+                    - link [ref=f20e410] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/company/cr-hospice-society?trk=organization_guest_main-feed-card-text
+                      - text: Campbell River Hospice Society
+                    - text: and us, reaching $24,000 in cumulative support for their Child & Youth Traumatic Grief Program. This program ensures local children and youth facing sudden loss have access to free, trauma-informed clinical support when they need it most. This partnership began through the leadership of Bruce, Linda, and
+                    - link [ref=f20e411] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/in/laura-kempling-79785948?trk=organization_guest_main-feed-card-text
+                      - text: Laura Kempling
+                    - text: ", who are recognized by the Hospice as Visionary Circle members. For the team at Ocean Pacific, continuing to support this vital program is both a privilege and a responsibility we're proud to carry forward. Thank you to the Campbell River Hospice Society for the essential work you do for our community every day. 𝘗𝘪𝘤𝘵𝘶𝘳𝘦𝘥: 𝘖𝘤𝘦𝘢𝘯 𝘗𝘢𝘤𝘪𝘧𝘪𝘤 𝘵𝘦𝘢𝘮 𝘮𝘦𝘮𝘣𝘦𝘳𝘴 𝘝𝘪𝘤𝘬𝘺 𝘔𝘤𝘕𝘦𝘪𝘭 𝘢𝘯𝘥 𝘚𝘩𝘢𝘶𝘯𝘢 𝘏𝘰𝘱𝘱𝘪𝘯 𝘱𝘳𝘦𝘴𝘦𝘯𝘵𝘪𝘯𝘨 𝘰𝘯 𝘣𝘦𝘩𝘢𝘭𝘧 𝘰𝘧 𝘵𝘩𝘦 𝘖𝘤𝘦𝘢𝘯 𝘗𝘢𝘤𝘪𝘧𝘪𝘤 𝘧𝘢𝘮𝘪𝘭𝘺."
+                  - list [ref=f20e412]:
+                    - listitem [ref=f20e413]
+                    - listitem [ref=f20e415]
+                  - generic [ref=f20e417]:
+                    - link [ref=f20e418] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_social-actions-reactions
+                      - generic [ref=f20e419]: "21"
+                    - link [ref=f20e420] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_social-actions-comments
+                      - text: · 1 Comment
+                  - generic [ref=f20e421]:
+                    - link [ref=f20e422] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f20e424]: Like
+                    - link [ref=f20e425] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f20e427]: Comment
+                    - link [ref=f20e428] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f20e430]: Share
+            - listitem [ref=f20e431]:
+              - generic [ref=f20e432]:
+                - link [ref=f20e433] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/ocean-pacific-marine-store-boatyard_r2ak-racetoalaska-r2ak-activity-7468403623312547840-NoQk
+                - article [ref=f20e434]:
+                  - generic [ref=f20e435]:
+                    - generic [ref=f20e437]:
+                      - link [ref=f20e438] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f20e440]:
+                        - link [ref=f20e442] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Ocean Pacific Marine Store & Boatyard
+                        - paragraph [ref=f20e443]: 409 followers
+                        - time [ref=f20e445]: 1mo
+                    - button [ref=f20e448] [cursor=pointer]
+                  - paragraph [ref=f20e450]:
+                    - text: Just 12 days until the 2026
+                    - link [ref=f20e451] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/company/race-to-alaska?trk=organization_guest_main-feed-card-text
+                      - text: Race To Alaska
+                    - text: (R2AK), and we're proud to sponsor David Gauci and the Agile Racing team as they prepare to take on one of the most demanding small-boat races in the world.
+                    - link [ref=f20e452] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fr2ak&trk=organization_guest_main-feed-card-text
+                      - text: "#R2AK"
+                    - text: is a 750-mile race from Port Townsend, Washington, to Ketchikan, Alaska. No engines. No support crews. Just human and wind power, determination, and the ability to navigate some of the most challenging coastal waters in North America. David's 27-foot fiberglass racing sailboat is built for performance. At just 1,750 pounds, it's an exceptionally fast and efficient vessel, but in a race like R2AK, success depends on far more than speed. Preparation, teamwork, resilience, and sound decision-making will be tested every mile of the journey. As the team completes its final preparations, we want to congratulate David and his crew on the dedication and commitment they've shown in getting to the starting line. Taking on a challenge of this magnitude is an accomplishment in itself. Fair winds and following seas, David and team. We're excited to be part of your journey.
+                    - link [ref=f20e453] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fracetoalaska&trk=organization_guest_main-feed-card-text
+                      - text: "#RaceToAlaska"
+                    - link [ref=f20e454] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fr2ak&trk=organization_guest_main-feed-card-text
+                      - text: "#R2AK"
+                    - link [ref=f20e455] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fsailing&trk=organization_guest_main-feed-card-text
+                      - text: "#Sailing"
+                    - link [ref=f20e456] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fadventureracing&trk=organization_guest_main-feed-card-text
+                      - text: "#AdventureRacing"
+                    - link [ref=f20e457] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fteamwork&trk=organization_guest_main-feed-card-text
+                      - text: "#Teamwork"
+                    - link [ref=f20e458] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fleadership&trk=organization_guest_main-feed-card-text
+                      - text: "#Leadership"
+                    - link [ref=f20e459] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fresilience&trk=organization_guest_main-feed-card-text
+                      - text: "#Resilience"
+                    - link [ref=f20e460] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fagileracing&trk=organization_guest_main-feed-card-text
+                      - text: "#AgileRacing"
+                  - list [ref=f20e461]:
+                    - listitem [ref=f20e462]
+                  - generic [ref=f20e464]:
+                    - link [ref=f20e465] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_social-actions-reactions
+                      - generic [ref=f20e466]: "21"
+                    - link [ref=f20e467] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_social-actions-comments
+                      - text: · 1 Comment
+                  - generic [ref=f20e468]:
+                    - link [ref=f20e469] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f20e471]: Like
+                    - link [ref=f20e472] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f20e474]: Comment
+                    - link [ref=f20e475] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f20e477]: Share
+            - listitem [ref=f20e478]:
+              - generic [ref=f20e479]:
+                - link [ref=f20e480] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/ocean-pacific-marine-store-boatyard_ocean-pacific-marine-store-boatyard-jobs-activity-7466272254109253632-StQ7
+                - article [ref=f20e481]:
+                  - generic [ref=f20e482]:
+                    - generic [ref=f20e484]:
+                      - link [ref=f20e485] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f20e487]:
+                        - link [ref=f20e489] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Ocean Pacific Marine Store & Boatyard
+                        - paragraph [ref=f20e490]: 409 followers
+                        - time [ref=f20e492]: 2mo
+                    - button [ref=f20e495] [cursor=pointer]
+                  - paragraph [ref=f20e497]:
+                    - text: "We’re hiring! Ocean Pacific Marine Store & Boatyard is seeking an Accountant to join our team in Campbell River. We’re looking for an experienced accounting professional who can support a range of finance and accounting responsibilities, including: - Financial reporting and analysis - General ledger reconciliations - Month-end and year-end close - Project/job costing - Accounts payable and receivable - Revenue tracking and forecasting - GST/PST filings and remittances Qualifications: - 5+ years of progressive accounting experience - Diploma or degree in Accounting, Finance, or a related field - Strong understanding of full-cycle accounting and financial reporting - Project accounting or job costing experience is an asset - SAP Business One experience is an asset 📍 Campbell River, BC 💵 $33–$38/hour depending on experience 🕒 In-person position ✅ Extended health, vision care, life insurance, and EAP benefits If you’re interested, or know someone who may be a great fit, please apply through Indeed or share this opportunity with your network."
+                    - link [ref=f20e498] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fhiring&trk=organization_guest_main-feed-card-text
+                      - text: "#Hiring"
+                    - link [ref=f20e499] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Faccountant&trk=organization_guest_main-feed-card-text
+                      - text: "#Accountant"
+                    - link [ref=f20e500] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Faccountingjobs&trk=organization_guest_main-feed-card-text
+                      - text: "#AccountingJobs"
+                    - link [ref=f20e501] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Ffinancejobs&trk=organization_guest_main-feed-card-text
+                      - text: "#FinanceJobs"
+                    - link [ref=f20e502] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fcampbellriver&trk=organization_guest_main-feed-card-text
+                      - text: "#CampbellRiver"
+                    - link [ref=f20e503] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fvancouverisland&trk=organization_guest_main-feed-card-text
+                      - text: "#VancouverIsland"
+                    - link [ref=f20e504] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fmarineindustry&trk=organization_guest_main-feed-card-text
+                      - text: "#MarineIndustry"
+                    - link [ref=f20e505] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fprojectaccounting&trk=organization_guest_main-feed-card-text
+                      - text: "#ProjectAccounting"
+                    - link [ref=f20e506] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Foceanpacificmarine&trk=organization_guest_main-feed-card-text
+                      - text: "#OceanPacificMarine"
+                    - link [ref=f20e507] [cursor=pointer]:
+                      - /url: https://lnkd.in/gwZq2Auq?trk=organization_guest_main-feed-card-text
+                      - text: https://lnkd.in/gwZq2Auq
+                  - button [ref=f20e509] [cursor=pointer]:
+                    - generic [ref=f20e512]:
+                      - generic [ref=f20e513]: Ocean Pacific Marine Store & Boatyard jobs and careers
+                      - generic [ref=f20e514]: ca.indeed.com
+                  - link [ref=f20e516] [cursor=pointer]:
+                    - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_social-actions-reactions
+                    - generic [ref=f20e517]: "6"
+                  - generic [ref=f20e518]:
+                    - link [ref=f20e519] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f20e521]: Like
+                    - link [ref=f20e522] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f20e524]: Comment
+                    - link [ref=f20e525] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f20e527]: Share
+            - listitem [ref=f20e528]:
+              - generic [ref=f20e529]:
+                - link [ref=f20e530] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/posts/ocean-pacific-marine-store-boatyard_cansec2026-shipbuilding-sustainment-activity-7465341656830218240-SBaY
+                - article [ref=f20e531]:
+                  - generic [ref=f20e532]:
+                    - generic [ref=f20e534]:
+                      - link [ref=f20e535] [cursor=pointer]:
+                        - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-image
+                      - generic [ref=f20e537]:
+                        - link [ref=f20e539] [cursor=pointer]:
+                          - /url: https://ca.linkedin.com/company/ocean-pacific-marine-store-boatyard?trk=organization_guest_main-feed-card_feed-actor-name
+                          - text: Ocean Pacific Marine Store & Boatyard
+                        - paragraph [ref=f20e540]: 409 followers
+                        - time [ref=f20e542]: 2mo
+                    - button [ref=f20e545] [cursor=pointer]
+                  - paragraph [ref=f20e547]:
+                    - text: Ocean Pacific Marine is in Ottawa today for CANSEC 2026 hosted by the
+                    - link [ref=f20e548] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/company/canadian-association-of-defence-and-security-industries?trk=organization_guest_main-feed-card-text
+                      - text: Canadian Association of Defence and Security Industries (CADSI)
+                    - text: For four decades we've built and sustained vessels on Canada's West Coast — from commercial refit and life-extension work to federal programs with the Canadian Coast Guard and the Department of National Defence. We're looking forward to connecting with partners, suppliers, and colleagues from across Canada's marine and defence community. Our CEO,
+                    - link [ref=f20e549] [cursor=pointer]:
+                      - /url: https://ca.linkedin.com/in/govindaadvani?trk=organization_guest_main-feed-card-text
+                      - text: Govinda Advani
+                    - text: ", will be on the floor throughout. If you're at CANSEC and want to talk West Coast shipbuilding and vessel sustainment, please reach out, we'd be glad to connect."
+                    - link [ref=f20e550] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fcansec2026&trk=organization_guest_main-feed-card-text
+                      - text: "#CANSEC2026"
+                    - link [ref=f20e551] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fshipbuilding&trk=organization_guest_main-feed-card-text
+                      - text: "#Shipbuilding"
+                    - link [ref=f20e552] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fsustainment&trk=organization_guest_main-feed-card-text
+                      - text: "#Sustainment"
+                    - link [ref=f20e553] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww.linkedin.com%2Ffeed%2Fhashtag%2Fmarineindustry&trk=organization_guest_main-feed-card-text
+                      - text: "#MarineIndustry"
+                  - link [ref=f20e555] [cursor=pointer]:
+                    - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_social-actions-reactions
+                    - generic [ref=f20e556]: "9"
+                  - generic [ref=f20e557]:
+                    - link [ref=f20e558] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_like-cta
+                      - generic [ref=f20e560]: Like
+                    - link [ref=f20e561] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_comment-cta
+                      - generic [ref=f20e563]: Comment
+                    - link [ref=f20e564] [cursor=pointer]:
+                      - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_main-feed-card_share-cta
+                      - generic [ref=f20e566]: Share
+    - generic [ref=f20e568]:
+      - heading [level=2] [ref=f20e569]: Similar pages
+      - generic [ref=f20e571]:
+        - list [ref=f20e572]:
+          - listitem [ref=f20e573]:
+            - link [ref=f20e574] [cursor=pointer]:
+              - /url: https://ca.linkedin.com/company/regenerative-capital-group?trk=similar-pages
+              - generic [ref=f20e575]:
+                - heading [level=3] [ref=f20e576]: Regenerative Capital Group
+                - paragraph [ref=f20e577]: Venture Capital and Private Equity Principals
+                - paragraph [ref=f20e578]: Campbell River, British Columbia
+          - listitem [ref=f20e579]:
+            - link [ref=f20e580] [cursor=pointer]:
+              - /url: https://ca.linkedin.com/company/dynamic-rescue-systems-inc?trk=similar-pages
+              - generic [ref=f20e581]:
+                - heading [level=3] [ref=f20e582]: Dynamic Rescue Systems Inc
+                - paragraph [ref=f20e583]: Public Safety
+                - paragraph [ref=f20e584]: Surrey, British Columbia
+          - listitem [ref=f20e585]:
+            - link [ref=f20e586] [cursor=pointer]:
+              - /url: https://ca.linkedin.com/company/eaglecraft-boats?trk=similar-pages
+              - generic [ref=f20e587]:
+                - heading [level=3] [ref=f20e588]: EagleCraft Boats
+                - paragraph [ref=f20e589]: Manufacturing
+                - paragraph [ref=f20e590]: Campbell River, British Columbia
+          - listitem [ref=f20e591]:
+            - link [ref=f20e592] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/tmc-reps?trk=similar-pages
+              - generic [ref=f20e593]:
+                - heading [level=3] [ref=f20e594]: TMC Reps
+                - paragraph [ref=f20e595]: Maritime
+        - button [ref=f20e596] [cursor=pointer]: Show more similar pages
+  - button [ref=f20e602] [cursor=pointer]: More searches
+  - contentinfo [ref=f20e604]:
+    - list [ref=f20e605]:
+      - generic [ref=f20e606]: LinkedIn
+      - generic [ref=f20e608]: © 2026
+      - listitem [ref=f20e609]:
+        - link [ref=f20e610] [cursor=pointer]:
+          - /url: https://about.linkedin.com?trk=d_org_guest_company_overview_footer-about
+          - text: About
+      - listitem [ref=f20e611]:
+        - link [ref=f20e612] [cursor=pointer]:
+          - /url: https://www.linkedin.com/accessibility?trk=d_org_guest_company_overview_footer-accessibility
+          - text: Accessibility
+      - listitem [ref=f20e613]:
+        - link [ref=f20e614] [cursor=pointer]:
+          - /url: https://www.linkedin.com/legal/user-agreement?trk=d_org_guest_company_overview_footer-user-agreement
+          - text: User Agreement
+      - listitem [ref=f20e615]:
+        - link [ref=f20e616] [cursor=pointer]:
+          - /url: https://www.linkedin.com/legal/privacy-policy?trk=d_org_guest_company_overview_footer-privacy-policy
+          - text: Privacy Policy
+      - listitem [ref=f20e617]:
+        - link [ref=f20e618] [cursor=pointer]:
+          - /url: https://www.linkedin.com/legal/cookie-policy?trk=d_org_guest_company_overview_footer-cookie-policy
+          - text: Cookie Policy
+      - listitem [ref=f20e619]:
+        - link [ref=f20e620] [cursor=pointer]:
+          - /url: https://www.linkedin.com/legal/copyright-policy?trk=d_org_guest_company_overview_footer-copyright-policy
+          - text: Copyright Policy
+      - listitem [ref=f20e621]:
+        - link [ref=f20e622] [cursor=pointer]:
+          - /url: https://brand.linkedin.com/policies?trk=d_org_guest_company_overview_footer-brand-policy
+          - text: Brand Policy
+      - listitem [ref=f20e623]:
+        - link [ref=f20e624] [cursor=pointer]:
+          - /url: https://www.linkedin.com/psettings/guest-controls?trk=d_org_guest_company_overview_footer-guest-controls
+          - text: Guest Controls
+      - listitem [ref=f20e625]:
+        - link [ref=f20e626] [cursor=pointer]:
+          - /url: https://www.linkedin.com/legal/professional-community-policies?trk=d_org_guest_company_overview_footer-community-guide
+          - text: Community Guidelines
+      - listitem [ref=f20e627]:
+        - button [ref=f20e629]: Language
+  - dialog [ref=f20e631]:
+    - paragraph [ref=f20e634]: LinkedIn
+    - paragraph [ref=f20e635]: LinkedIn is better on the app
+    - paragraph [ref=f20e636]: Don’t have the app? Get it in the Microsoft Store.
+    - link [ref=f20e637] [cursor=pointer]:
+      - /url: ms-windows-store://pdp/?ProductId=9WZDNCRFJ4Q7&mode=mini&cid=guest_desktop_upsell
+      - text: Open the app
+    - button [ref=f20e638]
+  - dialog [active] [ref=f20e641]:
+    - button "Dismiss" [ref=f20e642] [cursor=pointer]
+    - generic [ref=f20e644]:
+      - heading "Sign in to see who you already know at Ocean Pacific Marine Store & Boatyard" [level=2] [ref=f20e646]
+      - generic [ref=f20e647]:
+        - generic:
+          - generic:
+            - button "Continue with google"
+        - button "Sign in with Email" [ref=f20e648] [cursor=pointer]
+        - paragraph [ref=f20e652]: or
+        - generic:
+          - generic:
+            - button "Continue with google"
+        - paragraph [ref=f20e653]:
+          - text: New to LinkedIn?
+          - link "Join now" [ref=f20e654] [cursor=pointer]:
+            - /url: https://www.linkedin.com/signup/cold-join?session_redirect=https%3A%2F%2Fwww%2Elinkedin%2Ecom%2Fcompany%2Focean-pacific-marine-store-boatyard&trk=organization_guest_contextual-sign-in-modal_join-link
+        - paragraph [ref=f20e655]:
+          - text: By clicking Continue to join or sign in, you agree to LinkedIn’s
+          - link "User Agreement" [ref=f20e656] [cursor=pointer]:
+            - /url: /legal/user-agreement?trk=linkedin-tc_auth-button_user-agreement
+          - text: ","
+          - link "Privacy Policy" [ref=f20e657] [cursor=pointer]:
+            - /url: /legal/privacy-policy?trk=linkedin-tc_auth-button_privacy-policy
+          - text: ", and"
+          - link "Cookie Policy" [ref=f20e658] [cursor=pointer]:
+            - /url: /legal/cookie-policy?trk=linkedin-tc_auth-button_cookie-policy
+          - text: .

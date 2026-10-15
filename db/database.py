@@ -18,6 +18,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sess
 
 from config import LEAD_THRESHOLDS, MULTI_SOURCE_BONUS, VOLUME_BONUS_SECOND_SIGNAL, VOLUME_BONUS_THIRD_PLUS_SIGNAL
 from enrichment.domain_resolution import canonicalize_domain
+from enrichment.identity_verification import CompanyIdentityEvidence, verify_company_identity
 from models.schema import CompanyLead, ExtractedSignal, LeadContact, LeadScore
 
 
@@ -890,7 +891,13 @@ class Database:
             company.last_updated = datetime.now(timezone.utc)
             session.commit()
 
-    def upsert_company(self, signal: ExtractedSignal) -> CompanyLead:
+    def upsert_company(
+        self,
+        signal: ExtractedSignal,
+        *,
+        count_signal: bool = True,
+        dedupe_source: bool = True,
+    ) -> CompanyLead:
         signal_domain = canonicalize_domain(signal.company_domain)
         trusted_jobspy_domain = (
             bool(signal_domain)
@@ -1006,7 +1013,12 @@ class Database:
                 company.company_industry = signal.company_industry
                 identity_metadata_changed = True
 
-            if self._is_recent_same_source(session, company, signal):
+            # A duplicate source URL may still carry better identity metadata, but
+            # it must not be counted as a new company signal.  Callers that have
+            # already deduplicated the signal can explicitly disable scoring.
+            if not count_signal or (
+                dedupe_source and self._is_recent_same_source(session, company, signal)
+            ):
                 if identity_metadata_changed:
                     company.last_updated = now
                     session.commit()
@@ -1035,6 +1047,43 @@ class Database:
             session.commit()
             session.refresh(company)
             return _to_company_lead(company)
+
+    def persist_signal(self, signal: ExtractedSignal) -> tuple[SaveSignalResult, CompanyLead]:
+        """Persist evidence and update its company exactly once per source URL."""
+        saved = self.save_signal(signal)
+        company = self.upsert_company(
+            signal,
+            count_signal=saved.created,
+            # ``save_signal`` has already inserted a newly created source, so the
+            # recent-source lookup would otherwise mistake that first insert for
+            # a replay and suppress the company aggregate update.
+            dedupe_source=not saved.created,
+        )
+        return saved, company
+
+    def persist_verified_signal(
+        self,
+        signal: ExtractedSignal,
+        identity_evidence: CompanyIdentityEvidence,
+    ) -> tuple[SaveSignalResult, CompanyLead]:
+        """Verify company identity before persisting a qualified research signal.
+
+        Scheduled discovery should use this method instead of ``persist_signal``.
+        It rejects domain/company-URL mismatches and requires the website shown
+        on a LinkedIn company page to match the official canonical domain.
+        """
+        identity = verify_company_identity(signal, identity_evidence)
+        verified_signal = signal.model_copy(
+            update={
+                "company_name": identity.company_name,
+                "company_domain": identity.company_domain,
+                "company_url": identity.company_url,
+                "linkedin_url": identity.linkedin_url,
+                "domain_resolution_source": "verified_identity_evidence",
+                "domain_resolution_confidence": 1.0,
+            }
+        )
+        return self.persist_signal(verified_signal)
 
     def get_leads(self, lead_score: LeadScore | None = None, limit: int | None = None) -> list[CompanyLead]:
         with self.session() as session:

@@ -1,0 +1,184 @@
+- generic [active] [ref=f12e1]:
+  - banner [ref=f12e2]:
+    - generic [ref=f12e4]:
+      - link [ref=f12e6] [cursor=pointer]:
+        - /url: https://www.mdscoating.com/
+      - link "Menu" [ref=f12e22] [cursor=pointer]:
+        - /url: "#"
+  - generic [ref=f12e24]:
+    - link "Français" [ref=f12e31] [cursor=pointer]:
+      - /url: https://www.mdscoating.com/fr/compagnie/
+    - navigation [ref=f12e32]:
+      - list [ref=f12e34]:
+        - listitem [ref=f12e35]:
+          - link "Technology" [ref=f12e36] [cursor=pointer]:
+            - /url: https://www.mdscoating.com/technology/
+        - listitem [ref=f12e37]:
+          - link "Solutions" [ref=f12e38] [cursor=pointer]:
+            - /url: https://www.mdscoating.com/solutions/
+        - listitem [ref=f12e39]:
+          - link "Sectors" [ref=f12e40] [cursor=pointer]:
+            - /url: https://www.mdscoating.com/sectors/
+        - listitem [ref=f12e41]:
+          - link "Company" [ref=f12e42] [cursor=pointer]:
+            - /url: https://www.mdscoating.com/company/
+    - navigation [ref=f12e43]:
+      - list [ref=f12e45]:
+        - listitem [ref=f12e46]:
+          - link "Join Us" [ref=f12e47] [cursor=pointer]:
+            - /url: https://www.mdscoating.com/company/careers/
+        - listitem [ref=f12e48]:
+          - link "Contact Us" [ref=f12e49] [cursor=pointer]:
+            - /url: https://www.mdscoating.com/contact/
+  - document [ref=f12e50]:
+    - main [ref=f12e51]:
+      - generic [ref=f12e53]:
+        - img "MDS Coating Technologies Aerospace Company Engineer" [ref=f12e55]
+        - heading "About Us" [level=1] [ref=f12e59]
+      - generic [ref=f12e62]:
+        - heading "The leader in protective coating technology" [level=2] [ref=f12e65]
+        - generic [ref=f12e66]:
+          - paragraph [ref=f12e68]: Since 1997, we have developed and applied metallic-ceramic protective coatings used in the commercial, military and industrial sectors. No matter the challenge, we deliver unparalleled quality products that reduces maintenance and operational costs for our customers.
+          - paragraph [ref=f12e70]: Over the decades, we have set new standards and developed game-changing technologies. In every product, we prioritize quality, precision and trust.
+      - figure [ref=f12e73]:
+        - img "MDS Coating Technologies Aerospace Company Engineer" [ref=f12e74]
+      - generic [ref=f12e75]:
+        - generic [ref=f12e76]:
+          - img "MDS Coating Technologies Aerospace Company Engineer" [ref=f12e78]
+          - generic [ref=f12e82]:
+            - generic [ref=f12e83]: Our Values
+            - heading "Customer Dedicated" [level=3] [ref=f12e84]
+            - paragraph [ref=f12e85]: We focus on providing our customers with unmatched service. It is at the core of our company culture.
+            - separator [ref=f12e86]
+            - heading "Innovation Led" [level=3] [ref=f12e87]
+            - paragraph [ref=f12e88]: Thanks to the many creative scientific minds that make up our team, we continue to innovate new technologies and lead the industry.
+        - generic [ref=f12e89]:
+          - img "MDS Coating Technologies Aerospace Company Engineer" [ref=f12e91]
+          - generic [ref=f12e95]:
+            - generic [ref=f12e96]: Our Values
+            - heading "Quality Focused" [level=3] [ref=f12e97]
+            - paragraph [ref=f12e98]: High quality and precision goes into everything we do. The way we design and manufacture our technology is unmatched.
+            - separator [ref=f12e99]
+            - heading "Team Driven" [level=3] [ref=f12e100]
+            - paragraph [ref=f12e101]: We aim to create a work environment where our team is acknowledged and rewarded for their contributions, and feel proud of the contributions they make.
+      - generic [ref=f12e104]:
+        - generic [ref=f12e105]:
+          - generic [ref=f12e106]: Our Mission
+          - heading "Commitment to the ultimate customer & team experience." [level=2] [ref=f12e107]
+        - generic [ref=f12e109]:
+          - generic [ref=f12e110]:
+            - heading "Our customers are at the core of everything we do" [level=3] [ref=f12e111]
+            - paragraph [ref=f12e112]: We provide a trusted partnership, offering our customers solutions tailored to their needs.
+          - generic [ref=f12e113]:
+            - heading "Our team is committed to excellence" [level=3] [ref=f12e114]
+            - paragraph [ref=f12e115]: We invest in our people and value everything our team does to make us stand out as the industry leader.
+          - generic [ref=f12e116]:
+            - heading "Together we can reach great heights" [level=3] [ref=f12e117]
+            - paragraph [ref=f12e118]: We work in collaboration with our customers to provide the best coating solutions to meet their needs.
+        - heading "Our quality policy is to deliver to our customers quality, innovative coatings and surface treatments for gas turbines. To improve safety, reduce costs and emissions and extend life." [level=3] [ref=f12e120]
+      - generic [ref=f12e122]:
+        - img "MDS Coating Technologies Aerospace Company Team" [ref=f12e124]
+        - generic [ref=f12e128]:
+          - generic [ref=f12e129]: Our History
+          - heading "A company built from the ground up" [level=2] [ref=f12e130]
+          - paragraph [ref=f12e131]: From coating our first engine that greatly exceeded all expectations, increasing engine time-on-wing from 100 hours to over 2,000 hours, to today established as the industry leader—we have come a long way.
+          - paragraph [ref=f12e132]: We will always stay true to our core beliefs of putting the customer first and focusing on quality.
+      - heading "Our commitment to quality, innovation, and service has allowed MDS to coat over 5 million airfoils worldwide." [level=2] [ref=f12e137]
+      - generic [ref=f12e140]:
+        - generic [ref=f12e142]:
+          - generic [ref=f12e143]:
+            - generic:
+              - img "MDS Coating Technologies Aerospace Company 2013 Project Of The Year"
+              - paragraph: Environmental Security Technology Certification Program (ESTCP)
+            - generic [ref=f12e144]:
+              - img "MDS Coating Technologies Aerospace Company AHS International Award" [ref=f12e145]
+              - paragraph [ref=f12e146]: AHS International Harry T. Jensen Award
+            - generic:
+              - img "MDS Coating Technologies Aerospace Company CLEEN FAA"
+              - paragraph: FAA Continuous Lower Energy, Emissions and Noise (CLEEN) Program
+            - generic:
+              - img "MDS Coating Technologies Aerospace Company R&D1002013"
+              - paragraph: R&D Magazine 100 most technologically significant products introduced in 2013
+            - generic:
+              - img "MDS Coating Technologies Aerospace Company 2013 Project Of The Year"
+              - paragraph: Environmental Security Technology Certification Program (ESTCP)
+            - generic:
+              - img "MDS Coating Technologies Aerospace Company AHS International Award"
+              - paragraph: AHS International Harry T. Jensen Award
+          - generic [ref=f12e147]:
+            - button "Go to slide 1" [ref=f12e148] [cursor=pointer]
+            - button "Go to slide 2" [ref=f12e149] [cursor=pointer]
+            - button "Go to slide 3" [ref=f12e150] [cursor=pointer]
+            - button "Go to slide 4" [ref=f12e151] [cursor=pointer]
+        - generic [ref=f12e152]:
+          - generic [ref=f12e153]: Award Winning
+          - heading "Proven field experience and safety" [level=2] [ref=f12e156]
+          - paragraph [ref=f12e159]: Between the millions of airfoils we have coated, industry recognition and field-proven success—we have earned our reputation as the leader in aerospace coating technology.
+  - contentinfo [ref=f12e160]:
+    - generic [ref=f12e161]:
+      - generic [ref=f12e162]:
+        - link [ref=f12e164] [cursor=pointer]:
+          - /url: https://www.mdscoating.com/
+        - list [ref=f12e172]:
+          - listitem [ref=f12e173]:
+            - link "Technology" [ref=f12e174] [cursor=pointer]:
+              - /url: https://www.mdscoating.com/technology/
+          - listitem [ref=f12e175]:
+            - link "Solutions" [ref=f12e176] [cursor=pointer]:
+              - /url: https://www.mdscoating.com/solutions/
+          - listitem [ref=f12e177]:
+            - link "Sectors" [ref=f12e178] [cursor=pointer]:
+              - /url: https://www.mdscoating.com/sectors/
+        - list [ref=f12e182]:
+          - listitem [ref=f12e183]:
+            - link "About Us" [ref=f12e184] [cursor=pointer]:
+              - /url: https://www.mdscoating.com/company/
+          - listitem [ref=f12e185]:
+            - link "Facilities" [ref=f12e186] [cursor=pointer]:
+              - /url: https://www.mdscoating.com/company/facilities/
+          - listitem [ref=f12e187]:
+            - link "Careers" [ref=f12e188] [cursor=pointer]:
+              - /url: https://www.mdscoating.com/company/careers/
+          - listitem [ref=f12e189]:
+            - link "Announcements" [ref=f12e190] [cursor=pointer]:
+              - /url: https://www.mdscoating.com/company/announcements/
+          - listitem [ref=f12e191]:
+            - link "Contact" [ref=f12e192] [cursor=pointer]:
+              - /url: https://www.mdscoating.com/contact/
+          - listitem [ref=f12e193]:
+            - link "Make a Report" [ref=f12e194] [cursor=pointer]:
+              - /url: "#make-a-report"
+      - generic [ref=f12e196]:
+        - link [ref=f12e198] [cursor=pointer]:
+          - /url: "#top"
+        - generic [ref=f12e205]:
+          - navigation:
+            - generic:
+              - list:
+                - listitem [ref=f12e206]:
+                  - link "Terms of Use" [ref=f12e207] [cursor=pointer]:
+                    - /url: https://www.mdscoating.com/terms-of-use/
+        - paragraph [ref=f12e209]: 2026 © MDS Coating Technologies Corp.
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - heading [level=2]: Make an anonymous report
+          - paragraph: The ‘MDS Speak Up Email Form’ is an anonymous reporting channel for all stakeholders to report any type of issue or concern – from product quality and safety to management practices.
+        - generic:
+          - generic:
+            - textbox
+            - generic:
+              - generic:
+                - generic:
+                  - text: Name
+                  - generic: — optional
+                - textbox
+              - generic:
+                - generic: Question or complaint
+                - textbox
+              - generic:
+                - button: Submit
+              - generic:
+                - paragraph: Your submission will be treated with the utmost confidentiality, and we have zero tolerance for retaliation of activities that impact good-faith reporting. Anyone engaging in retaliatory behavior is subject to disciplinary actions.
+        - button

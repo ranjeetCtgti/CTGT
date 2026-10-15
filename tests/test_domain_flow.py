@@ -223,6 +223,44 @@ class JobSpyDomainPersistenceTests(unittest.TestCase):
             "Industrial Machinery Manufacturing",
         )
 
+    def test_persist_signal_does_not_double_count_duplicate_source_url(self) -> None:
+        signal = _signal(
+            "Idempotent Manufacturing Inc.",
+            "https://news.example/idempotent-expansion",
+            company_domain="idempotent.example",
+        )
+
+        first_save, first_company = self.database.persist_signal(signal)
+        second_save, second_company = self.database.persist_signal(signal)
+
+        self.assertTrue(first_save.created)
+        self.assertFalse(second_save.created)
+        self.assertEqual(first_company.signal_count, 1)
+        self.assertEqual(second_company.signal_count, 1)
+        self.assertEqual(first_company.total_score, second_company.total_score)
+
+    def test_persist_signal_counts_each_distinct_source_url_once(self) -> None:
+        first = _signal(
+            "Multi-source Manufacturing Inc.",
+            "https://news.example/multi-source-expansion",
+            company_domain="multi-source.example",
+        )
+        second = _signal(
+            "Multi-source Manufacturing Inc.",
+            "https://funding.example/multi-source-award",
+            company_domain="multi-source.example",
+        )
+
+        _, first_company = self.database.persist_signal(first)
+        second_save, second_company = self.database.persist_signal(second)
+        replay_save, replay_company = self.database.persist_signal(second)
+
+        self.assertEqual(first_company.signal_count, 1)
+        self.assertTrue(second_save.created)
+        self.assertEqual(second_company.signal_count, 2)
+        self.assertFalse(replay_save.created)
+        self.assertEqual(replay_company.signal_count, 2)
+
     def test_jobspy_replaces_legacy_and_company_name_guesses(self) -> None:
         cases = (
             ("Legacy Acme", "legacy-acme", None),
